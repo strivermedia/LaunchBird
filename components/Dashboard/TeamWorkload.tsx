@@ -57,7 +57,7 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
         titleColor: 'white',
         bodyColor: 'white',
-        borderColor: '#9844fc',
+        borderColor: '#7c3aed',
         borderWidth: 1,
         cornerRadius: 8,
         displayColors: false,
@@ -105,8 +105,8 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
       {
         label: 'Completed Tasks',
         data: teamWorkload.map(member => member.completedTasks),
-        backgroundColor: '#10b981',
-        borderColor: '#10b981',
+        backgroundColor: '#7c3aed',
+        borderColor: '#7c3aed',
         borderWidth: 0,
         borderRadius: 6,
         borderSkipped: false,
@@ -114,8 +114,8 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
       {
         label: 'In Progress Tasks',
         data: teamWorkload.map(member => member.inProgressTasks),
-        backgroundColor: '#f59e0b',
-        borderColor: '#f59e0b',
+        backgroundColor: '#a855f7',
+        borderColor: '#a855f7',
         borderWidth: 0,
         borderRadius: 6,
         borderSkipped: false,
@@ -123,8 +123,8 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
       {
         label: 'Overdue Tasks',
         data: teamWorkload.map(member => member.overdueTasks),
-        backgroundColor: '#ef4444',
-        borderColor: '#ef4444',
+        backgroundColor: '#6d28d9',
+        borderColor: '#6d28d9',
         borderWidth: 0,
         borderRadius: 6,
         borderSkipped: false,
@@ -170,7 +170,7 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
               Task distribution and performance
             </p>
           </div>
-          <Button variant="outline" size="sm" className="border-[#9844fc] text-[#9844fc] hover:bg-[#9844fc] hover:text-white">
+          <Button variant="outline" size="sm" className="border-[#7c3aed] text-[#7c3aed] hover:bg-[#7c3aed] hover:text-white">
             View Details
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
@@ -179,8 +179,8 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
       <CardContent>
         {teamWorkload.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-[#9844fc]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Users className="h-8 w-8 text-[#9844fc]" />
+            <div className="w-16 h-16 bg-[#7c3aed]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Users className="h-8 w-8 text-[#7c3aed]" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
               No team data
@@ -201,15 +201,15 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
             {/* Legend */}
             <div className="flex items-center justify-center space-x-6 mb-6">
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-green-500 rounded"></div>
+                <div className="w-3 h-3 bg-[#7c3aed] rounded"></div>
                 <span className="text-xs text-gray-600 dark:text-gray-300">Completed</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-yellow-500 rounded"></div>
+                <div className="w-3 h-3 bg-[#ccaaff] rounded"></div>
                 <span className="text-xs text-gray-600 dark:text-gray-300">In Progress</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-red-500 rounded"></div>
+                <div className="w-3 h-3 bg-[#581c87] rounded"></div>
                 <span className="text-xs text-gray-600 dark:text-gray-300">Overdue</span>
               </div>
             </div>
@@ -228,7 +228,7 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-[#9844fc]/10 rounded-full flex items-center justify-center">
+                        <div className="w-10 h-10 bg-[#7c3aed]/10 rounded-full flex items-center justify-center">
                           {member.avatar ? (
                             <Image 
                               src={member.avatar} 
@@ -238,7 +238,7 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
                               className="w-10 h-10 rounded-full object-cover"
                             />
                           ) : (
-                            <span className="text-[#9844fc] font-medium text-sm">
+                            <span className="text-[#7c3aed] font-medium text-sm">
                               {member.userName.charAt(0).toUpperCase()}
                             </span>
                           )}
@@ -256,12 +256,12 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
                       </div>
                       <div className="flex items-center space-x-2">
                         {isEfficient ? (
-                          <TrendingUp className="h-4 w-4 text-green-500" />
+                          <TrendingUp className="h-4 w-4 text-[#7c3aed]" />
                         ) : isStruggling ? (
                           <TrendingDown className="h-4 w-4 text-red-500" />
                         ) : null}
                         <span className={`text-sm font-medium ${
-                          isEfficient ? 'text-green-600 dark:text-green-400' :
+                          isEfficient ? 'text-[#7c3aed] dark:text-[#7c3aed]/90' :
                           isStruggling ? 'text-red-600 dark:text-red-400' :
                           'text-gray-600 dark:text-gray-300'
                         }`}>
@@ -271,27 +271,27 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
                     </div>
 
                     <div className="grid grid-cols-3 gap-4 text-center">
-                      <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
+                      <div className="bg-[#7c3aed]/10 dark:bg-[#7c3aed]/20 rounded-lg p-3">
                         <div className="flex items-center justify-center space-x-1 mb-1">
-                          <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-                          <span className="text-lg font-bold text-green-600 dark:text-green-400">
+                          <CheckCircle className="h-4 w-4 text-[#7c3aed] dark:text-[#7c3aed]/90" />
+                          <span className="text-lg font-bold text-[#7c3aed] dark:text-[#7c3aed]/90">
                             {member.completedTasks}
                           </span>
                         </div>
                         <span className="text-xs text-gray-600 dark:text-gray-300">Completed</span>
                       </div>
                       
-                      <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3">
+                      <div className="bg-[#ccaaff]/20 dark:bg-[#ccaaff]/30 rounded-lg p-3">
                         <div className="flex items-center justify-center space-x-1 mb-1">
-                          <Clock className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-                          <span className="text-lg font-bold text-yellow-600 dark:text-yellow-400">
+                          <Clock className="h-4 w-4 text-[#ccaaff] dark:text-[#ccaaff]/90" />
+                          <span className="text-lg font-bold text-[#ccaaff] dark:text-[#ccaaff]/90">
                             {member.inProgressTasks}
                           </span>
                         </div>
                         <span className="text-xs text-gray-600 dark:text-gray-300">In Progress</span>
                       </div>
                       
-                      <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3">
+                      <div className="bg-[#581c87]/10 dark:bg-[#581c87]/20 rounded-lg p-3">
                         <div className="flex items-center justify-center space-x-1 mb-1">
                           <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
                           <span className="text-lg font-bold text-red-600 dark:text-red-400">

@@ -60,7 +60,7 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
       completed: 'bg-purple-50 dark:bg-purple-900/20',
       'on-hold': 'bg-gray-50 dark:bg-gray-900/20',
     }
-    return bgColorMap[status] || 'bg-gray-50 dark:bg-gray-900/20'
+    return bgColorMap[status] || 'bg-gray-100 dark:bg-gray-800/20'
   }
 
   const formatDate = (date: Date) => {
@@ -80,12 +80,12 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
 
   if (loading) {
     return (
-      <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
-        <CardHeader>
-          <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
-            Active Projects
-          </CardTitle>
-        </CardHeader>
+          <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-[hsl(60,9.1%,97.8%)] dark:from-gray-900 dark:to-gray-700">
+      <CardHeader>
+        <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+          Active Projects
+        </CardTitle>
+      </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {[...Array(3)].map((_, index) => (
@@ -106,7 +106,7 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
   )
 
   return (
-    <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+    <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-[hsl(60,9.1%,97.8%)] dark:from-gray-900 dark:to-gray-700">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div>
@@ -153,7 +153,7 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
               return (
                 <div
                   key={project.id}
-                  className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
+                  className="bg-white dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600 hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
@@ -248,7 +248,7 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
                         <Button size="sm" variant="outline" className="border-[#9844fc] text-[#9844fc] hover:bg-[#9844fc] hover:text-white">
                           View Details
                         </Button>
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="outline" className="hover:bg-[#f5f5f5] dark:hover:bg-gray-700">
                           Edit
                         </Button>
                       </div>

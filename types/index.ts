@@ -6,6 +6,63 @@
 import { UserProfile } from '@/lib/auth'
 
 /**
+ * Organization types
+ */
+export type OrganizationPlan = 'free' | 'pro' | 'enterprise'
+export type OrganizationRole = 'owner' | 'admin' | 'member' | 'client'
+
+export interface Organization {
+  id: string
+  name: string
+  slug: string
+  plan: OrganizationPlan
+  settings: OrganizationSettings
+  members: string[] // Array of user IDs
+  status?: 'active' | 'suspended' | 'inactive'
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface OrganizationSettings {
+  branding: {
+    logo?: string
+    primaryColor: string
+    companyName: string
+    domain?: string
+  }
+  features: {
+    clientAccess: boolean
+    customDomains: boolean
+    advancedAnalytics: boolean
+    timeTracking: boolean
+    fileStorage: boolean
+  }
+  limits: {
+    maxProjects: number
+    maxTeamMembers: number
+    maxStorage: number // in MB
+    maxClients: number
+  }
+  notifications: {
+    emailUpdates: boolean
+    slackIntegration: boolean
+    clientNotifications: boolean
+  }
+}
+
+export interface OrganizationInvitation {
+  id: string
+  organizationId: string
+  email: string
+  role: OrganizationRole
+  invitedBy: string
+  invitedByName: string
+  status: 'pending' | 'accepted' | 'expired'
+  expiresAt: Date
+  createdAt: Date
+}
+
+/**
  * Project types
  */
 export type ProjectType = 'one-time' | 'ongoing'
@@ -13,6 +70,7 @@ export type ProjectStatus = 'planning' | 'in-progress' | 'review' | 'completed' 
 
 export interface Project {
   id: string
+  organizationId: string
   title: string
   description?: string
   type: ProjectType
@@ -28,6 +86,9 @@ export interface Project {
   clientId?: string
   budget?: number
   tags?: string[]
+  clientCode?: string
+  codeExpiry?: Date
+  clientAccessEnabled?: boolean
 }
 
 /**
@@ -38,6 +99,7 @@ export type TaskStatus = 'todo' | 'in-progress' | 'review' | 'completed'
 
 export interface Task {
   id: string
+  organizationId: string
   title: string
   description?: string
   projectId: string
@@ -60,6 +122,7 @@ export type ActivityType = 'project_update' | 'task_completed' | 'client_feedbac
 
 export interface Activity {
   id: string
+  organizationId: string
   type: ActivityType
   title: string
   description: string
@@ -361,4 +424,119 @@ export interface SendMessageForm {
   content: string
   recipientId?: string
   projectId?: string
+}
+
+// --- App Admin Types ---
+export type AppAdminRole = 'super_admin' | 'app_admin' | 'support'
+
+export interface AppAdmin {
+  id: string
+  email: string
+  role: AppAdminRole
+  name: string
+  permissions: AppAdminPermissions
+  createdAt: Date
+  lastLoginAt?: Date
+}
+
+export interface AppAdminPermissions {
+  manageUsers: boolean
+  manageOrganizations: boolean
+  viewAnalytics: boolean
+  manageBilling: boolean
+  accessSupport: boolean
+  systemSettings: boolean
+}
+
+export interface AppAnalytics {
+  totalUsers: number
+  totalOrganizations: number
+  activeOrganizations: number
+  totalProjects: number
+  totalTasks: number
+  storageUsed: number
+  revenue: number
+  userGrowth: {
+    daily: number
+    weekly: number
+    monthly: number
+  }
+}
+
+/**
+ * Client types
+ */
+export interface Client {
+  id: string
+  organizationId: string
+  name: string
+  email: string
+  phone?: string
+  company?: string
+  position?: string
+  assignedManagerId: string
+  assignedManagerName: string
+  assignedManagerTitle?: string
+  status: 'active' | 'inactive' | 'prospect'
+  createdAt: Date
+  updatedAt: Date
+  notes?: string
+  tags?: string[]
+  lastContactDate?: Date
+  totalProjects: number
+  activeProjects: number
+  completedProjects: number
+}
+
+export interface ClientViewCode {
+  id: string
+  clientId: string
+  code: string
+  accessType: 'code' | 'login'
+  isActive: boolean
+  expiresAt?: Date
+  createdAt: Date
+  createdBy: string
+  lastUsedAt?: Date
+  usageCount: number
+}
+
+export interface ClientCommunication {
+  id: string
+  clientId: string
+  type: 'email' | 'sms' | 'call' | 'meeting'
+  subject?: string
+  content: string
+  sentBy: string
+  sentByName: string
+  timestamp: Date
+  status: 'sent' | 'delivered' | 'failed'
+  metadata?: Record<string, any>
+}
+
+export interface ClientNote {
+  id: string
+  clientId: string
+  content: string
+  createdBy: string
+  createdByName: string
+  createdAt: Date
+  updatedAt: Date
+  isPrivate: boolean
+  tags?: string[]
+}
+
+export interface ClientProject {
+  id: string
+  clientId: string
+  projectId: string
+  projectTitle: string
+  projectType: ProjectType
+  projectStatus: ProjectStatus
+  assignedManagerId: string
+  assignedManagerName: string
+  startDate: Date
+  endDate?: Date
+  progress: number
+  lastUpdate?: Date
 } 

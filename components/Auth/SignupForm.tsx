@@ -296,7 +296,7 @@ export default function SignupForm() {
         {/* Submit Button */}
         <Button
           type="submit"
-          className="w-full bg-[#9844fc] hover:bg-[#7b33cc] text-white"
+          className="w-full bg-[#7c3aed] hover:bg-[#6d28d9] text-white"
           disabled={isLoading}
         >
           {isLoading ? (
@@ -316,7 +316,7 @@ export default function SignupForm() {
           Already have an account?{' '}
           <a
             href="/login"
-            className="text-[#9844fc] hover:text-[#7b33cc] hover:underline"
+            className="text-[#7c3aed] hover:text-[#6d28d9] hover:underline"
           >
             Sign in
           </a>

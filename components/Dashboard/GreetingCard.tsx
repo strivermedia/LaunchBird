@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Clock, MapPin, Thermometer, Cloud, Sun, Moon } from 'lucide-react'
-import { getGreeting, getLocalTime } from '@/lib/dashboard'
+import { getGreeting, getLocalTime, getDynamicGradient } from '@/lib/dashboard'
 import { getCurrentWeather, getWeatherEmoji } from '@/lib/weather'
 import { WeatherData } from '@/types'
 
@@ -16,24 +16,29 @@ interface GreetingCardProps {
 /**
  * GreetingCard component
  * Modern greeting card with personalized greeting, local time, and weather information
+ * Features dynamic gradient background that changes with time of day
  */
 export default function GreetingCard({ userName, userLocation }: GreetingCardProps) {
   const [greeting, setGreeting] = useState<string>('')
   const [localTime, setLocalTime] = useState<string>('')
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [gradient, setGradient] = useState(getDynamicGradient())
 
   useEffect(() => {
-    // Set initial greeting and time
+    // Set initial greeting, time, and gradient immediately
     setGreeting(getGreeting(userName))
     setLocalTime(getLocalTime())
+    setGradient(getDynamicGradient())
+    setLoading(false) // Don't wait for weather to load
 
-    // Update time every minute
+    // Update time and gradient every minute
     const timeInterval = setInterval(() => {
       setLocalTime(getLocalTime())
+      setGradient(getDynamicGradient())
     }, 60000)
 
-    // Fetch weather data
+    // Fetch weather data in background (don't block rendering)
     const fetchWeather = async () => {
       try {
         const weatherData = await getCurrentWeather()
@@ -51,16 +56,15 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
           feelsLike: 74,
           lastUpdated: new Date(),
         })
-      } finally {
-        setLoading(false)
       }
     }
 
     fetchWeather()
 
-    // Update greeting every hour
+    // Update greeting and gradient every hour
     const greetingInterval = setInterval(() => {
       setGreeting(getGreeting(userName))
+      setGradient(getDynamicGradient())
     }, 3600000)
 
     return () => {
@@ -71,7 +75,7 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
 
   if (loading) {
     return (
-      <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+      <Card className={`border-0 shadow-sm bg-gradient-to-br ${gradient.from} ${gradient.darkFrom}`}>
         <CardHeader>
           <Skeleton className="h-8 w-64" />
         </CardHeader>
@@ -86,23 +90,25 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
     )
   }
 
+
+  
   return (
-    <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+    <Card className={`border-0 shadow-sm bg-gradient-to-br ${gradient.from} ${gradient.darkFrom}`}>
       <CardHeader className="pb-4">
         <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
           {greeting}
         </CardTitle>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">
-            Here&apos;s what&apos;s happening today
-          </p>
+        <p className="text-gray-600 dark:text-gray-300 text-sm">
+          Here&apos;s what&apos;s happening today
+        </p>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Local Time */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+          <div className={`rounded-lg p-4 border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-300 ${gradient.cardBg} ${gradient.darkCardBg} backdrop-blur-sm`}>
             <div className="flex items-center space-x-3 mb-2">
-              <div className="w-10 h-10 bg-[#9844fc]/10 rounded-lg flex items-center justify-center">
-                <Clock className="h-5 w-5 text-[#9844fc]" />
+              <div className="w-10 h-10 bg-[#7c3aed]/10 rounded-lg flex items-center justify-center">
+                <Clock className="h-5 w-5 text-[#7c3aed]" />
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-white">Local Time</h3>
@@ -115,13 +121,13 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
           </div>
 
           {/* Weather Information */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+          <div className={`rounded-lg p-4 border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-300 ${gradient.cardBg} ${gradient.darkCardBg} backdrop-blur-sm`}>
             <div className="flex items-center space-x-3 mb-2">
-              <div className="w-10 h-10 bg-[#9844fc]/10 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-[#7c3aed]/10 rounded-lg flex items-center justify-center">
                 {weather?.condition === 'Clear' ? (
-                  <Sun className="h-5 w-5 text-[#9844fc]" />
+                  <Sun className="h-5 w-5 text-[#7c3aed]" />
                 ) : (
-                  <Cloud className="h-5 w-5 text-[#9844fc]" />
+                  <Cloud className="h-5 w-5 text-[#7c3aed]" />
                 )}
               </div>
               <div>
@@ -147,10 +153,10 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
           </div>
 
           {/* Quick Stats */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+          <div className={`rounded-lg p-4 border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-300 ${gradient.cardBg} ${gradient.darkCardBg} backdrop-blur-sm`}>
             <div className="flex items-center space-x-3 mb-2">
-              <div className="w-10 h-10 bg-[#9844fc]/10 rounded-lg flex items-center justify-center">
-                <MapPin className="h-5 w-5 text-[#9844fc]" />
+              <div className="w-10 h-10 bg-[#7c3aed]/10 rounded-lg flex items-center justify-center">
+                <MapPin className="h-5 w-5 text-[#7c3aed]" />
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-white">Location</h3>

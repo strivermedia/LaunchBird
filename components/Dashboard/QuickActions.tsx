@@ -82,7 +82,7 @@ export default function QuickActions({ userRole, onAction }: QuickActionsProps) 
   )
 
   return (
-    <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+    <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-[hsl(60,9.1%,97.8%)] dark:from-gray-900 dark:to-gray-700">
       <CardHeader className="pb-4">
         <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
           Quick Actions
@@ -92,7 +92,7 @@ export default function QuickActions({ userRole, onAction }: QuickActionsProps) 
         </p>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="flex flex-wrap gap-4 mb-6">
           {filteredActions.map((action) => {
             const IconComponent = getIconComponent(action.icon)
             return (
@@ -100,19 +100,21 @@ export default function QuickActions({ userRole, onAction }: QuickActionsProps) 
                 key={action.type}
                 onClick={action.action}
                 variant="ghost"
-                className="group bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-[#9844fc]/30 transition-all duration-200 text-left h-auto"
+                className="group bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:bg-[#f5f5f5] dark:hover:bg-gray-700 hover:shadow-md hover:border-[#7c3aed]/30 transition-all duration-200 text-left h-auto flex-1 min-w-[240px] max-w-[280px]"
               >
-                <div className="flex items-center space-x-3 mb-3">
-                  <div className="w-10 h-10 bg-[#9844fc]/10 rounded-lg flex items-center justify-center group-hover:bg-[#9844fc]/20 transition-colors">
-                    <IconComponent className="h-5 w-5 text-[#9844fc]" />
+                <div className="flex items-start space-x-3 w-full">
+                  <div className="w-10 h-10 bg-[#7c3aed]/10 rounded-lg flex items-center justify-center group-hover:bg-[#7c3aed]/20 transition-colors flex-shrink-0 mt-0.5">
+                    <IconComponent className="h-5 w-5 text-[#7c3aed]" />
+                  </div>
+                  <div className="flex-1 min-w-0 flex flex-col">
+                    <h3 className="font-semibold text-gray-900 dark:text-white mb-1 text-left">
+                      {action.label}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-left leading-tight">
+                      {action.description}
+                    </p>
                   </div>
                 </div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
-                  {action.label}
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {action.description}
-                </p>
               </Button>
             )
           })}
@@ -120,9 +122,9 @@ export default function QuickActions({ userRole, onAction }: QuickActionsProps) 
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 text-center">
-            <div className="w-10 h-10 bg-[#9844fc]/10 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <FileText className="h-5 w-5 text-[#9844fc]" />
+          <div className="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600 text-center">
+            <div className="w-10 h-10 bg-[#7c3aed]/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+              <FileText className="h-5 w-5 text-[#7c3aed]" />
             </div>
             <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
               12
@@ -132,9 +134,9 @@ export default function QuickActions({ userRole, onAction }: QuickActionsProps) 
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 text-center">
-            <div className="w-10 h-10 bg-[#9844fc]/10 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <CheckSquare className="h-5 w-5 text-[#9844fc]" />
+          <div className="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600 text-center">
+            <div className="w-10 h-10 bg-[#7c3aed]/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+              <CheckSquare className="h-5 w-5 text-[#7c3aed]" />
             </div>
             <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
               8
@@ -144,9 +146,9 @@ export default function QuickActions({ userRole, onAction }: QuickActionsProps) 
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 text-center">
-            <div className="w-10 h-10 bg-[#9844fc]/10 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <Calendar className="h-5 w-5 text-[#9844fc]" />
+          <div className="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600 text-center">
+            <div className="w-10 h-10 bg-[#7c3aed]/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+              <Calendar className="h-5 w-5 text-[#7c3aed]" />
             </div>
             <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
               156
@@ -156,9 +158,9 @@ export default function QuickActions({ userRole, onAction }: QuickActionsProps) 
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 text-center">
-            <div className="w-10 h-10 bg-[#9844fc]/10 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <Users className="h-5 w-5 text-[#9844fc]" />
+          <div className="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600 text-center">
+            <div className="w-10 h-10 bg-[#7c3aed]/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+              <Users className="h-5 w-5 text-[#7c3aed]" />
             </div>
             <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
               5
@@ -171,7 +173,7 @@ export default function QuickActions({ userRole, onAction }: QuickActionsProps) 
 
         {/* View All Button */}
         <div className="mt-6 text-center">
-          <Button variant="outline" className="border-[#9844fc] text-[#9844fc] hover:bg-[#9844fc] hover:text-white transition-colors">
+          <Button variant="outline" className="border-[#7c3aed] text-[#7c3aed] hover:bg-[#7c3aed] hover:text-white transition-colors">
             View All Actions
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>

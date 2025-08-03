@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Lock, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -25,14 +25,10 @@ export default function ClientViewPage() {
   const [error, setError] = useState<string | null>(null)
   const [codeData, setCodeData] = useState<ClientViewCode | null>(null)
 
-  useEffect(() => {
-    validateCode()
-  }, [code])
-
   /**
    * Validate the client view code
    */
-  const validateCode = async () => {
+  const validateCode = useCallback(async () => {
     if (!code || code.length !== 4) {
       setError('Invalid access code')
       setIsLoading(false)
@@ -60,7 +56,11 @@ export default function ClientViewPage() {
       setError('An error occurred while validating the access code')
       setIsLoading(false)
     }
-  }
+  }, [code])
+
+  useEffect(() => {
+    validateCode()
+  }, [validateCode])
 
   /**
    * Handle password submission

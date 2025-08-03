@@ -25,6 +25,9 @@ import { auth, db } from './firebase'
 // Development mode flag - set to true to bypass authentication
 const DEV_MODE = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
 
+// Completely disable Firebase for now
+const DISABLE_FIREBASE = true
+
 /**
  * User role types
  */
@@ -40,6 +43,10 @@ export interface UserProfile {
   title?: string
   location?: string
   theme?: 'light' | 'dark'
+  organizationId?: string
+  organizationRole?: 'owner' | 'admin' | 'member' | 'client'
+  invitedBy?: string
+  joinedAt?: any
   createdAt: any
   updatedAt: any
 }
@@ -83,14 +90,14 @@ const getMockUser = (): UserProfile => ({
  * Check if development mode is enabled
  * @returns boolean
  */
-export const isDevMode = (): boolean => DEV_MODE
+export const isDevMode = (): boolean => DEV_MODE || DISABLE_FIREBASE
 
 /**
  * Get current user (with dev mode support)
  * @returns Promise<User | null>
  */
 export const getCurrentUser = async (): Promise<User | null> => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_FIREBASE) {
     // Return a mock user for development
     return {
       uid: 'dev-user-123',
@@ -129,7 +136,7 @@ export const getCurrentUser = async (): Promise<User | null> => {
  * @returns Promise<UserProfile | null>
  */
 export const getCurrentUserProfile = async (): Promise<UserProfile | null> => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_FIREBASE) {
     console.log('Development mode enabled - returning mock user')
     return getMockUser()
   }
@@ -160,7 +167,7 @@ export const signInWithEmail = async (
   password: string,
   rememberMe: boolean = false
 ): Promise<UserCredential> => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_FIREBASE) {
     throw new Error('Authentication is disabled in development mode')
   }
   
@@ -197,7 +204,7 @@ export const createUserAccount = async (
   title?: string,
   location?: string
 ): Promise<UserCredential> => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_FIREBASE) {
     throw new Error('Authentication is disabled in development mode')
   }
   
@@ -232,7 +239,7 @@ export const createUserAccount = async (
  * @returns Promise<void>
  */
 export const signOutUser = async (): Promise<void> => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_FIREBASE) {
     throw new Error('Authentication is disabled in development mode')
   }
   
@@ -253,7 +260,7 @@ export const signOutUser = async (): Promise<void> => {
  * @returns Promise<void>
  */
 export const sendPasswordReset = async (email: string): Promise<void> => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_FIREBASE) {
     throw new Error('Authentication is disabled in development mode')
   }
   
@@ -273,7 +280,7 @@ export const sendPasswordReset = async (email: string): Promise<void> => {
  * @returns Promise<UserCredential>
  */
 export const signInAnonymouslyForClient = async (): Promise<UserCredential> => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_FIREBASE) {
     throw new Error('Authentication is disabled in development mode')
   }
   
@@ -294,7 +301,7 @@ export const signInAnonymouslyForClient = async (): Promise<UserCredential> => {
  * @returns Promise<UserProfile | null>
  */
 export const getUserProfile = async (uid: string): Promise<UserProfile | null> => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_FIREBASE) {
     return getMockUser()
   }
   
@@ -327,7 +334,7 @@ export const updateUserProfile = async (
   uid: string,
   updates: Partial<UserProfile>
 ): Promise<void> => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_FIREBASE) {
     console.log('Profile update in dev mode:', { uid, updates })
     return
   }
@@ -357,7 +364,7 @@ export const validateClientViewCode = async (
   code: string,
   password?: string
 ): Promise<ClientViewCode | null> => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_FIREBASE) {
     // Return a mock client view code for development
     return {
       code: code.toUpperCase(),
@@ -415,7 +422,7 @@ export const createClientViewCode = async (
   password?: string,
   expiresInDays: number = 30
 ): Promise<string> => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_FIREBASE) {
     // Generate random 4-character alphanumeric code for development
     const code = Math.random().toString(36).substring(2, 6).toUpperCase()
     console.log('Created client view code in dev mode:', code)
@@ -473,7 +480,7 @@ export const getRedirectPath = (role: UserRole): string => {
  * @returns Unsubscribe function
  */
 export const onAuthStateChange = (callback: (user: User | null) => void) => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_FIREBASE) {
     // In dev mode, immediately call with mock user and return no-op unsubscribe
     const mockUser = {
       uid: 'dev-user-123',

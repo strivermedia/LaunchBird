@@ -5,6 +5,9 @@ import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 // Development mode flag - set to true to bypass authentication
 const DEV_MODE = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
 
+// Completely disable Firebase for now
+const DISABLE_FIREBASE = true
+
 /**
  * Firebase configuration object
  * Replace with your actual Firebase config values
@@ -25,7 +28,8 @@ let app: any = null
 let auth: any = null
 let db: any = null
 
-if (!DEV_MODE || (process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'your_firebase_api_key_here')) {
+// Completely bypass Firebase initialization
+if (!DISABLE_FIREBASE && (!DEV_MODE || (process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'your_firebase_api_key_here'))) {
   try {
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
     auth = getAuth(app)

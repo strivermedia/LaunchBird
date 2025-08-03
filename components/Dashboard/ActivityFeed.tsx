@@ -62,7 +62,7 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
       client_feedback: 'bg-orange-50 dark:bg-orange-900/20',
       deadline_reminder: 'bg-red-50 dark:bg-red-900/20',
     }
-    return bgColorMap[type] || 'bg-gray-50 dark:bg-gray-900/20'
+    return bgColorMap[type] || 'bg-gray-100 dark:bg-gray-800/20'
   }
 
   const formatTimestamp = (timestamp: Date) => {
@@ -86,12 +86,12 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
 
   if (loading) {
     return (
-      <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
-        <CardHeader>
-          <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
-            Recent Activity
-          </CardTitle>
-        </CardHeader>
+          <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-[hsl(60,9.1%,97.8%)] dark:from-gray-900 dark:to-gray-700">
+      <CardHeader>
+        <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+          Recent Activity
+        </CardTitle>
+      </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {[...Array(5)].map((_, index) => (
@@ -110,7 +110,7 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
   }
 
   return (
-    <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+    <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-[hsl(60,9.1%,97.8%)] dark:from-gray-900 dark:to-gray-700">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div>
@@ -121,7 +121,7 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
               Latest updates and notifications
             </p>
           </div>
-          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-[#9844fc] transition-colors p-0 h-auto">
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-[#7c3aed] transition-colors p-0 h-auto">
             <MoreHorizontal className="h-5 w-5" />
           </Button>
         </div>
@@ -129,8 +129,8 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
       <CardContent>
         {activities.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-[#9844fc]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Activity className="h-8 w-8 text-[#9844fc]" />
+            <div className="w-16 h-16 bg-[#7c3aed]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Activity className="h-8 w-8 text-[#7c3aed]" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
               No recent activity
@@ -150,7 +150,7 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
                 return (
                   <div
                     key={activity.id}
-                    className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-sm transition-shadow"
+                    className="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600 hover:shadow-sm transition-shadow"
                   >
                     <div className="flex items-start space-x-3">
                       {/* Activity Icon */}
@@ -203,7 +203,7 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
 
         {activities.length > 0 && (
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-center">
-            <Button variant="ghost" className="text-sm text-[#9844fc] hover:text-[#7b33cc] transition-colors flex items-center justify-center space-x-1">
+            <Button variant="ghost" className="text-sm text-[#7c3aed] hover:text-[#6d28d9] transition-colors flex items-center justify-center space-x-1">
               <span>View all activity</span>
               <ArrowRight className="h-4 w-4" />
             </Button>
