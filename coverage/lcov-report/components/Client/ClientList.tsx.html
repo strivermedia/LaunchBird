@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/20</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/20</span>
             </div>
         
             
@@ -303,12 +303,7 @@
 <a name='L238'></a><a href='#L238'>238</a>
 <a name='L239'></a><a href='#L239'>239</a>
 <a name='L240'></a><a href='#L240'>240</a>
-<a name='L241'></a><a href='#L241'>241</a>
-<a name='L242'></a><a href='#L242'>242</a>
-<a name='L243'></a><a href='#L243'>243</a>
-<a name='L244'></a><a href='#L244'>244</a>
-<a name='L245'></a><a href='#L245'>245</a>
-<a name='L246'></a><a href='#L246'>246</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L241'></a><a href='#L241'>241</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -322,7 +317,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -380,16 +375,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -508,6 +493,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -518,8 +510,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -567,7 +557,7 @@ import {
 } from <span class="cstat-no" title="statement not covered" >'@/components/ui/table'</span>
 import { Badge } from <span class="cstat-no" title="statement not covered" >'@/components/ui/badge'</span>
 import { Button } from <span class="cstat-no" title="statement not covered" >'@/components/ui/button'</span>
-import { Card, CardContent, CardHeader, CardTitle } from <span class="cstat-no" title="statement not covered" >'@/components/ui/card'</span>
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { 
   Eye, 
   Mail, 
@@ -590,13 +580,13 @@ interface ClientListProps {
 export default function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >ClientList({</span></span> clients }: ClientListProps) {
   const getStatusBadge = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(s</span>tatus: string) =&gt; {</span>
     const variants = <span class="cstat-no" title="statement not covered" >{</span>
-      active: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-      inactive: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
-      prospect: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+      active: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200',
+      inactive: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 border-gray-200',
+      prospect: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200 border-orange-200',
     }
     
     return (
-      &lt;Badge className={variants[status as keyof typeof variants] || variants.inactive}&gt;
+      &lt;Badge className={`${variants[status as keyof typeof variants] || variants.inactive} border`}&gt;
         {status.charAt(0).toUpperCase() + status.slice(1)}
       &lt;/Badge&gt;
     )
@@ -612,12 +602,12 @@ export default function <span class="cstat-no" title="statement not covered" ><s
 &nbsp;
   const handleSendEmail = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(c</span>lient: Client) =&gt; {</span>
     // TODO: Implement email sending functionality
-<span class="cstat-no" title="statement not covered" >    console.log('Sending email to:', client.email)</span>
+<span class="cstat-no" title="statement not covered" >    alert('Email functionality coming soon!')</span>
   }
 &nbsp;
   const handleSendSMS = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(c</span>lient: Client) =&gt; {</span>
     // TODO: Implement SMS sending functionality
-<span class="cstat-no" title="statement not covered" >    console.log('Sending SMS to:', client.phone)</span>
+<span class="cstat-no" title="statement not covered" >    alert('SMS functionality coming soon!')</span>
   }
 &nbsp;
   const handleViewClient = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(c</span>lientId: string) =&gt; {</span>
@@ -626,177 +616,172 @@ export default function <span class="cstat-no" title="statement not covered" ><s
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (clients.length === 0) {</span>
     return (
-      &lt;Card className="border-purple-200 dark:border-purple-800"&gt;
-        &lt;CardContent className="flex flex-col items-center justify-center py-12"&gt;
-          &lt;Building2 className="h-12 w-12 text-gray-400 mb-4" /&gt;
-          &lt;h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2"&gt;
-            No clients found
-          &lt;/h3&gt;
-          &lt;p className="text-gray-600 dark:text-gray-400 text-center"&gt;
-            Try adjusting your search or filters to find what you're looking for.
-          &lt;/p&gt;
-        &lt;/CardContent&gt;
-      &lt;/Card&gt;
+      &lt;div className="flex flex-col items-center justify-center py-16"&gt;
+        &lt;div className="p-4 bg-gray-100 rounded-full mb-4"&gt;
+          &lt;Building2 className="h-8 w-8 text-gray-400" /&gt;
+        &lt;/div&gt;
+        &lt;h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2"&gt;
+          No clients found
+        &lt;/h3&gt;
+        &lt;p className="text-gray-600 dark:text-gray-400 text-center max-w-md"&gt;
+          Try adjusting your search or filters to find what you&amp;apos;re looking for.
+        &lt;/p&gt;
+      &lt;/div&gt;
     )
   }
 &nbsp;
   return (
-    &lt;Card className="border-purple-200 dark:border-purple-800"&gt;
-      &lt;CardHeader&gt;
-        &lt;CardTitle className="flex items-center justify-between"&gt;
-          &lt;span&gt;Client Directory&lt;/span&gt;
-          &lt;span className="text-sm font-normal text-gray-600 dark:text-gray-400"&gt;
-            {clients.length} client{clients.length !== 1 ? 's' : ''}
-          &lt;/span&gt;
-        &lt;/CardTitle&gt;
-      &lt;/CardHeader&gt;
-      &lt;CardContent&gt;
-        &lt;div className="rounded-md border border-gray-200 dark:border-gray-700"&gt;
-          &lt;Table&gt;
-            &lt;TableHeader&gt;
-              &lt;TableRow className="bg-gray-50 dark:bg-gray-800"&gt;
-                &lt;TableHead className="font-medium text-gray-900 dark:text-white"&gt;
-                  Client
-                &lt;/TableHead&gt;
-                &lt;TableHead className="font-medium text-gray-900 dark:text-white"&gt;
-                  Company
-                &lt;/TableHead&gt;
-                &lt;TableHead className="font-medium text-gray-900 dark:text-white"&gt;
-                  Manager
-                &lt;/TableHead&gt;
-                &lt;TableHead className="font-medium text-gray-900 dark:text-white"&gt;
-                  Status
-                &lt;/TableHead&gt;
-                &lt;TableHead className="font-medium text-gray-900 dark:text-white"&gt;
-                  Projects
-                &lt;/TableHead&gt;
-                &lt;TableHead className="font-medium text-gray-900 dark:text-white"&gt;
-                  Last Contact
-                &lt;/TableHead&gt;
-                &lt;TableHead className="font-medium text-gray-900 dark:text-white text-right"&gt;
-                  Actions
-                &lt;/TableHead&gt;
-              &lt;/TableRow&gt;
-            &lt;/TableHeader&gt;
-            &lt;TableBody&gt;
-              {clients.map(<span class="fstat-no" title="function not covered" >(c</span>lient) =&gt; (
-<span class="cstat-no" title="statement not covered" >                &lt;TableRow key={client.id} c</span>lassName="hover:bg-gray-50 dark:hover:bg-gray-800"&gt;
-                  &lt;TableCell&gt;
-                    &lt;div className="flex flex-col"&gt;
-                      &lt;div className="font-medium text-gray-900 dark:text-white"&gt;
-                        {client.name}
-                      &lt;/div&gt;
-                      &lt;div className="text-sm text-gray-600 dark:text-gray-400"&gt;
-                        {client.email}
-                      &lt;/div&gt;
-                      {<span class="branch-0 cbranch-no" title="branch not covered" >client.phone </span>&amp;&amp; (
-                        &lt;div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1"&gt;
-                          &lt;Phone className="h-3 w-3" /&gt;
-                          {client.phone}
-                        &lt;/div&gt;
-                      )}
+    &lt;div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden"&gt;
+      &lt;Table&gt;
+        &lt;TableHeader&gt;
+          &lt;TableRow className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700"&gt;
+            &lt;TableHead className="font-semibold text-gray-700 dark:text-gray-300 py-4"&gt;
+              Client
+            &lt;/TableHead&gt;
+            &lt;TableHead className="font-semibold text-gray-700 dark:text-gray-300 py-4"&gt;
+              Company
+            &lt;/TableHead&gt;
+            &lt;TableHead className="font-semibold text-gray-700 dark:text-gray-300 py-4"&gt;
+              Manager
+            &lt;/TableHead&gt;
+            &lt;TableHead className="font-semibold text-gray-700 dark:text-gray-300 py-4"&gt;
+              Status
+            &lt;/TableHead&gt;
+            &lt;TableHead className="font-semibold text-gray-700 dark:text-gray-300 py-4"&gt;
+              Projects
+            &lt;/TableHead&gt;
+            &lt;TableHead className="font-semibold text-gray-700 dark:text-gray-300 py-4"&gt;
+              Last Contact
+            &lt;/TableHead&gt;
+            &lt;TableHead className="font-semibold text-gray-700 dark:text-gray-300 py-4 text-right"&gt;
+              Actions
+            &lt;/TableHead&gt;
+          &lt;/TableRow&gt;
+        &lt;/TableHeader&gt;
+        &lt;TableBody&gt;
+          {clients.map(<span class="fstat-no" title="function not covered" >(c</span>lient, index) =&gt; (
+<span class="cstat-no" title="statement not covered" >            &lt;TableRow </span>
+              key={client.id} 
+              className={`hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-150 ${
+                index !== clients.length - 1 ? 'border-b border-gray-100 dark:border-gray-800' : ''
+              }`}
+            &gt;
+              &lt;TableCell className="py-4"&gt;
+                &lt;div className="flex flex-col space-y-1"&gt;
+                  &lt;div className="font-semibold text-gray-900 dark:text-white"&gt;
+                    {client.name}
+                  &lt;/div&gt;
+                  &lt;div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1"&gt;
+                    &lt;Mail className="h-3 w-3" /&gt;
+                    {client.email}
+                  &lt;/div&gt;
+                  {<span class="branch-0 cbranch-no" title="branch not covered" >client.phone </span>&amp;&amp; (
+                    &lt;div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1"&gt;
+                      &lt;Phone className="h-3 w-3" /&gt;
+                      {client.phone}
                     &lt;/div&gt;
-                  &lt;/TableCell&gt;
-                  &lt;TableCell&gt;
-                    &lt;div className="flex flex-col"&gt;
-                      &lt;div className="font-medium text-gray-900 dark:text-white"&gt;
-                        {client.company || '—'}
-                      &lt;/div&gt;
-                      {<span class="branch-0 cbranch-no" title="branch not covered" >client.position </span>&amp;&amp; (
-                        &lt;div className="text-sm text-gray-600 dark:text-gray-400"&gt;
-                          {client.position}
-                        &lt;/div&gt;
-                      )}
+                  )}
+                &lt;/div&gt;
+              &lt;/TableCell&gt;
+              &lt;TableCell className="py-4"&gt;
+                &lt;div className="flex flex-col space-y-1"&gt;
+                  &lt;div className="font-medium text-gray-900 dark:text-white flex items-center gap-1"&gt;
+                    &lt;Building2 className="h-3 w-3 text-gray-400" /&gt;
+                    {client.company || '—'}
+                  &lt;/div&gt;
+                  {<span class="branch-0 cbranch-no" title="branch not covered" >client.position </span>&amp;&amp; (
+                    &lt;div className="text-sm text-gray-600 dark:text-gray-400"&gt;
+                      {client.position}
                     &lt;/div&gt;
-                  &lt;/TableCell&gt;
-                  &lt;TableCell&gt;
-                    &lt;div className="flex flex-col"&gt;
-                      &lt;div className="font-medium text-gray-900 dark:text-white"&gt;
-                        {client.assignedManagerName}
-                      &lt;/div&gt;
-                      {<span class="branch-0 cbranch-no" title="branch not covered" >client.assignedManagerTitle </span>&amp;&amp; (
-                        &lt;div className="text-sm text-gray-600 dark:text-gray-400"&gt;
-                          {client.assignedManagerTitle}
-                        &lt;/div&gt;
-                      )}
+                  )}
+                &lt;/div&gt;
+              &lt;/TableCell&gt;
+              &lt;TableCell className="py-4"&gt;
+                &lt;div className="flex flex-col space-y-1"&gt;
+                  &lt;div className="font-medium text-gray-900 dark:text-white"&gt;
+                    {client.assignedManagerName}
+                  &lt;/div&gt;
+                  {<span class="branch-0 cbranch-no" title="branch not covered" >client.assignedManagerTitle </span>&amp;&amp; (
+                    &lt;div className="text-sm text-gray-600 dark:text-gray-400"&gt;
+                      {client.assignedManagerTitle}
                     &lt;/div&gt;
-                  &lt;/TableCell&gt;
-                  &lt;TableCell&gt;
-                    {getStatusBadge(client.status)}
-                  &lt;/TableCell&gt;
-                  &lt;TableCell&gt;
-                    &lt;div className="flex flex-col gap-1"&gt;
-                      &lt;div className="text-sm"&gt;
-                        &lt;span className="font-medium text-gray-900 dark:text-white"&gt;
-                          {client.totalProjects}
-                        &lt;/span&gt;
-                        &lt;span className="text-gray-600 dark:text-gray-400"&gt; total&lt;/span&gt;
-                      &lt;/div&gt;
-                      &lt;div className="text-xs text-gray-600 dark:text-gray-400"&gt;
-                        {client.activeProjects} active, {client.completedProjects} completed
-                      &lt;/div&gt;
-                    &lt;/div&gt;
-                  &lt;/TableCell&gt;
-                  &lt;TableCell&gt;
-                    &lt;div className="flex items-center gap-1"&gt;
-                      &lt;Calendar className="h-3 w-3 text-gray-400" /&gt;
-                      &lt;span className="text-sm text-gray-600 dark:text-gray-400"&gt;
-                        {client.lastContactDate 
-                          ? formatDate(client.lastContactDate)
-                          : 'Never'
-                        }
-                      &lt;/span&gt;
-                    &lt;/div&gt;
-                  &lt;/TableCell&gt;
-                  &lt;TableCell&gt;
-                    &lt;div className="flex items-center justify-end gap-2"&gt;
-                      &lt;Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >h</span>andleSendEmail(client)}</span>
-                        className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 dark:text-purple-400 dark:hover:text-purple-300 dark:hover:bg-purple-900/20"
-                        title="Send Email"
-                      &gt;
-                        &lt;Mail className="h-4 w-4" /&gt;
-                      &lt;/Button&gt;
-                      &lt;Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >h</span>andleSendSMS(client)}</span>
-                        className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 dark:text-purple-400 dark:hover:text-purple-300 dark:hover:bg-purple-900/20"
-                        title="Send SMS"
-                      &gt;
-                        &lt;MessageSquare className="h-4 w-4" /&gt;
-                      &lt;/Button&gt;
-                      &lt;Link href={`/clients/${client.id}`}&gt;
-                        &lt;Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 dark:text-purple-400 dark:hover:text-purple-300 dark:hover:bg-purple-900/20"
-                          title="View Client"
-                        &gt;
-                          &lt;Eye className="h-4 w-4" /&gt;
-                        &lt;/Button&gt;
-                      &lt;/Link&gt;
-                      &lt;Link href={`/view/${client.id}`} target="_blank"&gt;
-                        &lt;Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 dark:text-purple-400 dark:hover:text-purple-300 dark:hover:bg-purple-900/20"
-                          title="Client View"
-                        &gt;
-                          &lt;ExternalLink className="h-4 w-4" /&gt;
-                        &lt;/Button&gt;
-                      &lt;/Link&gt;
-                    &lt;/div&gt;
-                  &lt;/TableCell&gt;
-                &lt;/TableRow&gt;
-              ))}
-            &lt;/TableBody&gt;
-          &lt;/Table&gt;
-        &lt;/div&gt;
-      &lt;/CardContent&gt;
-    &lt;/Card&gt;
+                  )}
+                &lt;/div&gt;
+              &lt;/TableCell&gt;
+              &lt;TableCell className="py-4"&gt;
+                {getStatusBadge(client.status)}
+              &lt;/TableCell&gt;
+              &lt;TableCell className="py-4"&gt;
+                &lt;div className="flex flex-col space-y-1"&gt;
+                  &lt;div className="text-sm"&gt;
+                    &lt;span className="font-semibold text-gray-900 dark:text-white"&gt;
+                      {client.totalProjects}
+                    &lt;/span&gt;
+                    &lt;span className="text-gray-600 dark:text-gray-400"&gt; total&lt;/span&gt;
+                  &lt;/div&gt;
+                  &lt;div className="text-xs text-gray-500 dark:text-gray-400"&gt;
+                    {client.activeProjects} active, {client.completedProjects} completed
+                  &lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/TableCell&gt;
+              &lt;TableCell className="py-4"&gt;
+                &lt;div className="flex items-center gap-2"&gt;
+                  &lt;Calendar className="h-4 w-4 text-gray-400" /&gt;
+                  &lt;span className="text-sm text-gray-600 dark:text-gray-400"&gt;
+                    {client.lastContactDate 
+                      ? formatDate(client.lastContactDate)
+                      : 'Never'
+                    }
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/TableCell&gt;
+              &lt;TableCell className="py-4"&gt;
+                &lt;div className="flex items-center justify-end gap-1"&gt;
+                  &lt;Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >h</span>andleSendEmail(client)}</span>
+                    className="h-8 w-8 p-0 text-gray-600 hover:text-blue-600 hover:bg-blue-50 dark:text-gray-400 dark:hover:text-blue-400 dark:hover:bg-blue-900/20"
+                    title="Send Email"
+                  &gt;
+                    &lt;Mail className="h-4 w-4" /&gt;
+                  &lt;/Button&gt;
+                  &lt;Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >h</span>andleSendSMS(client)}</span>
+                    className="h-8 w-8 p-0 text-gray-600 hover:text-green-600 hover:bg-green-50 dark:text-gray-400 dark:hover:text-green-400 dark:hover:bg-green-900/20"
+                    title="Send SMS"
+                  &gt;
+                    &lt;MessageSquare className="h-4 w-4" /&gt;
+                  &lt;/Button&gt;
+                  &lt;Link href={`/clients/${client.id}`}&gt;
+                    &lt;Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-gray-600 hover:text-purple-600 hover:bg-purple-50 dark:text-gray-400 dark:hover:text-purple-400 dark:hover:bg-purple-900/20"
+                      title="View Client"
+                    &gt;
+                      &lt;Eye className="h-4 w-4" /&gt;
+                    &lt;/Button&gt;
+                  &lt;/Link&gt;
+                  &lt;Link href={`/view/${client.id}`} target="_blank"&gt;
+                    &lt;Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-gray-600 hover:text-orange-600 hover:bg-orange-50 dark:text-gray-400 dark:hover:text-orange-400 dark:hover:bg-orange-900/20"
+                      title="Client View"
+                    &gt;
+                      &lt;ExternalLink className="h-4 w-4" /&gt;
+                    &lt;/Button&gt;
+                  &lt;/Link&gt;
+                &lt;/div&gt;
+              &lt;/TableCell&gt;
+            &lt;/TableRow&gt;
+          ))}
+        &lt;/TableBody&gt;
+      &lt;/Table&gt;
+    &lt;/div&gt;
   )
 } </pre></td></tr></table></pre>
 
@@ -805,7 +790,7 @@ export default function <span class="cstat-no" title="statement not covered" ><s
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-02T23:16:32.657Z
+                at 2025-08-03T21:32:01.369Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

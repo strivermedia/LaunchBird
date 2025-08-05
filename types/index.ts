@@ -89,6 +89,11 @@ export interface Project {
   clientCode?: string
   codeExpiry?: Date
   clientAccessEnabled?: boolean
+  assignedManagerId?: string
+  assignedManagerName?: string
+  assignedManagerTitle?: string
+  assignedManagerEmail?: string
+  assignedManagerPhone?: string
 }
 
 /**
@@ -477,6 +482,8 @@ export interface Client {
   assignedManagerId: string
   assignedManagerName: string
   assignedManagerTitle?: string
+  assignedManagerEmail?: string
+  assignedManagerPhone?: string
   status: 'active' | 'inactive' | 'prospect'
   createdAt: Date
   updatedAt: Date
@@ -486,6 +493,9 @@ export interface Client {
   totalProjects: number
   activeProjects: number
   completedProjects: number
+  clientAccessCode?: string
+  codeExpiry?: Date
+  clientAccessEnabled?: boolean
 }
 
 export interface ClientViewCode {

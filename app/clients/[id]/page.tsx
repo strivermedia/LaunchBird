@@ -19,11 +19,13 @@ import {
   Copy,
   Check,
   ToggleLeft,
-  ToggleRight
+  ToggleRight,
+  X
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { 
@@ -34,6 +36,7 @@ import {
   ClientProject 
 } from '@/types'
 import { useAuth } from '@/lib/useAuth'
+import { updateClient } from '@/lib/clients'
 
 /**
  * Client Profile Page
@@ -53,6 +56,18 @@ export default function ClientProfilePage() {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'overview' | 'projects' | 'communications' | 'notes' | 'access'>('overview')
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const [isEditingManager, setIsEditingManager] = useState(false)
+  const [editData, setEditData] = useState<Partial<Client>>({})
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+
+  // Mock team members for assignment - in real app, fetch from API
+  const [teamMembers] = useState([
+    { id: 'manager1', name: 'Sarah Johnson', title: 'Senior Project Manager' },
+    { id: 'manager2', name: 'Mike Chen', title: 'Project Manager' },
+    { id: 'manager3', name: 'Alex Rodriguez', title: 'Lead Developer' },
+  ])
 
   // Mock data for development
   useEffect(() => {
@@ -212,6 +227,154 @@ export default function ClientProfilePage() {
     alert('SMS functionality coming soon!')
   }
 
+  const handleEditClient = () => {
+    setIsEditing(true)
+    setEditData({
+      name: client?.name || '',
+      email: client?.email || '',
+      phone: client?.phone || '',
+      company: client?.company || '',
+      position: client?.position || '',
+      assignedManagerId: client?.assignedManagerId || '',
+      assignedManagerName: client?.assignedManagerName || '',
+      assignedManagerTitle: client?.assignedManagerTitle || '',
+      status: client?.status || 'active',
+      notes: client?.notes || '',
+      tags: client?.tags || [],
+    })
+    setSaveError(null)
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditing(false)
+    setEditData({})
+    setSaveError(null)
+  }
+
+  const handleSaveEdit = async () => {
+    if (!client || !user) return
+
+    setIsSaving(true)
+    setSaveError(null)
+
+    try {
+      const updatedClient: Partial<Client> = {
+        name: editData.name?.trim(),
+        email: editData.email?.trim().toLowerCase(),
+        phone: editData.phone?.trim() || undefined,
+        company: editData.company?.trim() || undefined,
+        position: editData.position?.trim() || undefined,
+        assignedManagerId: editData.assignedManagerId,
+        assignedManagerName: editData.assignedManagerName,
+        assignedManagerTitle: editData.assignedManagerTitle,
+        status: editData.status,
+        notes: editData.notes?.trim() || undefined,
+        tags: editData.tags && editData.tags.length > 0 ? editData.tags : undefined,
+        updatedAt: new Date(),
+      }
+
+      await updateClient(client.id, updatedClient, user.uid)
+      
+      // Update the client state
+      setClient({
+        ...client,
+        ...updatedClient,
+      })
+      
+      setIsEditing(false)
+      setEditData({})
+    } catch (err) {
+      console.error('Error updating client:', err)
+      setSaveError(err instanceof Error ? err.message : 'Failed to update client')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleInputChange = (field: keyof Client, value: string | string[]) => {
+    setEditData(prev => ({ ...prev, [field]: value }))
+    setSaveError(null)
+  }
+
+  const handleAddTag = (newTag: string) => {
+    if (newTag.trim() && !editData.tags?.includes(newTag.trim())) {
+      setEditData(prev => ({
+        ...prev,
+        tags: [...(prev.tags || []), newTag.trim()]
+      }))
+    }
+  }
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setEditData(prev => ({
+      ...prev,
+      tags: prev.tags?.filter(tag => tag !== tagToRemove) || []
+    }))
+  }
+
+  const handleEditManager = () => {
+    setIsEditingManager(true)
+    setEditData(prev => ({
+      ...prev,
+      assignedManagerId: client?.assignedManagerId || '',
+      assignedManagerName: client?.assignedManagerName || '',
+      assignedManagerTitle: client?.assignedManagerTitle || '',
+    }))
+    setSaveError(null)
+  }
+
+  const handleCancelEditManager = () => {
+    setIsEditingManager(false)
+    setEditData(prev => ({
+      ...prev,
+      assignedManagerId: client?.assignedManagerId || '',
+      assignedManagerName: client?.assignedManagerName || '',
+      assignedManagerTitle: client?.assignedManagerTitle || '',
+    }))
+    setSaveError(null)
+  }
+
+  const handleSaveManager = async () => {
+    if (!client || !user) return
+
+    setIsSaving(true)
+    setSaveError(null)
+
+    try {
+      const updatedClient: Partial<Client> = {
+        assignedManagerId: editData.assignedManagerId,
+        assignedManagerName: editData.assignedManagerName,
+        assignedManagerTitle: editData.assignedManagerTitle,
+        updatedAt: new Date(),
+      }
+
+      await updateClient(client.id, updatedClient, user.uid)
+      
+      // Update the client state
+      setClient({
+        ...client,
+        ...updatedClient,
+      })
+      
+      setIsEditingManager(false)
+    } catch (err) {
+      console.error('Error updating manager:', err)
+      setSaveError(err instanceof Error ? err.message : 'Failed to update manager')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleManagerChange = (managerId: string) => {
+    const manager = teamMembers.find(m => m.id === managerId)
+    setEditData(prev => ({
+      ...prev,
+      assignedManagerId: managerId,
+      assignedManagerName: manager?.name || '',
+      assignedManagerTitle: manager?.title || '',
+    }))
+  }
+
   const handleCopyCode = async (code: string) => {
     try {
       await navigator.clipboard.writeText(code)
@@ -337,6 +500,13 @@ export default function ClientProfilePage() {
         </nav>
       </div>
 
+      {/* Error Message */}
+      {saveError && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-sm text-red-600">{saveError}</p>
+        </div>
+      )}
+
       {/* Tab Content */}
       <div className="space-y-6">
         {activeTab === 'overview' && (
@@ -344,108 +514,306 @@ export default function ClientProfilePage() {
             {/* Client Info */}
             <Card className="lg:col-span-2 border-purple-200 dark:border-purple-800">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5 text-purple-600" />
-                  Client Information
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <User className="h-5 w-5 text-purple-600" />
+                    Client Information
+                  </CardTitle>
+                  {isEditing ? (
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={handleSaveEdit}
+                        disabled={isSaving}
+                        size="sm"
+                        className="bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
+                      >
+                        {isSaving ? 'Saving...' : 'Save'}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={handleCancelEdit}
+                        disabled={isSaving}
+                        size="sm"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      onClick={handleEditClient}
+                      size="sm"
+                      className="border-purple-200 text-purple-600 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-900/20"
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Name
+                      Name *
                     </label>
-                    <p className="text-gray-900 dark:text-white">{client.name}</p>
+                    {isEditing ? (
+                      <Input
+                        value={editData.name || ''}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        className="mt-1 focus:ring-purple-500 focus:border-purple-500"
+                        placeholder="Enter client name"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white">{client.name}</p>
+                    )}
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       Status
                     </label>
-                    <div className="mt-1">{getStatusBadge(client.status)}</div>
+                    {isEditing ? (
+                      <Select 
+                        value={editData.status || 'active'} 
+                        onValueChange={(value: 'active' | 'inactive' | 'prospect') => handleInputChange('status', value)}
+                      >
+                        <SelectTrigger className="mt-1 focus:ring-purple-500 focus:border-purple-500">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="prospect">Prospect</SelectItem>
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="inactive">Inactive</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <div className="mt-1">{getStatusBadge(client.status)}</div>
+                    )}
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Email
+                      Email *
                     </label>
-                    <p className="text-gray-900 dark:text-white flex items-center gap-2">
-                      <Mail className="h-4 w-4" />
-                      {client.email}
-                    </p>
+                    {isEditing ? (
+                      <Input
+                        type="email"
+                        value={editData.email || ''}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        className="mt-1 focus:ring-purple-500 focus:border-purple-500"
+                        placeholder="client@company.com"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white flex items-center gap-2">
+                        <Mail className="h-4 w-4" />
+                        {client.email}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       Phone
                     </label>
-                    <p className="text-gray-900 dark:text-white flex items-center gap-2">
-                      <Phone className="h-4 w-4" />
-                      {client.phone || 'Not provided'}
-                    </p>
+                    {isEditing ? (
+                      <Input
+                        type="tel"
+                        value={editData.phone || ''}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        className="mt-1 focus:ring-purple-500 focus:border-purple-500"
+                        placeholder="+1 (555) 123-4567"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white flex items-center gap-2">
+                        <Phone className="h-4 w-4" />
+                        {client.phone || 'Not provided'}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       Company
                     </label>
-                    <p className="text-gray-900 dark:text-white flex items-center gap-2">
-                      <Building2 className="h-4 w-4" />
-                      {client.company || 'Not specified'}
-                    </p>
+                    {isEditing ? (
+                      <Input
+                        value={editData.company || ''}
+                        onChange={(e) => handleInputChange('company', e.target.value)}
+                        className="mt-1 focus:ring-purple-500 focus:border-purple-500"
+                        placeholder="Enter company name"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white flex items-center gap-2">
+                        <Building2 className="h-4 w-4" />
+                        {client.company || 'Not specified'}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       Position
                     </label>
-                    <p className="text-gray-900 dark:text-white">{client.position || 'Not specified'}</p>
+                    {isEditing ? (
+                      <Input
+                        value={editData.position || ''}
+                        onChange={(e) => handleInputChange('position', e.target.value)}
+                        className="mt-1 focus:ring-purple-500 focus:border-purple-500"
+                        placeholder="e.g., CEO, CTO, Project Manager"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white">{client.position || 'Not specified'}</p>
+                    )}
                   </div>
                 </div>
-                {client.notes && (
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Notes
-                    </label>
-                    <p className="text-gray-900 dark:text-white mt-1">{client.notes}</p>
-                  </div>
-                )}
-                {client.tags && client.tags.length > 0 && (
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Tags
-                    </label>
-                    <div className="flex flex-wrap gap-2 mt-1">
-                      {client.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary">
-                          {tag}
-                        </Badge>
-                      ))}
+                
+                {/* Notes */}
+                <div>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Notes
+                  </label>
+                  {isEditing ? (
+                    <Textarea
+                      value={editData.notes || ''}
+                      onChange={(e) => handleInputChange('notes', e.target.value)}
+                      className="mt-1 focus:ring-purple-500 focus:border-purple-500"
+                      placeholder="Add notes about this client..."
+                      rows={3}
+                    />
+                  ) : (
+                    <p className="text-gray-900 dark:text-white mt-1">
+                      {client.notes || 'No notes added'}
+                    </p>
+                  )}
+                </div>
+
+                {/* Tags */}
+                <div>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Tags
+                  </label>
+                  {isEditing ? (
+                    <div className="mt-1 space-y-2">
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Add a tag..."
+                          className="flex-1 focus:ring-purple-500 focus:border-purple-500"
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault()
+                              const input = e.target as HTMLInputElement
+                              handleAddTag(input.value)
+                              input.value = ''
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {editData.tags?.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
+                          >
+                            {tag}
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveTag(tag)}
+                              className="ml-1 hover:text-purple-600"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {client.tags && client.tags.length > 0 ? (
+                        client.tags.map((tag) => (
+                          <Badge key={tag} variant="secondary">
+                            {tag}
+                          </Badge>
+                        ))
+                      ) : (
+                        <span className="text-gray-500 text-sm">No tags</span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
 
             {/* Manager Info */}
             <Card className="border-purple-200 dark:border-purple-800">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5 text-purple-600" />
-                  Assigned Manager
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <User className="h-5 w-5 text-purple-600" />
+                    Assigned Manager
+                  </CardTitle>
+                  {isEditingManager ? (
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={handleSaveManager}
+                        disabled={isSaving}
+                        size="sm"
+                        className="bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
+                      >
+                        {isSaving ? 'Saving...' : 'Save'}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={handleCancelEditManager}
+                        disabled={isSaving}
+                        size="sm"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      onClick={handleEditManager}
+                      size="sm"
+                      className="border-purple-200 text-purple-600 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-900/20"
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Name
+                    Manager
                   </label>
-                  <p className="text-gray-900 dark:text-white font-medium">
-                    {client.assignedManagerName}
-                  </p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Title
-                  </label>
-                  <p className="text-gray-900 dark:text-white">
-                    {client.assignedManagerTitle || 'Not specified'}
-                  </p>
+                  {isEditingManager ? (
+                    <Select 
+                      value={editData.assignedManagerId || ''} 
+                      onValueChange={handleManagerChange}
+                    >
+                      <SelectTrigger className="mt-1 focus:ring-purple-500 focus:border-purple-500">
+                        <SelectValue placeholder="Select a manager" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {teamMembers.map((member) => (
+                          <SelectItem key={member.id} value={member.id}>
+                            <div className="flex flex-col">
+                              <span className="font-medium">{member.name}</span>
+                              <span className="text-sm text-gray-500">{member.title}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <div>
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {client.assignedManagerName}
+                      </p>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">
+                        {client.assignedManagerTitle || 'Not specified'}
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">

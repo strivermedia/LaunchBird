@@ -1,13 +1,14 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Plus, Search, Users, Building2, Mail, Phone } from 'lucide-react'
+import { Plus, Search, Users, CheckCircle, UserPlus, FolderOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Client } from '@/types'
 import ClientList from '@/components/Client/ClientList'
+import AddClientForm from '@/components/Client/AddClientForm'
 import { getGradientColors } from '@/lib/dashboard'
 
 /**
@@ -22,6 +23,7 @@ export default function ClientsPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [managerFilter, setManagerFilter] = useState<string>('all')
   const [gradient, setGradient] = useState(getGradientColors())
+  const [showAddClientForm, setShowAddClientForm] = useState(false)
 
   // Mock data for development
   useEffect(() => {
@@ -165,15 +167,22 @@ export default function ClientsPage() {
   }
 
   const handleAddClient = () => {
-    // TODO: Implement add client functionality
-    alert('Add client functionality coming soon!')
+    setShowAddClientForm(true)
+  }
+
+  const handleClientCreated = (clientId: string) => {
+    // Refresh the client list or add the new client to the list
+    // For now, we'll just close the form and show a success message
+    setShowAddClientForm(false)
+    // In a real app, you would refresh the client list here
+    alert('Client created successfully!')
   }
 
   const stats = getClientStats()
 
   return (
     <div className="p-6" style={{
-      background: `linear-gradient(135deg, ${gradient.from}10, ${gradient.to}05)`,
+      background: `linear-gradient(135deg, ${gradient.from}08, ${gradient.to}04)`,
       minHeight: 'calc(100vh - 4rem)'
     }}>
       {/* Header */}
@@ -184,43 +193,55 @@ export default function ClientsPage() {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+        <Card className="border border-gray-200 dark:border-gray-700 shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+            <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Clients</CardTitle>
+            <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalClients}</div>
+            <div className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalClients}</div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">All registered clients</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Clients</CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
+        <Card className="border border-gray-200 dark:border-gray-700 shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+            <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">Active Clients</CardTitle>
+            <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+              <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.activeClients}</div>
+            <div className="text-3xl font-bold text-gray-900 dark:text-white">{stats.activeClients}</div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Currently engaged</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Prospects</CardTitle>
-            <Mail className="h-4 w-4 text-muted-foreground" />
+        <Card className="border border-gray-200 dark:border-gray-700 shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+            <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">Prospects</CardTitle>
+            <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+              <UserPlus className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.prospects}</div>
+            <div className="text-3xl font-bold text-gray-900 dark:text-white">{stats.prospects}</div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Potential clients</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
-            <Phone className="h-4 w-4 text-muted-foreground" />
+        <Card className="border border-gray-200 dark:border-gray-700 shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+            <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Projects</CardTitle>
+            <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <FolderOpen className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalProjects}</div>
+            <div className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalProjects}</div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Across all clients</p>
           </CardContent>
         </Card>
       </div>
@@ -229,7 +250,7 @@ export default function ClientsPage() {
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="flex-1 space-y-4">
           <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
+            <div className="flex-[1.4] min-w-0">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -240,35 +261,39 @@ export default function ClientsPage() {
                 />
               </div>
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-400 dark:focus:border-purple-400">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                {getStatusOptions().map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={managerFilter} onValueChange={setManagerFilter}>
-              <SelectTrigger className="focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-400 dark:focus:border-purple-400">
-                <SelectValue placeholder="Manager" />
-              </SelectTrigger>
-              <SelectContent>
-                {getManagerOptions().map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="w-64">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-400 dark:focus:border-purple-400">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {getStatusOptions().map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="w-64">
+              <Select value={managerFilter} onValueChange={setManagerFilter}>
+                <SelectTrigger className="focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-400 dark:focus:border-purple-400">
+                  <SelectValue placeholder="Manager" />
+                </SelectTrigger>
+                <SelectContent>
+                  {getManagerOptions().map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
         <Button 
           onClick={handleAddClient}
-          className="bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 dark:bg-purple-600 dark:hover:bg-purple-700"
+          className="bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 dark:bg-purple-600 dark:hover:bg-purple-700 shadow-sm"
         >
           <Plus className="h-4 w-4 mr-2" />
           Add Client
@@ -276,10 +301,10 @@ export default function ClientsPage() {
       </div>
 
       {/* Client List */}
-      <Card>
+      <Card className="border-0 shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle>Client Directory</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-gray-900 dark:text-white">Client Directory</CardTitle>
+          <CardDescription className="text-gray-600 dark:text-gray-400">
             {filteredClients.length} clients
           </CardDescription>
         </CardHeader>
@@ -287,6 +312,14 @@ export default function ClientsPage() {
           <ClientList clients={filteredClients} />
         </CardContent>
       </Card>
+
+      {/* Add Client Form Modal */}
+      {showAddClientForm && (
+        <AddClientForm
+          onClose={() => setShowAddClientForm(false)}
+          onSuccess={handleClientCreated}
+        />
+      )}
     </div>
   )
 } 
