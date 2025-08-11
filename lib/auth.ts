@@ -1,32 +1,11 @@
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  sendPasswordResetEmail,
-  signInAnonymously,
-  onAuthStateChanged,
-  setPersistence,
-  browserLocalPersistence,
-  User,
-  UserCredential,
-} from 'firebase/auth'
-import {
-  doc,
-  setDoc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  serverTimestamp,
-} from 'firebase/firestore'
+// Firebase removed. Provide stubs and allow full access without auth
+type User = any
+type UserCredential = any
 import { auth, db } from './firebase'
 
 // Development mode flag - set to true to bypass authentication
 const DEV_MODE = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
-
-// Completely disable Firebase for now
-const DISABLE_FIREBASE = true
+const DISABLE_FIREBASE = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
 
 /**
  * User role types
@@ -41,7 +20,9 @@ export interface UserProfile {
   email: string
   role: UserRole
   title?: string
+  jobTitle?: string
   location?: string
+  profileImageUrl?: string
   theme?: 'light' | 'dark'
   organizationId?: string
   organizationRole?: 'owner' | 'admin' | 'member' | 'client'
@@ -90,14 +71,14 @@ const getMockUser = (): UserProfile => ({
  * Check if development mode is enabled
  * @returns boolean
  */
-export const isDevMode = (): boolean => DEV_MODE || DISABLE_FIREBASE
+export const isDevMode = (): boolean => DEV_MODE
 
 /**
  * Get current user (with dev mode support)
  * @returns Promise<User | null>
  */
 export const getCurrentUser = async (): Promise<User | null> => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
+  if (DEV_MODE) {
     // Return a mock user for development
     return {
       uid: 'dev-user-123',
@@ -127,8 +108,8 @@ export const getCurrentUser = async (): Promise<User | null> => {
       providerId: 'password',
     } as User
   }
-  
-  return auth?.currentUser || null
+  // Auth is disabled
+  return null
 }
 
 /**
@@ -136,7 +117,7 @@ export const getCurrentUser = async (): Promise<User | null> => {
  * @returns Promise<UserProfile | null>
  */
 export const getCurrentUserProfile = async (): Promise<UserProfile | null> => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
+  if (DEV_MODE) {
     console.log('Development mode enabled - returning mock user')
     return getMockUser()
   }
@@ -163,29 +144,11 @@ export const getCurrentUserProfile = async (): Promise<UserProfile | null> => {
  * @returns Promise<UserCredential>
  */
 export const signInWithEmail = async (
-  email: string,
-  password: string,
-  rememberMe: boolean = false
+  _email: string,
+  _password: string,
+  _rememberMe: boolean = false
 ): Promise<UserCredential> => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
-    throw new Error('Authentication is disabled in development mode')
-  }
-  
-  if (!auth) {
-    throw new Error('Firebase Auth is not initialized')
-  }
-  
-  try {
-    if (rememberMe) {
-      // Set persistence to LOCAL for "Remember Me"
-      await setPersistence(auth, browserLocalPersistence)
-    }
-    
-    const result = await signInWithEmailAndPassword(auth, email, password)
-    return result
-  } catch (error) {
-    throw error as AuthError
-  }
+  throw new Error('Authentication is disabled')
 }
 
 /**
@@ -198,101 +161,34 @@ export const signInWithEmail = async (
  * @returns Promise<UserCredential>
  */
 export const createUserAccount = async (
-  email: string,
-  password: string,
-  role: UserRole,
-  title?: string,
-  location?: string
+  _email: string,
+  _password: string,
+  _role: UserRole,
+  _title?: string,
+  _location?: string
 ): Promise<UserCredential> => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
-    throw new Error('Authentication is disabled in development mode')
-  }
-  
-  if (!auth || !db) {
-    throw new Error('Firebase is not initialized')
-  }
-  
-  try {
-    const result = await createUserWithEmailAndPassword(auth, email, password)
-    
-    // Create user profile in Firestore
-    const userProfile: Omit<UserProfile, 'uid'> = {
-      email,
-      role,
-      title,
-      location,
-      theme: 'light',
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    }
-    
-    await setDoc(doc(db, 'users', result.user.uid), userProfile)
-    
-    return result
-  } catch (error) {
-    throw error as AuthError
-  }
+  throw new Error('Authentication is disabled')
 }
 
 /**
  * Sign out user
  * @returns Promise<void>
  */
-export const signOutUser = async (): Promise<void> => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
-    throw new Error('Authentication is disabled in development mode')
-  }
-  
-  if (!auth) {
-    throw new Error('Firebase Auth is not initialized')
-  }
-  
-  try {
-    await signOut(auth)
-  } catch (error) {
-    throw error as AuthError
-  }
-}
+export const signOutUser = async (): Promise<void> => {}
 
 /**
  * Send password reset email
  * @param email - User email
  * @returns Promise<void>
  */
-export const sendPasswordReset = async (email: string): Promise<void> => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
-    throw new Error('Authentication is disabled in development mode')
-  }
-  
-  if (!auth) {
-    throw new Error('Firebase Auth is not initialized')
-  }
-  
-  try {
-    await sendPasswordResetEmail(auth, email)
-  } catch (error) {
-    throw error as AuthError
-  }
-}
+export const sendPasswordReset = async (_email: string): Promise<void> => {}
 
 /**
  * Sign in anonymously for client view
  * @returns Promise<UserCredential>
  */
 export const signInAnonymouslyForClient = async (): Promise<UserCredential> => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
-    throw new Error('Authentication is disabled in development mode')
-  }
-  
-  if (!auth) {
-    throw new Error('Firebase Auth is not initialized')
-  }
-  
-  try {
-    return await signInAnonymously(auth)
-  } catch (error) {
-    throw error as AuthError
-  }
+  throw new Error('Authentication is disabled')
 }
 
 /**
@@ -300,29 +196,7 @@ export const signInAnonymouslyForClient = async (): Promise<UserCredential> => {
  * @param uid - User ID
  * @returns Promise<UserProfile | null>
  */
-export const getUserProfile = async (uid: string): Promise<UserProfile | null> => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
-    return getMockUser()
-  }
-  
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    return null
-  }
-  
-  try {
-    const userDoc = await getDoc(doc(db, 'users', uid))
-    
-    if (userDoc.exists()) {
-      return { uid, ...userDoc.data() } as UserProfile
-    }
-    
-    return null
-  } catch (error) {
-    console.error('Error getting user profile:', error)
-    return null
-  }
-}
+export const getUserProfile = async (_uid: string): Promise<UserProfile | null> => getMockUser()
 
 /**
  * Update user profile
@@ -330,29 +204,7 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
  * @param updates - Profile updates
  * @returns Promise<void>
  */
-export const updateUserProfile = async (
-  uid: string,
-  updates: Partial<UserProfile>
-): Promise<void> => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
-    console.log('Profile update in dev mode:', { uid, updates })
-    return
-  }
-  
-  if (!db) {
-    throw new Error('Firestore is not initialized')
-  }
-  
-  try {
-    await setDoc(
-      doc(db, 'users', uid),
-      { ...updates, updatedAt: serverTimestamp() },
-      { merge: true }
-    )
-  } catch (error) {
-    throw error as AuthError
-  }
-}
+export const updateUserProfile = async (): Promise<void> => {}
 
 /**
  * Validate client view code
@@ -363,52 +215,14 @@ export const updateUserProfile = async (
 export const validateClientViewCode = async (
   code: string,
   password?: string
-): Promise<ClientViewCode | null> => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
-    // Return a mock client view code for development
-    return {
-      code: code.toUpperCase(),
-      projectId: 'dev-project-123',
-      password,
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-      createdAt: new Date(),
-      createdBy: 'dev-user-123',
-    }
-  }
-  
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    return null
-  }
-  
-  try {
-    const codesRef = collection(db, 'clientViewCodes')
-    const q = query(codesRef, where('code', '==', code.toUpperCase()))
-    const querySnapshot = await getDocs(q)
-    
-    if (querySnapshot.empty) {
-      return null
-    }
-    
-    const codeDoc = querySnapshot.docs[0]
-    const codeData = codeDoc.data() as ClientViewCode
-    
-    // Check if code has expired
-    if (codeData.expiresAt && codeData.expiresAt.toDate() < new Date()) {
-      return null
-    }
-    
-    // Check password if required
-    if (codeData.password && codeData.password !== password) {
-      return null
-    }
-    
-    return codeData
-  } catch (error) {
-    console.error('Error validating client view code:', error)
-    return null
-  }
-}
+): Promise<ClientViewCode | null> => ({
+  code: code.toUpperCase(),
+  projectId: 'dev-project-123',
+  password,
+  expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  createdAt: new Date(),
+  createdBy: 'dev-user-123',
+})
 
 /**
  * Create client view code
@@ -417,44 +231,7 @@ export const validateClientViewCode = async (
  * @param expiresInDays - Days until expiration (default: 30)
  * @returns Promise<string>
  */
-export const createClientViewCode = async (
-  projectId: string,
-  password?: string,
-  expiresInDays: number = 30
-): Promise<string> => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
-    // Generate random 4-character alphanumeric code for development
-    const code = Math.random().toString(36).substring(2, 6).toUpperCase()
-    console.log('Created client view code in dev mode:', code)
-    return code
-  }
-  
-  if (!db || !auth) {
-    throw new Error('Firebase is not initialized')
-  }
-  
-  try {
-    // Generate random 4-character alphanumeric code
-    const code = Math.random().toString(36).substring(2, 6).toUpperCase()
-    
-    const expiresAt = new Date()
-    expiresAt.setDate(expiresAt.getDate() + expiresInDays)
-    
-    const codeData: Omit<ClientViewCode, 'code'> = {
-      projectId,
-      password,
-      expiresAt,
-      createdAt: serverTimestamp(),
-      createdBy: auth.currentUser?.uid || 'system',
-    }
-    
-    await setDoc(doc(db, 'clientViewCodes', code), codeData)
-    
-    return code
-  } catch (error) {
-    throw error as AuthError
-  }
-}
+export const createClientViewCode = async (): Promise<string> => Math.random().toString(36).substring(2, 6).toUpperCase()
 
 /**
  * Get redirect path based on user role
@@ -479,46 +256,4 @@ export const getRedirectPath = (role: UserRole): string => {
  * @param callback - Callback function
  * @returns Unsubscribe function
  */
-export const onAuthStateChange = (callback: (user: User | null) => void) => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
-    // In dev mode, immediately call with mock user and return no-op unsubscribe
-    const mockUser = {
-      uid: 'dev-user-123',
-      email: 'dev@launchbird.com',
-      emailVerified: true,
-      isAnonymous: false,
-      metadata: {},
-      providerData: [],
-      refreshToken: '',
-      tenantId: null,
-      delete: async () => {},
-      getIdToken: async () => 'dev-token',
-      getIdTokenResult: async () => ({ 
-        authTime: '', 
-        issuedAtTime: '', 
-        signInProvider: null, 
-        signInSecondFactor: null,
-        claims: {}, 
-        expirationTime: '', 
-        token: 'dev-token' 
-      }),
-      reload: async () => {},
-      toJSON: () => ({}),
-      displayName: 'Developer',
-      phoneNumber: null,
-      photoURL: null,
-      providerId: 'password',
-    } as User
-    
-    callback(mockUser)
-    return () => {} // No-op unsubscribe function
-  }
-  
-  if (!auth) {
-    console.warn('Firebase Auth is not initialized')
-    callback(null)
-    return () => {} // No-op unsubscribe function
-  }
-  
-  return onAuthStateChanged(auth, callback)
-} 
+export const onAuthStateChange = (callback: (user: User | null) => void) => { callback(null); return () => {} }
