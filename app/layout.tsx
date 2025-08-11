@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getCurrentUserProfile, isDevMode } from '@/lib/auth'
 import { 
   Sun, 
@@ -44,8 +43,8 @@ export default function RootLayout({
   const router = useRouter()
   const pathname = usePathname()
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [authInitialized, setAuthInitialized] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [authInitialized, setAuthInitialized] = useState(true)
   const [devMode] = useState(isDevMode())
   
   // Theme state
@@ -74,33 +73,7 @@ export default function RootLayout({
     }
   }, [pathname])
 
-  // Load user profile with proper auth initialization
-  useEffect(() => {
-    const auth = getAuth()
-    
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      console.log('Layout: Auth state changed:', user ? 'User found' : 'No user')
-      setAuthInitialized(true)
-      
-      if (user) {
-        try {
-          console.log('Layout: Loading user profile for authenticated user...')
-          const profile = await getCurrentUserProfile()
-          console.log('Layout: User profile loaded:', profile)
-          setUserProfile(profile)
-        } catch (error) {
-          console.error('Layout: Error loading user profile:', error)
-        }
-      } else {
-        console.log('Layout: No authenticated user, clearing profile')
-        setUserProfile(null)
-      }
-      
-      setLoading(false)
-    })
-
-    return () => unsubscribe()
-  }, [])
+  // With auth disabled, skip async auth init entirely
 
   // Theme management
   useEffect(() => {

@@ -3,7 +3,7 @@
  * Comprehensive type definitions for the dashboard components
  */
 
-import { UserProfile } from '@/lib/auth'
+import type { UserProfile } from '@/lib/auth'
 
 /**
  * Organization types
