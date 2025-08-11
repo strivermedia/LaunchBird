@@ -41,6 +41,7 @@ export default function AddClientForm({ onClose, onSuccess }: AddClientFormProps
   const router = useRouter()
   const { user } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isCheckingConnection, setIsCheckingConnection] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [newTag, setNewTag] = useState('')
 
@@ -131,9 +132,13 @@ export default function AddClientForm({ onClose, onSuccess }: AddClientFormProps
     }
 
     setIsSubmitting(true)
+    setIsCheckingConnection(true)
     setError(null)
 
     try {
+      // Skip connectivity check for now; remove when enabling connectivity checks
+      setIsCheckingConnection(false)
+
       const clientData: Omit<Client, 'id'> = {
         organizationId: user.organizationId || 'default',
         name: formData.name.trim(),
@@ -169,6 +174,7 @@ export default function AddClientForm({ onClose, onSuccess }: AddClientFormProps
       setError(err instanceof Error ? err.message : 'Failed to create client')
     } finally {
       setIsSubmitting(false)
+      setIsCheckingConnection(false)
     }
   }
 
@@ -428,7 +434,7 @@ export default function AddClientForm({ onClose, onSuccess }: AddClientFormProps
                 disabled={isSubmitting}
                 className="bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
               >
-                {isSubmitting ? 'Creating...' : 'Create Client'}
+                {isCheckingConnection ? 'Checking connection...' : isSubmitting ? 'Creating...' : 'Create Client'}
               </Button>
             </div>
           </form>
