@@ -1,18 +1,4 @@
-import {
-  doc,
-  setDoc,
-  getDoc,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  collection,
-  query,
-  where,
-  orderBy,
-  serverTimestamp,
-  onSnapshot,
-} from 'firebase/firestore'
+// Firebase removed; return mock organizations and no-op updates
 import { db } from './firebase'
 import type { 
   Organization, 
@@ -32,154 +18,44 @@ import type {
 export const createOrganization = async (
   name: string,
   ownerId: string,
-  settings?: Partial<OrganizationSettings>
-): Promise<string> => {
-  if (!db) {
-    throw new Error('Firestore is not initialized')
-  }
-
-  try {
-    const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-    
-    const defaultSettings: OrganizationSettings = {
-      branding: {
-        primaryColor: '#7c3aed',
-        companyName: name,
-      },
-      features: {
-        clientAccess: true,
-        customDomains: false,
-        advancedAnalytics: false,
-        timeTracking: true,
-        fileStorage: true,
-      },
-      limits: {
-        maxProjects: 5,
-        maxTeamMembers: 3,
-        maxStorage: 100,
-        maxClients: 10,
-      },
-      notifications: {
-        emailUpdates: true,
-        slackIntegration: false,
-        clientNotifications: true,
-      },
-    }
-
-    const organizationData: Omit<Organization, 'id'> = {
-      name,
-      slug,
-      plan: 'free',
-      settings: { ...defaultSettings, ...settings },
-      members: [ownerId],
-      createdAt: serverTimestamp() as any,
-      updatedAt: serverTimestamp() as any,
-    }
-
-    const orgRef = await addDoc(collection(db, 'organizations'), organizationData)
-    
-    // Update user with organization membership
-    await updateDoc(doc(db, 'users', ownerId), {
-      organizationId: orgRef.id,
-      organizationRole: 'owner',
-      joinedAt: serverTimestamp(),
-    })
-
-    return orgRef.id
-  } catch (error) {
-    console.error('Error creating organization:', error)
-    throw error
-  }
-}
+  _settings?: Partial<OrganizationSettings>
+): Promise<string> => 'org-' + Math.random().toString(36).slice(2, 8)
 
 /**
  * Get organization by ID
  * @param organizationId - Organization ID
  * @returns Promise<Organization | null>
  */
-export const getOrganization = async (organizationId: string): Promise<Organization | null> => {
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    return null
-  }
-
-  try {
-    const orgDoc = await getDoc(doc(db, 'organizations', organizationId))
-    
-    if (orgDoc.exists()) {
-      return { id: orgDoc.id, ...orgDoc.data() } as Organization
-    }
-    
-    return null
-  } catch (error) {
-    console.error('Error getting organization:', error)
-    return null
-  }
-}
+export const getOrganization = async (organizationId: string): Promise<Organization | null> => ({
+  id: organizationId,
+  name: 'Acme Corp',
+  slug: 'acme-corp',
+  plan: 'pro',
+  members: ['user-1', 'user-2'],
+  settings: {
+    branding: { primaryColor: '#7c3aed', companyName: 'Acme Corp' },
+    features: { clientAccess: true, customDomains: false, advancedAnalytics: true, timeTracking: true, fileStorage: true },
+    limits: { maxProjects: 50, maxTeamMembers: 25, maxStorage: 1000, maxClients: 100 },
+    notifications: { emailUpdates: true, slackIntegration: false, clientNotifications: true },
+  },
+  createdAt: new Date(),
+  updatedAt: new Date(),
+})
 
 /**
  * Get organization by slug
  * @param slug - Organization slug
  * @returns Promise<Organization | null>
  */
-export const getOrganizationBySlug = async (slug: string): Promise<Organization | null> => {
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    return null
-  }
-
-  try {
-    const q = query(
-      collection(db, 'organizations'),
-      where('slug', '==', slug)
-    )
-    
-    const snapshot = await getDocs(q)
-    
-    if (!snapshot.empty) {
-      const doc = snapshot.docs[0]
-      return { id: doc.id, ...doc.data() } as Organization
-    }
-    
-    return null
-  } catch (error) {
-    console.error('Error getting organization by slug:', error)
-    return null
-  }
-}
+export const getOrganizationBySlug = async (slug: string): Promise<Organization | null> =>
+  slug === 'acme-corp' ? await getOrganization('org-1') : null
 
 /**
  * Get user's organization
  * @param userId - User ID
  * @returns Promise<Organization | null>
  */
-export const getUserOrganization = async (userId: string): Promise<Organization | null> => {
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    return null
-  }
-
-  try {
-    // First get user profile to find organization ID
-    const userDoc = await getDoc(doc(db, 'users', userId))
-    
-    if (!userDoc.exists()) {
-      return null
-    }
-    
-    const userData = userDoc.data()
-    const organizationId = userData.organizationId
-    
-    if (!organizationId) {
-      return null
-    }
-    
-    return await getOrganization(organizationId)
-  } catch (error) {
-    console.error('Error getting user organization:', error)
-    return null
-  }
-}
+export const getUserOrganization = async (_userId: string): Promise<Organization | null> => getOrganization('org-1')
 
 /**
  * Update organization settings
@@ -188,23 +64,9 @@ export const getUserOrganization = async (userId: string): Promise<Organization 
  * @returns Promise<void>
  */
 export const updateOrganization = async (
-  organizationId: string,
-  updates: Partial<Organization>
-): Promise<void> => {
-  if (!db) {
-    throw new Error('Firestore is not initialized')
-  }
-
-  try {
-    await updateDoc(doc(db, 'organizations', organizationId), {
-      ...updates,
-      updatedAt: serverTimestamp(),
-    })
-  } catch (error) {
-    console.error('Error updating organization:', error)
-    throw error
-  }
-}
+  _organizationId: string,
+  _updates: Partial<Organization>
+): Promise<void> => {}
 
 /**
  * Add member to organization
@@ -214,32 +76,10 @@ export const updateOrganization = async (
  * @returns Promise<void>
  */
 export const addOrganizationMember = async (
-  organizationId: string,
-  userId: string,
-  role: OrganizationRole = 'member'
-): Promise<void> => {
-  if (!db) {
-    throw new Error('Firestore is not initialized')
-  }
-
-  try {
-    // Add user to organization members array
-    const orgRef = doc(db, 'organizations', organizationId)
-    await updateDoc(orgRef, {
-      members: [...(await getDoc(orgRef)).data()?.members || [], userId],
-    })
-
-    // Update user profile with organization membership
-    await updateDoc(doc(db, 'users', userId), {
-      organizationId,
-      organizationRole: role,
-      joinedAt: serverTimestamp(),
-    })
-  } catch (error) {
-    console.error('Error adding organization member:', error)
-    throw error
-  }
-}
+  _organizationId: string,
+  _userId: string,
+  _role: OrganizationRole = 'member'
+): Promise<void> => {}
 
 /**
  * Remove member from organization
@@ -248,36 +88,9 @@ export const addOrganizationMember = async (
  * @returns Promise<void>
  */
 export const removeOrganizationMember = async (
-  organizationId: string,
-  userId: string
-): Promise<void> => {
-  if (!db) {
-    throw new Error('Firestore is not initialized')
-  }
-
-  try {
-    // Remove user from organization members array
-    const orgRef = doc(db, 'organizations', organizationId)
-    const orgDoc = await getDoc(orgRef)
-    const currentMembers = orgDoc.data()?.members || []
-    const updatedMembers = currentMembers.filter((id: string) => id !== userId)
-    
-    await updateDoc(orgRef, {
-      members: updatedMembers,
-      updatedAt: serverTimestamp(),
-    })
-
-    // Remove organization from user profile
-    await updateDoc(doc(db, 'users', userId), {
-      organizationId: null,
-      organizationRole: null,
-      joinedAt: null,
-    })
-  } catch (error) {
-    console.error('Error removing organization member:', error)
-    throw error
-  }
-}
+  _organizationId: string,
+  _userId: string
+): Promise<void> => {}
 
 /**
  * Create organization invitation

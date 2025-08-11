@@ -28,7 +28,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Separator } from '@/components/ui/separator'
 import { Input } from '@/components/ui/input'
 import ProfileManagement from '@/components/Admin/ProfileManagement'
-import type { UserProfile, Theme } from '@/types'
+import type { Theme } from '@/types'
+import type { UserProfile } from '@/lib/auth'
 import './globals.css'
 
 /**

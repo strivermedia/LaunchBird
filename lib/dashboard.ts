@@ -1,19 +1,4 @@
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  limit,
-  getDocs,
-  doc,
-  getDoc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  onSnapshot,
-  serverTimestamp,
-  Timestamp,
-} from 'firebase/firestore'
+// Firebase removed; use mock data helpers
 import { db } from './firebase'
 import { isDevMode } from './auth'
 import {

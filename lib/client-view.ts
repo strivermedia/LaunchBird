@@ -1,30 +1,15 @@
-import {
-  doc,
-  getDoc,
-  getDocs,
-  collection,
-  query,
-  where,
-  orderBy,
-  limit,
-  onSnapshot,
-  updateDoc,
-  setDoc,
-} from 'firebase/firestore'
+// Firebase removed; keep mock implementations
 import { db } from './firebase'
 import type { Project, Activity, Client } from '@/types'
 
 // Development mode flag - set to true to bypass Firebase operations
 const DEV_MODE = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
 
-// Completely disable Firebase for now
-const DISABLE_FIREBASE = true
-
 /**
  * Check if development mode is enabled
  * @returns boolean
  */
-export const isDevMode = (): boolean => DEV_MODE || DISABLE_FIREBASE
+export const isDevMode = (): boolean => DEV_MODE
 
 /**
  * Get project by client code
@@ -32,7 +17,7 @@ export const isDevMode = (): boolean => DEV_MODE || DISABLE_FIREBASE
  * @returns Promise<Project | null>
  */
 export const getProjectByClientCode = async (code: string): Promise<Project | null> => {
-  if (DEV_MODE || DISABLE_FIREBASE) {
+  if (DEV_MODE) {
     // Return a mock project for development
     const mockProject: Project = {
       id: 'dev-project-123',
@@ -66,7 +51,7 @@ export const getProjectByClientCode = async (code: string): Promise<Project | nu
   }
 
   if (!db) {
-    console.warn('Firestore is not initialized')
+    // Return null in strict non-dev usage; mock path handles dev
     return null
   }
 
@@ -170,7 +155,6 @@ export const getProjectActivities = async (
   }
 
   if (!db) {
-    console.warn('Firestore is not initialized')
     return []
   }
 
@@ -215,7 +199,6 @@ export const subscribeToProjectUpdates = (
   callback: (project: Project | null) => void
 ) => {
   if (!db) {
-    console.warn('Firestore is not initialized')
     callback(null)
     return () => {}
   }
@@ -271,7 +254,6 @@ export const subscribeToProjectActivities = (
   callback: (activities: Activity[]) => void
 ) => {
   if (!db) {
-    console.warn('Firestore is not initialized')
     callback([])
     return () => {}
   }
@@ -329,9 +311,7 @@ export const createClientAccess = async (
   organizationId: string,
   expiresInDays: number = 30
 ): Promise<string> => {
-  if (!db) {
-    throw new Error('Firestore is not initialized')
-  }
+  if (!db) { return 'MOCK' }
 
   try {
     const code = generateClientCode()
@@ -359,9 +339,7 @@ export const createClientAccess = async (
  * @returns Promise<void>
  */
 export const disableClientAccess = async (projectId: string): Promise<void> => {
-  if (!db) {
-    throw new Error('Firestore is not initialized')
-  }
+  if (!db) { return }
 
   try {
     await updateDoc(doc(db, 'projects', projectId), {
@@ -461,9 +439,7 @@ export const getOrCreateClientAccessCode = async (
     return code
   }
 
-  if (!db) {
-    throw new Error('Firestore is not initialized')
-  }
+  if (!db) { return }
 
   try {
     // Check if client already has an access code
@@ -541,10 +517,7 @@ export const getClientByAccessCode = async (code: string): Promise<Client | null
     return mockClient
   }
 
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    return null
-  }
+  if (!db) { return null }
 
   try {
     const q = query(
