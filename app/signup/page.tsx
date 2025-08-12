@@ -1,5 +1,6 @@
 import React from 'react'
 import SignupForm from '@/components/Auth/SignupForm'
+import { Card, CardContent } from '@/components/ui/card'
 
 /**
  * Signup page metadata
@@ -19,7 +20,7 @@ export default function SignupPage() {
       <div className="w-full max-w-md">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#9844fc] rounded-2xl mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4">
             <svg
               className="w-8 h-8 text-white"
               fill="none"
@@ -39,9 +40,11 @@ export default function SignupPage() {
         </div>
 
         {/* Signup Form */}
-        <div className="bg-card border border-border rounded-lg shadow-lg p-8">
-          <SignupForm />
-        </div>
+        <Card className="shadow-sm">
+          <CardContent className="p-8">
+            <SignupForm />
+          </CardContent>
+        </Card>
 
         {/* Footer */}
         <div className="text-center mt-6 text-sm text-muted-foreground">

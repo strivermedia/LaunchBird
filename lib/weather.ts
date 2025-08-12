@@ -122,6 +122,21 @@ export const getWeatherData = async (
  * @returns Promise<WeatherData>
  */
 export const getCurrentWeather = async (): Promise<WeatherData> => {
+  // Check if we're in development mode
+  if (process.env.NODE_ENV === 'development') {
+    // Return mock weather data for development
+    return {
+      temperature: 72,
+      condition: 'Clear',
+      icon: '01d',
+      location: 'San Francisco',
+      humidity: 65,
+      windSpeed: 5,
+      feelsLike: 74,
+      lastUpdated: new Date(),
+    }
+  }
+
   try {
     // Try to get user's geolocation first
     const location = await getCurrentLocation()

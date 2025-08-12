@@ -55,7 +55,6 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button 
                 onClick={reset}
-                className="bg-[#9844fc] hover:bg-[#7b33cc] text-white"
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Try Again

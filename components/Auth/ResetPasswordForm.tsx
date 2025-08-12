@@ -108,7 +108,7 @@ export default function ResetPasswordForm() {
           <div className="text-center">
             <a
               href="/login"
-              className="text-sm text-[#7c3aed] hover:text-[#6d28d9] hover:underline"
+              className="text-sm text-primary hover:text-primary/90 hover:underline"
             >
               Back to sign in
             </a>
@@ -161,7 +161,7 @@ export default function ResetPasswordForm() {
         {/* Submit Button */}
         <Button
           type="submit"
-          className="w-full bg-[#7c3aed] hover:bg-[#6d28d9] text-white"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
           disabled={isLoading}
         >
           {isLoading ? (
@@ -179,7 +179,7 @@ export default function ResetPasswordForm() {
       <div className="text-center space-y-2">
         <a
           href="/login"
-          className="text-sm text-[#7c3aed] hover:text-[#6d28d9] hover:underline"
+          className="text-sm text-primary hover:text-primary/90 hover:underline"
         >
           Back to sign in
         </a>
@@ -187,7 +187,7 @@ export default function ResetPasswordForm() {
           Don&apos;t have an account?{' '}
           <a
             href="/signup"
-            className="text-[#7c3aed] hover:text-[#6d28d9] hover:underline"
+            className="text-primary hover:text-primary/90 hover:underline"
           >
             Sign up
           </a>

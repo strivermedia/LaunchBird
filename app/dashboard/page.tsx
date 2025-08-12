@@ -1,142 +1,36 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { getCurrentUserProfile } from '@/lib/auth'
-import { 
-  getProjects, 
-  getTasks, 
-  getRecentActivities, 
-  getTimeSummary, 
-  getTeamWorkload,
-  getDashboardStats,
-  subscribeToProjects,
-  subscribeToActivities,
-  getGreeting,
-  getDynamicGradient,
-  getGradientColors
-} from '@/lib/dashboard'
-import { getCurrentWeather, getWeatherEmoji, getSkylineSVG } from '@/lib/weather'
-import { Clock, Sun, Cloud, CloudRain } from 'lucide-react'
-import type { UserProfile } from '@/lib/auth'
-import type { 
-  Project, 
-  Task, 
-  Activity, 
-  TimeSummary, 
-  TeamMemberWorkload, 
-  DashboardStats,
-  WeatherData,
-  Theme,
-  QuickActionType
-} from '@/types'
-
-// Dashboard Components
-import GreetingCard from '@/components/Dashboard/GreetingCard'
-import QuickActions from '@/components/Dashboard/QuickActions'
-import ActivityFeed from '@/components/Dashboard/ActivityFeed'
-import ProjectsOverview from '@/components/Dashboard/ProjectsOverview'
-import TeamWorkload from '@/components/Dashboard/TeamWorkload'
-
-// UI Components
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
+import { logAnalyticsEvent } from '@/lib/platform'
+import { getCurrentWeather, getWeatherEmoji } from '@/lib/weather'
+import { Clock, Sun, Cloud, CloudRain, Plus } from 'lucide-react'
+import { Progress } from '@/components/ui/progress'
+import RingsAccent from '@/components/ui/rings-accent'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import type { WeatherData } from '@/types'
 
 /**
  * Dashboard page component
- * Displays the main dashboard content with statistics and overview
+ * Displays the main dashboard content with dynamic welcome banner
  */
 export default function DashboardPage() {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
-  const [loading, setLoading] = useState(true)
-  
-  // Dashboard data
-  const [projects, setProjects] = useState<Project[]>([])
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [activities, setActivities] = useState<Activity[]>([])
-  const [timeSummary, setTimeSummary] = useState<TimeSummary | null>(null)
-  const [teamWorkload, setTeamWorkload] = useState<TeamMemberWorkload[]>([])
-  const [stats, setStats] = useState<DashboardStats | null>(null)
-  const [weather, setWeather] = useState<WeatherData | null>(null)
-  const [localTime, setLocalTime] = useState<string>('')
-  const [greeting, setGreeting] = useState<string>('')
-  const [timeOfDay, setTimeOfDay] = useState<'morning' | 'afternoon' | 'evening' | 'night'>('morning')
-  const [gradient, setGradient] = useState(getGradientColors())
+  const [localTime, setLocalTime] = useState<string>('7:15 PM')
+  const [greeting, setGreeting] = useState<string>('Good Evening')
+  const [weather, setWeather] = useState<WeatherData | null>({
+    temperature: 72,
+    condition: 'Clear',
+    icon: '01d',
+    location: 'San Francisco',
+    humidity: 65,
+    windSpeed: 5,
+    feelsLike: 74,
+    lastUpdated: new Date(),
+  })
+  // Removed dynamic gradient hardcoded styling
 
-  // Load user profile and initialize dashboard
+  // Update time, greeting, and weather
   useEffect(() => {
-    const loadUserProfile = async () => {
-      try {
-        const profile = await getCurrentUserProfile()
-        setUserProfile(profile)
-        
-        if (profile) {
-          // Load dashboard data
-          await loadDashboardData(profile.uid, profile.role)
-          
-          // Set up real-time subscriptions
-          const unsubscribeProjects = subscribeToProjects(
-            profile.uid,
-            profile.role,
-            setProjects
-          )
-          
-          const unsubscribeActivities = subscribeToActivities(
-            profile.uid,
-            profile.role,
-            setActivities
-          )
-          
-          return () => {
-            unsubscribeProjects()
-            unsubscribeActivities()
-          }
-        }
-      } catch (error) {
-        console.error('Error loading user profile:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadUserProfile()
-  }, [])
-
-  // Load dashboard data
-  const loadDashboardData = async (userId: string, userRole: string) => {
-    try {
-      const [
-        projectsData,
-        tasksData,
-        activitiesData,
-        timeSummaryData,
-        teamWorkloadData,
-        statsData,
-        weatherData
-      ] = await Promise.all([
-        getProjects(userId, userRole),
-        getTasks(userId, userRole),
-        getRecentActivities(userId, userRole, 10),
-        getTimeSummary(userId),
-        getTeamWorkload(userRole),
-        getDashboardStats(userId, userRole),
-        getCurrentWeather()
-      ])
-
-      setProjects(projectsData)
-      setTasks(tasksData)
-      setActivities(activitiesData)
-      setTimeSummary(timeSummaryData)
-      setTeamWorkload(teamWorkloadData)
-      setStats(statsData)
-      setWeather(weatherData)
-    } catch (error) {
-      console.error('Error loading dashboard data:', error)
-    }
-  }
-
-  // Theme management and time/weather updates
-  useEffect(() => {
-    // Set initial time, greeting, and time of day
     const updateTime = () => {
       const now = new Date()
       const hour = now.getHours()
@@ -147,34 +41,23 @@ export default function DashboardPage() {
         hour12: true,
       }))
       
-      // Update time of day based on current hour
+      // Update greeting based on time of day
       if (hour >= 5 && hour < 12) {
-        setTimeOfDay('morning')
+        setGreeting('Good Morning')
       } else if (hour >= 12 && hour < 17) {
-        setTimeOfDay('afternoon')
+        setGreeting('Good Afternoon')
       } else if (hour >= 17 && hour < 22) {
-        setTimeOfDay('evening')
+        setGreeting('Good Evening')
       } else {
-        setTimeOfDay('night')
+        setGreeting('Good Night')
       }
     }
     
-    const updateGreeting = () => {
-      const userName = userProfile?.title || userProfile?.email.split('@')[0] || 'Developer'
-      setGreeting(getGreeting(userName))
-    }
-    
+    // Removed dynamic gradient updater
     updateTime()
-    updateGreeting()
-    setGradient(getGradientColors())
     const timeInterval = setInterval(() => {
       updateTime()
-      setGradient(getGradientColors())
     }, 60000) // Update every minute
-    const greetingInterval = setInterval(() => {
-      updateGreeting()
-      setGradient(getGradientColors())
-    }, 3600000) // Update greeting every hour
 
     // Fetch weather data
     const fetchWeather = async () => {
@@ -199,157 +82,99 @@ export default function DashboardPage() {
 
     fetchWeather()
 
-    return () => {
-      clearInterval(timeInterval)
-      clearInterval(greetingInterval)
-    }
-  }, [userProfile])
-
-  // Handle quick actions
-  const handleQuickAction = (actionType: QuickActionType) => {
-    // TODO: Implement action handlers
-    switch (actionType) {
-      case 'create_project':
-        // Open project creation modal
-        break
-      case 'create_task':
-        // Open task creation modal
-        break
-      case 'create_shoutout':
-        // Open shoutout creation modal
-        break
-      case 'send_message':
-        // Open message creation modal
-        break
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="p-6 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-32" />
-          ))}
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Skeleton className="h-96" />
-          <Skeleton className="h-96" />
-        </div>
-      </div>
-    )
-  }
-
-  if (!userProfile) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#7c3aed] mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Unable to load user profile</p>
-        </div>
-      </div>
-    )
-  }
+    return () => clearInterval(timeInterval)
+  }, [])
 
   return (
-    <div className="p-6" style={{
-      background: `linear-gradient(135deg, ${gradient.from}10, ${gradient.to}05)`,
-      minHeight: 'calc(100vh - 4rem)'
-    }}>
-      {/* Welcome Banner with Dynamic Gradient */}
-      <div className="mb-8">
-        <div className="rounded-2xl p-6 text-white relative overflow-hidden" style={{
-          minHeight: '200px',
-          background: `linear-gradient(to bottom right, ${gradient.from}, ${gradient.to})`
-        }}>
+    <div className="min-h-screen p-6 bg-background">
+      {/* Welcome Banner aligned to left column width */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="lg:col-span-2">
+          <Card className="relative overflow-hidden border card-glow with-bottom-glow">
+            {/* Top-right rings accent */}
+            <RingsAccent className="absolute top-0 right-0 h-[24rem] w-[24rem] text-primary/30 dark:text-primary/25 translate-x-1/2 -translate-y-1/2" />
+            <CardContent className="relative p-6">
+              <div className="relative">
+                <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+                  {greeting}, Developer!
+                </h2>
 
-          {/* Large translucent circles for visual effect - inspired by concentric ripple effect */}
-          <div className="absolute top-0 right-0 w-[28rem] h-[28rem] bg-white/25 rounded-full transform translate-x-48 -translate-y-48"></div>
-          <div className="absolute top-0 right-0 w-[24rem] h-[24rem] bg-white/20 rounded-full transform translate-x-40 -translate-y-40"></div>
-          <div className="absolute top-0 right-0 w-80 h-80 bg-white/15 rounded-full transform translate-x-32 -translate-y-32"></div>
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full transform translate-x-24 -translate-y-24"></div>
-          <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full transform translate-x-16 -translate-y-16"></div>
-          
-          {/* Subtle grid pattern overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-30"></div>
-          
-          <div className="relative z-10">
-            <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent">
-              {getGreeting(userProfile.title || userProfile.email.split('@')[0])}
-            </h2>
-            
-            {/* Medium-sized Weather and Time Information */}
-            <div className="flex flex-wrap gap-5">
-              {/* Medium Local Time Widget */}
-              <div className="group relative min-w-[280px]">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-white/5 rounded-xl backdrop-blur-xl border border-white/20 shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-[1.02] group-hover:bg-gradient-to-br group-hover:from-white/25 group-hover:to-white/10">
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent rounded-xl"></div>
-                </div>
-                <div className="relative p-5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-white/30 to-white/10 rounded-lg flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-md">
-                        <Clock className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <p className="text-3xl font-bold text-white">
-                          {localTime}
-                        </p>
-                        <div className="flex items-center space-x-2 text-white/70">
-                          <div className="w-2 h-2 bg-white/50 rounded-full animate-pulse"></div>
-                          <span className="text-sm font-medium">Live</span>
+                {/* Weather and Time Information */}
+                <div className="flex flex-wrap gap-5">
+                  {/* Local Time Widget */}
+                  <div className="relative min-w-72 rounded-xl border p-5 bg-white/60 dark:bg-white/5 backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-md card-glow with-bottom-glow">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-white/40 to-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm border border-white/30">
+                          <Clock className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                            {localTime}
+                          </p>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Medium Weather Widget */}
-              <div className="group relative min-w-[280px]">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-white/5 rounded-xl backdrop-blur-xl border border-white/20 shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-[1.02] group-hover:bg-gradient-to-br group-hover:from-white/25 group-hover:to-white/10">
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent rounded-xl"></div>
-                </div>
-                <div className="relative p-5 pr-4">
-                  <div className="flex items-center">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-white/30 to-white/10 rounded-lg flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-md">
-                        {weather?.condition === 'Clear' ? (
-                          <Sun className="h-6 w-6 text-white" />
-                        ) : weather?.condition === 'Clouds' ? (
-                          <Cloud className="h-6 w-6 text-white" />
-                        ) : weather?.condition === 'Rain' ? (
-                          <CloudRain className="h-6 w-6 text-white" />
-                        ) : (
-                          <Cloud className="h-6 w-6 text-white" />
-                        )}
-                      </div>
-                      <div>
-                        <div className="flex items-center space-x-3 mb-2">
-                          <span className="text-3xl font-bold text-white">
-                            {weather?.temperature}°
-                          </span>
-                          <div className="text-2xl">
-                            {getWeatherEmoji(weather?.condition || 'Clear')}
+                  {/* Weather Widget */}
+                  <div className="relative min-w-72 rounded-xl border p-5 pr-4 bg-white/60 dark:bg-white/5 backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-md card-glow with-bottom-glow">
+                    <div className="flex items-center">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-white/40 to-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm border border-white/30">
+                          {weather?.condition === 'Clear' ? (
+                            <Sun className="h-6 w-6 text-primary" />
+                          ) : weather?.condition === 'Clouds' ? (
+                            <Cloud className="h-6 w-6 text-primary" />
+                          ) : weather?.condition === 'Rain' ? (
+                            <CloudRain className="h-6 w-6 text-primary" />
+                          ) : (
+                            <Cloud className="h-6 w-6 text-primary" />
+                          )}
+                        </div>
+                        <div>
+                          <div className="flex items-center space-x-3 mb-2">
+                            <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                              {weather?.temperature}°
+                            </span>
+                            <div className="text-2xl">
+                              {getWeatherEmoji(weather?.condition || 'Clear')}
+                            </div>
                           </div>
                         </div>
-                        <p className="text-base font-semibold text-white/90">
-                          {weather?.condition}
-                        </p>
                       </div>
                     </div>
                   </div>
-                  {weather?.feelsLike && (
-                    <div className="mt-3 flex items-center space-x-2 text-white/70 -mr-1">
-                      <span className="text-sm font-medium">Feels like {weather.feelsLike}°</span>
-                      <div className="w-1 h-1 bg-white/50 rounded-full"></div>
-                      <span className="text-sm font-medium">{weather.humidity}% humidity</span>
-                    </div>
-                  )}
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
+        </div>
+        {/* Right column: Recent Activity aligned with welcome banner */}
+        <div className="hidden lg:block">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Recent Activity</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                <div>
+                  <p className="text-sm font-medium">Project Updated</p>
+                  <p className="text-xs text-muted-foreground">Website Redesign progress updated to 65%</p>
+                  <p className="text-xs text-muted-foreground">2 hours ago</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                <div>
+                  <p className="text-sm font-medium">Task Completed</p>
+                  <p className="text-xs text-muted-foreground">Design Homepage task marked as completed</p>
+                  <p className="text-xs text-muted-foreground">4 hours ago</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
@@ -358,123 +183,158 @@ export default function DashboardPage() {
         {/* Left Column - Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Quick Actions */}
-          <QuickActions 
-            userRole={userProfile.role}
-            onAction={handleQuickAction}
-          />
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Quick Actions</CardTitle>
+              <CardDescription>Common tasks to get you going</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Button variant="pill" className="justify-center"
+                  onClick={() => logAnalyticsEvent('quick_action_clicked', { action: 'add_project' })}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Project
+                </Button>
+                <Button variant="pill" className="justify-center"
+                  onClick={() => logAnalyticsEvent('quick_action_clicked', { action: 'create_task' })}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Task
+                </Button>
+                <Button variant="pill" className="justify-center"
+                  onClick={() => logAnalyticsEvent('quick_action_clicked', { action: 'add_client' })}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Client
+                </Button>
+                <Button variant="pill" className="justify-center"
+                  onClick={() => logAnalyticsEvent('quick_action_clicked', { action: 'view_analytics' })}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  View Analytics
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Projects Overview */}
-          <ProjectsOverview 
-            projects={projects}
-            loading={loading}
-          />
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Projects Overview</CardTitle>
+              <CardDescription>Progress across your active projects</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <h4 className="font-medium">Website Redesign</h4>
+                    <p className="text-sm text-muted-foreground">Complete redesign of company website</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-medium text-green-600">65%</div>
+                    <div className="text-xs text-muted-foreground">In Progress</div>
+                  </div>
+                </div>
+                <Progress value={65} className="h-2" />
+              </div>
+              <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <h4 className="font-medium">Mobile App Development</h4>
+                    <p className="text-sm text-muted-foreground">iOS and Android app for client</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-medium text-blue-600">25%</div>
+                    <div className="text-xs text-muted-foreground">Planning</div>
+                  </div>
+                </div>
+                <Progress value={25} className="h-2" />
+              </div>
+            </CardContent>
+          </Card>
 
-          {/* Team Workload (Admin Only) */}
-          {userProfile.role === 'admin' && (
-            <TeamWorkload 
-              teamWorkload={teamWorkload}
-              loading={loading}
-            />
-          )}
+          {/* Team Workload */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Team Workload</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div>
+                  <div className="font-medium">John Doe</div>
+                  <div className="text-sm text-muted-foreground">Designer</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-medium">8/10</div>
+                  <div className="text-xs text-muted-foreground">tasks</div>
+                </div>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div>
+                  <div className="font-medium">Jane Smith</div>
+                  <div className="text-sm text-muted-foreground">Developer</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-medium">6/8</div>
+                  <div className="text-xs text-muted-foreground">tasks</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Right Column - Sidebar */}
         <div className="space-y-6">
-          {/* Activity Feed */}
-          <ActivityFeed 
-            activities={activities}
-            loading={loading}
-          />
-
           {/* Time Tracking Summary */}
-          {timeSummary && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold text-[#7c3aed] dark:text-[#7c3aed]/90">
-                  Time Tracking
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
-                    <div className="text-2xl font-bold text-[#7c3aed] dark:text-[#7c3aed]/90">
-                      {timeSummary.todayHours}
-                    </div>
-                    <div className="text-xs text-muted-foreground dark:text-muted-foreground/70">
-                      Today
-                    </div>
-                  </div>
-                  <div className="text-center p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
-                    <div className="text-2xl font-bold text-[#7c3aed] dark:text-[#7c3aed]/90">
-                      {timeSummary.thisWeekHours}
-                    </div>
-                    <div className="text-xs text-muted-foreground dark:text-muted-foreground/70">
-                      This Week
-                    </div>
-                  </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Time Tracking</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">6.5</div>
+                  <div className="text-xs text-muted-foreground">Today</div>
                 </div>
-                <div className="text-center p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
-                  <div className="text-3xl font-bold text-[#7c3aed] dark:text-[#7c3aed]/90">
-                    {timeSummary.totalHours}
-                  </div>
-                  <div className="text-sm text-muted-foreground dark:text-muted-foreground/70">
-                    Total Hours
-                  </div>
+                <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">32.5</div>
+                  <div className="text-xs text-muted-foreground">This Week</div>
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              </div>
+              <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">156.5</div>
+                <div className="text-sm text-muted-foreground">Total Hours</div>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Dashboard Stats */}
-          {stats && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold text-[#7c3aed] dark:text-[#7c3aed]/90">
-                  Overview
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground dark:text-muted-foreground/70">
-                      Active Projects
-                    </span>
-                    <span className="font-semibold text-[#7c3aed] dark:text-[#7c3aed]/90">
-                      {stats.activeProjects}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground dark:text-muted-foreground/70">
-                      Pending Tasks
-                    </span>
-                    <span className="font-semibold text-[#7c3aed] dark:text-[#7c3aed]/90">
-                      {stats.totalTasks - stats.completedTasks}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground dark:text-muted-foreground/70">
-                      Overdue Tasks
-                    </span>
-                    <span className="font-semibold text-red-600 dark:text-red-400">
-                      {stats.overdueTasks}
-                    </span>
-                  </div>
-                  {userProfile.role === 'admin' && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground dark:text-muted-foreground/70">
-                        Team Members
-                      </span>
-                      <span className="font-semibold text-[#7c3aed] dark:text-[#7c3aed]/90">
-                        {stats.teamMembers}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Overview</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Active Projects</span>
+                <span className="font-semibold text-purple-600 dark:text-purple-400">2</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Pending Tasks</span>
+                <span className="font-semibold text-purple-600 dark:text-purple-400">8</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Overdue Tasks</span>
+                <span className="font-semibold text-red-600 dark:text-red-400">1</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Team Members</span>
+                <span className="font-semibold text-purple-600 dark:text-purple-400">5</span>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
   )
-} 
+}

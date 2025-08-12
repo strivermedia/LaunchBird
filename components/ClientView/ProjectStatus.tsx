@@ -54,7 +54,7 @@ export default function ProjectStatus({ project, activities }: ProjectStatusProp
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'project_update':
-        return <Calendar className="h-4 w-4 text-[#6d28d9] dark:text-[#7c3aed]" />
+        return <Calendar className="h-4 w-4 text-primary" />
       case 'task_completed':
         return <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
       case 'client_feedback':
@@ -126,7 +126,7 @@ export default function ProjectStatus({ project, activities }: ProjectStatusProp
       <Card className="border-border/50 dark:border-border/50 shadow-lg dark:shadow-xl">
         <CardHeader>
           <CardTitle className="text-xl font-semibold text-foreground dark:text-white flex items-center space-x-2">
-            <Calendar className="h-5 w-5 text-[#6d28d9] dark:text-[#7c3aed]" />
+            <Calendar className="h-5 w-5 text-primary" />
             <span>Project Milestones</span>
           </CardTitle>
           <CardDescription className="text-muted-foreground dark:text-muted-foreground">
@@ -151,7 +151,7 @@ export default function ProjectStatus({ project, activities }: ProjectStatusProp
                           ? 'bg-red-500 border-red-500'
                           : status === 'upcoming'
                           ? 'bg-yellow-500 border-yellow-500'
-                          : 'bg-[#6d28d9] border-[#6d28d9] dark:bg-[#7c3aed] dark:border-[#7c3aed]'
+                           : 'bg-primary border-primary'
                       }`}>
                         {status === 'completed' && (
                           <CheckCircle className="w-3 h-3 text-white" />
@@ -205,7 +205,7 @@ export default function ProjectStatus({ project, activities }: ProjectStatusProp
       <Card className="border-border/50 dark:border-border/50 shadow-lg dark:shadow-xl">
         <CardHeader>
           <CardTitle className="text-xl font-semibold text-foreground dark:text-white flex items-center space-x-2">
-            <MessageSquare className="h-5 w-5 text-[#6d28d9] dark:text-[#7c3aed]" />
+            <MessageSquare className="h-5 w-5 text-primary" />
             <span>Recent Activity</span>
           </CardTitle>
           <CardDescription className="text-muted-foreground dark:text-muted-foreground">

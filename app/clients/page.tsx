@@ -22,7 +22,7 @@ export default function ClientsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [managerFilter, setManagerFilter] = useState<string>('all')
-  const [gradient, setGradient] = useState(getGradientColors())
+  // Removed dynamic gradient hardcoded styling
   const [showAddClientForm, setShowAddClientForm] = useState(false)
 
   // Mock data for development
@@ -98,12 +98,7 @@ export default function ClientsPage() {
 
   // Dynamic gradient updates
   useEffect(() => {
-    setGradient(getGradientColors())
-    const interval = setInterval(() => {
-      setGradient(getGradientColors())
-    }, 60000) // Update every minute
-
-    return () => clearInterval(interval)
+    // No dynamic gradient updates
   }, [])
 
   // Filter clients based on search and filters
@@ -181,10 +176,7 @@ export default function ClientsPage() {
   const stats = getClientStats()
 
   return (
-    <div className="p-6" style={{
-      background: `linear-gradient(135deg, ${gradient.from}08, ${gradient.to}04)`,
-      minHeight: 'calc(100vh - 4rem)'
-    }}>
+    <div className="min-h-screen p-6 bg-background">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Clients</h1>
@@ -293,7 +285,7 @@ export default function ClientsPage() {
         </div>
         <Button 
           onClick={handleAddClient}
-          className="bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 dark:bg-purple-600 dark:hover:bg-purple-700 shadow-sm"
+          className="shadow-sm"
         >
           <Plus className="h-4 w-4 mr-2" />
           Add Client
@@ -303,8 +295,8 @@ export default function ClientsPage() {
       {/* Client List */}
       <Card className="border-0 shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="text-gray-900 dark:text-white">Client Directory</CardTitle>
-          <CardDescription className="text-gray-600 dark:text-gray-400">
+           <CardTitle>Client Directory</CardTitle>
+           <CardDescription>
             {filteredClients.length} clients
           </CardDescription>
         </CardHeader>

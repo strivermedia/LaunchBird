@@ -12,7 +12,7 @@ import {
   serverTimestamp,
   onSnapshot,
 } from 'firebase/firestore'
-import { db } from './firebase'
+import { db } from './platform'
 import type { 
   Organization, 
   AppAdmin,
@@ -25,25 +25,33 @@ import type { UserProfile } from '@/lib/auth'
 // --- App Admin Service ---
 
 export const isAppAdmin = async (userId: string): Promise<boolean> => {
-  // In development mode, allow access for the dev user
+  console.log(`isAppAdmin: Starting check for user ${userId}`)
+  
+  // In development mode with disabled auth, allow access
   if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true') {
+    console.log('isAppAdmin: Development mode with disabled auth, allowing access')
     return true
   }
   
-  // Also check if Firebase is disabled (which indicates development mode)
-  if (process.env.NODE_ENV === 'development') {
-    return true
-  }
-  
-  // For development purposes, always allow admin access when Firebase is disabled
+  // If Firebase is not available, return false (don't allow admin access)
   if (!db) {
-    return true
+    console.warn('isAppAdmin: Firestore not available, denying admin access')
+    return false
   }
   
   try {
+    console.log(`isAppAdmin: Checking Firestore document for user ${userId}`)
     const adminDoc = await getDoc(doc(db, 'appAdmins', userId))
-    return adminDoc.exists()
-  } catch {
+    const isAdmin = adminDoc.exists()
+    console.log(`isAppAdmin: Document exists: ${isAdmin}`)
+    
+    if (isAdmin) {
+      console.log('isAppAdmin: Document data:', adminDoc.data())
+    }
+    
+    return isAdmin
+  } catch (error) {
+    console.error('isAppAdmin: Error checking admin status:', error)
     return false
   }
 }

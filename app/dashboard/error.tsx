@@ -53,7 +53,6 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button 
             onClick={reset}
-            className="bg-[#9844fc] hover:bg-[#7b33cc] text-white"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             Retry Dashboard
@@ -84,7 +83,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="text-[#9844fc] hover:bg-[#9844fc]/10"
+              className="text-primary hover:bg-primary/10"
               onClick={() => window.location.reload()}
             >
               Refresh Page
@@ -92,7 +91,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="text-[#9844fc] hover:bg-[#9844fc]/10"
+              className="text-primary hover:bg-primary/10"
               onClick={() => window.location.href = '/login'}
             >
               Re-login

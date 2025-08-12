@@ -1,5 +1,5 @@
 // Firebase removed; return mock organizations and no-op updates
-import { db } from './firebase'
+import { db } from './platform'
 import type { 
   Organization, 
   OrganizationSettings, 

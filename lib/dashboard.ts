@@ -1,5 +1,5 @@
 // Firebase removed; use mock data helpers
-import { db } from './firebase'
+import { db } from './platform'
 import { isDevMode } from './auth'
 import {
   Project,

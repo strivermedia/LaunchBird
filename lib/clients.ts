@@ -1,5 +1,5 @@
 // Firebase removed: provide mock data implementations
-import { db } from './firebase'
+import { db } from './platform'
 import { 
   Client, 
   ClientViewCode, 

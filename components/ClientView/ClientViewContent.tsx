@@ -113,7 +113,7 @@ export default function ClientViewContent({
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-[#6d28d9] dark:bg-[#7c3aed] rounded-2xl">
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-primary rounded-2xl">
                 <Zap className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -129,7 +129,7 @@ export default function ClientViewContent({
             {/* Manager Contact Card */}
             <div className="bg-card/80 backdrop-blur-sm border border-border/50 dark:border-border/50 rounded-lg p-4 shadow-sm">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-[#6d28d9] dark:bg-[#7c3aed] rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                   <span className="text-white font-semibold text-sm">
                     {project.assignedManagerName?.charAt(0) || 'M'}
                   </span>
@@ -146,7 +146,7 @@ export default function ClientViewContent({
                   <Button
                     size="sm"
                     variant="outline"
-                    className="h-8 w-8 p-0 border-[#6d28d9] text-[#6d28d9] hover:bg-[#6d28d9] hover:text-white dark:border-[#7c3aed] dark:text-[#7c3aed] dark:hover:bg-[#7c3aed] dark:hover:text-white"
+                    className="h-8 w-8 p-0 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                     onClick={() => window.open(`mailto:${project.assignedManagerEmail || 'manager@launchbird.com'}`, '_blank')}
                   >
                     <Mail className="w-4 h-4" />
@@ -154,7 +154,7 @@ export default function ClientViewContent({
                   <Button
                     size="sm"
                     variant="outline"
-                    className="h-8 w-8 p-0 border-[#6d28d9] text-[#6d28d9] hover:bg-[#6d28d9] hover:text-white dark:border-[#7c3aed] dark:text-[#7c3aed] dark:hover:bg-[#7c3aed] dark:hover:text-white"
+                    className="h-8 w-8 p-0 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                     onClick={() => window.open(`sms:${project.assignedManagerPhone || '+1234567890'}`, '_blank')}
                   >
                     <MessageSquare className="w-4 h-4" />
@@ -172,9 +172,7 @@ export default function ClientViewContent({
           {/* Project Overview */}
           <div className="lg:col-span-2 space-y-6">
             {/* Project Header */}
-            <Card className="border-0 shadow-lg overflow-hidden" style={{
-              background: `linear-gradient(135deg, ${gradientColors.from}, ${gradientColors.to})`
-            }}>
+            <Card className="border-0 shadow-lg overflow-hidden bg-primary">
               <CardHeader className="pb-4">
                 <div className="flex items-start justify-between">
                   <div className="space-y-2">
@@ -218,14 +216,10 @@ export default function ClientViewContent({
                           {project.progress}%
                         </p>
                       </div>
-                      <Progress 
-                        value={project.progress} 
-                        className="h-2 bg-white/20"
-                        style={{
-                          '--progress-background': 'rgba(255, 255, 255, 0.3)',
-                          '--progress-foreground': 'rgba(255, 255, 255, 0.8)',
-                        } as React.CSSProperties}
-                      />
+                       <Progress 
+                         value={project.progress} 
+                         className="h-2"
+                       />
                     </div>
                   </div>
 
@@ -325,7 +319,7 @@ export default function ClientViewContent({
             <Card className="border-border/50 dark:border-border/50 shadow-lg dark:shadow-xl">
               <CardHeader>
                 <CardTitle className="text-xl font-semibold text-foreground dark:text-white flex items-center space-x-2">
-                  <FileText className="h-5 w-5 text-[#6d28d9] dark:text-[#7c3aed]" />
+                   <FileText className="h-5 w-5 text-primary" />
                   <span>Shared Files</span>
                 </CardTitle>
                 <CardDescription className="text-muted-foreground dark:text-muted-foreground">
@@ -337,7 +331,7 @@ export default function ClientViewContent({
                   {/* Mock shared files - in real implementation, these would come from Firestore */}
                   <div className="flex items-center justify-between p-3 bg-muted/50 dark:bg-muted/50 rounded-lg">
                     <div className="flex items-center space-x-3">
-                      <FileText className="h-5 w-5 text-[#6d28d9] dark:text-[#7c3aed]" />
+                      <FileText className="h-5 w-5 text-primary" />
                       <div>
                         <p className="font-medium text-foreground dark:text-white">
                           Project Brief.pdf
@@ -349,7 +343,7 @@ export default function ClientViewContent({
                     </div>
                     <Button
                       size="sm"
-                      className="bg-[#6d28d9] hover:bg-[#5b21b6] dark:bg-[#7c3aed] dark:hover:bg-[#6d28d9] text-white"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground"
                     >
                       <Download className="h-4 w-4 mr-1" />
                       Download
@@ -358,7 +352,7 @@ export default function ClientViewContent({
                   
                   <div className="flex items-center justify-between p-3 bg-muted/50 dark:bg-muted/50 rounded-lg">
                     <div className="flex items-center space-x-3">
-                      <FileText className="h-5 w-5 text-[#6d28d9] dark:text-[#7c3aed]" />
+                      <FileText className="h-5 w-5 text-primary" />
                       <div>
                         <p className="font-medium text-foreground dark:text-white">
                           Design Mockups.zip
@@ -370,7 +364,7 @@ export default function ClientViewContent({
                     </div>
                     <Button
                       size="sm"
-                      className="bg-[#6d28d9] hover:bg-[#5b21b6] dark:bg-[#7c3aed] dark:hover:bg-[#6d28d9] text-white"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground"
                     >
                       <Download className="h-4 w-4 mr-1" />
                       Download
@@ -387,7 +381,7 @@ export default function ClientViewContent({
             <Card className="border-border/50 dark:border-border/50 shadow-lg dark:shadow-xl">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-foreground dark:text-white flex items-center space-x-2">
-                  <Info className="h-5 w-5 text-[#6d28d9] dark:text-[#7c3aed]" />
+                  <Info className="h-5 w-5 text-primary" />
                   <span>Project Info</span>
                 </CardTitle>
               </CardHeader>
@@ -428,7 +422,7 @@ export default function ClientViewContent({
                         <Badge
                           key={index}
                           variant="secondary"
-                          className="text-xs bg-[#6d28d9]/10 text-[#6d28d9] dark:bg-[#7c3aed]/10 dark:text-[#7c3aed]"
+                          className="text-xs bg-primary/10 text-primary"
                         >
                           {tag}
                         </Badge>

@@ -86,7 +86,7 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
 
   if (loading) {
     return (
-          <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-[hsl(60,9.1%,97.8%)] dark:from-gray-900 dark:to-gray-700">
+          <Card className="border-0 shadow-sm bg-gradient-to-br from-background to-muted dark:from-background dark:to-muted">
       <CardHeader>
         <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
           Recent Activity
@@ -110,7 +110,7 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
   }
 
   return (
-    <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-[hsl(60,9.1%,97.8%)] dark:from-gray-900 dark:to-gray-700">
+    <Card className="border-0 shadow-sm bg-gradient-to-br from-background to-muted dark:from-background dark:to-muted">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div>
@@ -121,7 +121,7 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
               Latest updates and notifications
             </p>
           </div>
-          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-[#7c3aed] transition-colors p-0 h-auto">
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-primary transition-colors p-0 h-auto">
             <MoreHorizontal className="h-5 w-5" />
           </Button>
         </div>
@@ -129,8 +129,8 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
       <CardContent>
         {activities.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-[#7c3aed]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Activity className="h-8 w-8 text-[#7c3aed]" />
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Activity className="h-8 w-8 text-primary" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
               No recent activity
@@ -140,7 +140,7 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
             </p>
           </div>
         ) : (
-          <ScrollArea className="h-[400px] pr-4">
+          <ScrollArea className="h-100 pr-4">
             <div className="space-y-4">
               {activities.map((activity) => {
                 const ActivityIcon = getActivityIcon(activity.type)
@@ -203,7 +203,7 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
 
         {activities.length > 0 && (
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-center">
-            <Button variant="ghost" className="text-sm text-[#7c3aed] hover:text-[#6d28d9] transition-colors flex items-center justify-center space-x-1">
+            <Button variant="ghost" className="text-sm text-primary hover:text-primary/90 transition-colors flex items-center justify-center space-x-1">
               <span>View all activity</span>
               <ArrowRight className="h-4 w-4" />
             </Button>

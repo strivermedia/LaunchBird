@@ -1,7 +1,7 @@
 // Firebase removed. Provide stubs and allow full access without auth
 type User = any
 type UserCredential = any
-import { auth, db } from './firebase'
+import { auth, db } from './platform'
 
 // Development mode flag - set to true to bypass authentication
 const DEV_MODE = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'

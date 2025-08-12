@@ -124,7 +124,7 @@ export default function ClientDashboardView({
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-[#6d28d9] dark:bg-[#7c3aed] rounded-2xl">
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-primary rounded-2xl">
                 <Zap className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -140,7 +140,7 @@ export default function ClientDashboardView({
             {/* Manager Contact Card */}
             <div className="bg-card/80 backdrop-blur-sm border border-border/50 dark:border-border/50 rounded-lg p-4 shadow-sm">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-[#6d28d9] dark:bg-[#7c3aed] rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                   <span className="text-white font-semibold text-sm">
                     {client.assignedManagerName?.charAt(0) || 'M'}
                   </span>
@@ -157,7 +157,7 @@ export default function ClientDashboardView({
                   <Button
                     size="sm"
                     variant="outline"
-                    className="h-8 w-8 p-0 border-[#6d28d9] text-[#6d28d9] hover:bg-[#6d28d9] hover:text-white dark:border-[#7c3aed] dark:text-[#7c3aed] dark:hover:bg-[#7c3aed] dark:hover:text-white"
+                    className="h-8 w-8 p-0 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                     onClick={() => window.open(`mailto:${client.assignedManagerEmail || 'manager@launchbird.com'}`, '_blank')}
                   >
                     <Mail className="w-4 h-4" />
@@ -165,7 +165,7 @@ export default function ClientDashboardView({
                   <Button
                     size="sm"
                     variant="outline"
-                    className="h-8 w-8 p-0 border-[#6d28d9] text-[#6d28d9] hover:bg-[#6d28d9] hover:text-white dark:border-[#7c3aed] dark:text-[#7c3aed] dark:hover:bg-[#7c3aed] dark:hover:text-white"
+                    className="h-8 w-8 p-0 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                     onClick={() => window.open(`sms:${client.assignedManagerPhone || '+1234567890'}`, '_blank')}
                   >
                     <MessageSquare className="w-4 h-4" />
@@ -180,9 +180,7 @@ export default function ClientDashboardView({
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Client Information */}
-        <Card className="border-0 shadow-lg mb-8 overflow-hidden" style={{
-          background: `linear-gradient(135deg, ${gradientColors.from}, ${gradientColors.to})`
-        }}>
+        <Card className="border-0 shadow-lg mb-8 overflow-hidden bg-primary">
           <CardHeader className="pb-4">
             <div className="flex items-start justify-between">
               <div className="space-y-2">
@@ -294,11 +292,7 @@ export default function ClientDashboardView({
                   </div>
                   <Progress 
                     value={stats.totalProgress} 
-                    className="h-2 bg-white/20"
-                    style={{
-                      '--progress-background': 'rgba(255, 255, 255, 0.3)',
-                      '--progress-foreground': 'rgba(255, 255, 255, 0.8)',
-                    } as React.CSSProperties}
+                    className="h-2"
                   />
                 </div>
               </div>
@@ -379,14 +373,14 @@ export default function ClientDashboardView({
                     {/* Timeline */}
                     <div className="space-y-2">
                       <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-[#6d28d9] dark:text-[#7c3aed]" />
+                        <Calendar className="h-4 w-4 text-primary" />
                         <span className="text-sm text-muted-foreground dark:text-muted-foreground">
                           Started {formatDate(project.startDate)}
                         </span>
                       </div>
                       {project.endDate && (
                         <div className="flex items-center space-x-2">
-                          <Clock className="h-4 w-4 text-[#6d28d9] dark:text-[#7c3aed]" />
+                          <Clock className="h-4 w-4 text-primary" />
                           <span className="text-sm text-muted-foreground dark:text-muted-foreground">
                             Due {formatDate(project.endDate)}
                           </span>
@@ -396,7 +390,7 @@ export default function ClientDashboardView({
 
                     {/* Action Button */}
                     <Button
-                      className="w-full bg-[#6d28d9] hover:bg-[#5b21b6] dark:bg-[#7c3aed] dark:hover:bg-[#6d28d9] text-white"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                       onClick={() => window.open(`/view/${project.clientCode}`, '_blank')}
                       disabled={!project.clientCode}
                     >

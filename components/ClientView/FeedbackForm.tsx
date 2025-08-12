@@ -122,7 +122,7 @@ export default function FeedbackForm({ projectId }: FeedbackFormProps) {
             <Button
               variant="outline"
               onClick={() => setIsSubmitted(false)}
-              className="border-[#6d28d9] text-[#6d28d9] hover:bg-[#6d28d9] hover:text-white dark:border-[#7c3aed] dark:text-[#7c3aed] dark:hover:bg-[#7c3aed] dark:hover:text-white"
+              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
             >
               Submit Another
             </Button>
@@ -135,8 +135,8 @@ export default function FeedbackForm({ projectId }: FeedbackFormProps) {
   return (
     <Card className="border-border/50 dark:border-border/50 shadow-lg dark:shadow-xl">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold text-foreground dark:text-white flex items-center space-x-2">
-          <MessageSquare className="h-5 w-5 text-[#6d28d9] dark:text-[#7c3aed]" />
+          <CardTitle className="text-lg font-semibold text-foreground dark:text-white flex items-center space-x-2">
+          <MessageSquare className="h-5 w-5 text-primary" />
           <span>Send Feedback</span>
         </CardTitle>
         <CardDescription className="text-muted-foreground dark:text-muted-foreground">
@@ -156,7 +156,7 @@ export default function FeedbackForm({ projectId }: FeedbackFormProps) {
               placeholder="Enter your name"
               value={formData.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
-              className="bg-background dark:bg-background border-border dark:border-border focus:border-[#6d28d9] dark:focus:border-[#7c3aed] focus:ring-[#6d28d9] dark:focus:ring-[#7c3aed]"
+              className="bg-background border-border focus:border-primary focus:ring-primary"
             />
           </div>
 
@@ -171,7 +171,7 @@ export default function FeedbackForm({ projectId }: FeedbackFormProps) {
               placeholder="Enter your email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
-              className="bg-background dark:bg-background border-border dark:border-border focus:border-[#6d28d9] dark:focus:border-[#7c3aed] focus:ring-[#6d28d9] dark:focus:ring-[#7c3aed]"
+              className="bg-background border-border focus:border-primary focus:ring-primary"
             />
           </div>
 
@@ -186,7 +186,7 @@ export default function FeedbackForm({ projectId }: FeedbackFormProps) {
                   key={rating}
                   type="button"
                   onClick={() => handleInputChange('rating', rating.toString())}
-                  className="focus:outline-none focus:ring-2 focus:ring-[#6d28d9] dark:focus:ring-[#7c3aed] rounded"
+                  className="focus:outline-none focus:ring-2 focus:ring-primary rounded"
                 >
                   <Star
                     className={`h-6 w-6 ${
@@ -214,7 +214,7 @@ export default function FeedbackForm({ projectId }: FeedbackFormProps) {
               value={formData.category}
               onValueChange={(value) => handleInputChange('category', value)}
             >
-              <SelectTrigger className="bg-background dark:bg-background border-border dark:border-border focus:border-[#6d28d9] dark:focus:border-[#7c3aed] focus:ring-[#6d28d9] dark:focus:ring-[#7c3aed]">
+              <SelectTrigger className="bg-background border-border focus:border-primary focus:ring-primary">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
@@ -238,7 +238,7 @@ export default function FeedbackForm({ projectId }: FeedbackFormProps) {
               value={formData.comment}
               onChange={(e) => handleInputChange('comment', e.target.value)}
               rows={4}
-              className="bg-background dark:bg-background border-border dark:border-border focus:border-[#6d28d9] dark:focus:border-[#7c3aed] focus:ring-[#6d28d9] dark:focus:ring-[#7c3aed] resize-none"
+              className="bg-background border-border focus:border-primary focus:ring-primary resize-none"
             />
           </div>
 
@@ -255,7 +255,7 @@ export default function FeedbackForm({ projectId }: FeedbackFormProps) {
           {/* Submit Button */}
           <Button
             type="submit"
-            className="w-full bg-[#6d28d9] hover:bg-[#5b21b6] dark:bg-[#7c3aed] dark:hover:bg-[#6d28d9] text-white shadow-lg dark:shadow-xl"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
             disabled={isSubmitting}
           >
             {isSubmitting ? (

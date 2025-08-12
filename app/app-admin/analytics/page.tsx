@@ -154,8 +154,8 @@ export default function AdminAnalyticsPage() {
         <div className="w-64 bg-card flex flex-col fixed left-0 top-0 h-full z-50 shadow-xs">
           <div className="p-4 border-b border-border">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                <Shield className="h-4 w-4 text-white" />
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                <Shield className="h-4 w-4 text-primary-foreground" />
               </div>
               <span className="font-semibold text-lg text-foreground">Admin Panel</span>
             </div>
@@ -176,7 +176,7 @@ export default function AdminAnalyticsPage() {
                 <Users className="h-4 w-4" />
                 <span>Users</span>
               </div>
-              <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">5</span>
+              <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">5</span>
             </Link>
             <Link 
               href="/app-admin/organizations"
@@ -186,11 +186,11 @@ export default function AdminAnalyticsPage() {
                 <Building2 className="h-4 w-4" />
                 <span>Organizations</span>
               </div>
-              <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">2</span>
+              <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">2</span>
             </Link>
             <Link 
               href="/app-admin/analytics"
-              className="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-red-600/10 text-red-600 hover:bg-red-600/20 transition-colors"
+              className="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
             >
               <Activity className="h-4 w-4 mr-3" />
               <span>Analytics</span>
@@ -205,13 +205,13 @@ export default function AdminAnalyticsPage() {
           </div>
           <div className="mt-auto p-4">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-medium text-sm">A</span>
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                <span className="text-primary-foreground font-medium text-sm">A</span>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground truncate">Admin User</p>
                 <div className="flex items-center space-x-2">
-                  <span className="text-xs bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300 px-2 py-1 rounded-full font-medium">
+                  <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">
                     Admin
                   </span>
                 </div>
@@ -247,8 +247,8 @@ export default function AdminAnalyticsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md">
-          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <BarChart3 className="h-8 w-8 text-red-600 dark:text-red-400" />
+          <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <BarChart3 className="h-8 w-8 text-primary" />
           </div>
           <h1 className="text-2xl font-bold text-foreground mb-2">Access Denied</h1>
           <p className="text-muted-foreground">You don&apos;t have permission to access analytics.</p>
@@ -261,7 +261,7 @@ export default function AdminAnalyticsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Unable to load user profile</p>
         </div>
       </div>
@@ -275,8 +275,8 @@ export default function AdminAnalyticsPage() {
         {/* Logo */}
         <div className="p-4 border-b border-border">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-              <Shield className="h-4 w-4 text-white" />
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <Shield className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="font-semibold text-lg text-foreground">Admin Panel</span>
           </div>
@@ -300,7 +300,7 @@ export default function AdminAnalyticsPage() {
               <Users className="h-4 w-4" />
               <span>Users</span>
             </div>
-            <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">
+            <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
               {users.length}
             </span>
           </Link>
@@ -313,14 +313,14 @@ export default function AdminAnalyticsPage() {
               <Building2 className="h-4 w-4" />
               <span>Organizations</span>
             </div>
-            <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">
+            <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
               {organizations.length}
             </span>
           </Link>
 
           <Link 
             href="/app-admin/analytics"
-            className="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-red-600/10 text-red-600 hover:bg-red-600/20 transition-colors"
+            className="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
           >
             <Activity className="h-4 w-4 mr-3" />
             <span>Analytics</span>
@@ -338,8 +338,8 @@ export default function AdminAnalyticsPage() {
         {/* Profile Section */}
         <div className="mt-auto p-4">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-medium text-sm">
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <span className="text-primary-foreground font-medium text-sm">
                 {userProfile?.title?.charAt(0) || userProfile?.email?.charAt(0)?.toUpperCase() || 'A'}
               </span>
             </div>
@@ -348,7 +348,7 @@ export default function AdminAnalyticsPage() {
                 {userProfile?.title || userProfile?.email?.split('@')[0] || 'Admin User'}
               </p>
               <div className="flex items-center space-x-2">
-                <span className="text-xs bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300 px-2 py-1 rounded-full font-medium">
+                <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">
                   Admin
                 </span>
               </div>
@@ -405,7 +405,7 @@ export default function AdminAnalyticsPage() {
               <select
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value as any)}
-                className="bg-muted border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
+                className="bg-muted border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="7d">Last 7 days</option>
                 <option value="30d">Last 30 days</option>
@@ -671,12 +671,12 @@ export default function AdminAnalyticsPage() {
                     </div>
                     <span className="text-2xl font-bold text-orange-600">99.9%</span>
                   </div>
-                  <div className="flex justify-between items-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                  <div className="flex justify-between items-center p-3 bg-destructive/10 dark:bg-destructive/20 rounded-lg">
                     <div>
                       <p className="text-sm font-medium text-foreground">Response Time</p>
                       <p className="text-xs text-muted-foreground">Average API response</p>
                     </div>
-                    <span className="text-2xl font-bold text-red-600">1.2s</span>
+                    <span className="text-2xl font-bold text-destructive">1.2s</span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
                     <div>

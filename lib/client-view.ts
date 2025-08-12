@@ -1,5 +1,5 @@
 // Firebase removed; keep mock implementations
-import { db } from './firebase'
+import { db } from './platform'
 import type { Project, Activity, Client } from '@/types'
 
 // Development mode flag - set to true to bypass Firebase operations

@@ -56,7 +56,7 @@ export function RadialProgress({
           strokeDasharray={strokeDasharray}
           strokeDashoffset={strokeDashoffset}
           strokeLinecap="round"
-          className="text-[#6d28d9] dark:text-[#7c3aed] transition-all duration-1000 ease-out"
+          className="text-primary transition-all duration-1000 ease-out"
         />
       </svg>
       

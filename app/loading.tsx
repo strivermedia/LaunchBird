@@ -9,8 +9,8 @@ export default function Loading() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="max-w-md w-full text-center">
-        <div className="w-16 h-16 bg-[#9844fc]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Loader2 className="h-8 w-8 text-[#9844fc] animate-spin" />
+        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Loader2 className="h-8 w-8 text-primary animate-spin" />
         </div>
         
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">

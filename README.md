@@ -74,6 +74,27 @@ A modern, secure project management platform built with Next.js, TypeScript, Tai
    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
    NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+   ```
+
+5. **Firebase Analytics Setup**
+   - Enable Google Analytics in your Firebase project
+   - The app automatically initializes analytics when available
+   - Use the `logAnalyticsEvent` utility function to track custom events:
+   ```typescript
+   import { logAnalyticsEvent } from '@/lib/firebase'
+   
+   // Track user actions
+   logAnalyticsEvent('button_clicked', {
+     button_name: 'signup',
+     user_role: 'admin'
+   })
+   
+   // Track page views
+   logAnalyticsEvent('page_view', {
+     page_name: 'dashboard',
+     user_id: 'user123'
+   })
    ```
 
 5. **Firebase Security Rules**

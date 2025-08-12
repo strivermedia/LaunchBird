@@ -9,7 +9,7 @@ export default function DashboardLoading() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Sidebar Skeleton */}
-      <div className="w-64 bg-card border-r border-border p-4">
+      <div className="w-64 bg-background p-4 shadow-xs">
         <Skeleton className="h-8 w-32 mb-6" />
         <Skeleton className="h-10 w-full mb-4" />
         <div className="space-y-2">
@@ -22,7 +22,7 @@ export default function DashboardLoading() {
       {/* Main Content Skeleton */}
       <div className="flex-1 flex flex-col">
         {/* Header Skeleton */}
-        <header className="h-16 bg-card border-b border-border px-6 flex items-center justify-between">
+        <header className="h-16 bg-background border-b border-border px-6 flex items-center justify-between">
           <Skeleton className="h-8 w-48" />
           <div className="flex items-center space-x-4">
             <Skeleton className="h-10 w-10 rounded-full" />

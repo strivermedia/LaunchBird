@@ -459,7 +459,6 @@ export default function ClientProfilePage() {
           <Button
             variant="outline"
             onClick={handleSendEmail}
-            className="border-purple-200 text-purple-600 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-900/20"
           >
             <Mail className="w-4 h-4 mr-2" />
             Email
@@ -467,7 +466,6 @@ export default function ClientProfilePage() {
           <Button
             variant="outline"
             onClick={handleSendSMS}
-            className="border-purple-200 text-purple-600 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-900/20"
           >
             <MessageSquare className="w-4 h-4 mr-2" />
             SMS
@@ -543,7 +541,6 @@ export default function ClientProfilePage() {
                       variant="outline"
                       onClick={handleEditClient}
                       size="sm"
-                      className="border-purple-200 text-purple-600 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-900/20"
                     >
                       <Edit className="w-4 h-4 mr-2" />
                       Edit
@@ -561,7 +558,7 @@ export default function ClientProfilePage() {
                       <Input
                         value={editData.name || ''}
                         onChange={(e) => handleInputChange('name', e.target.value)}
-                        className="mt-1 focus:ring-purple-500 focus:border-purple-500"
+                        className="mt-1"
                         placeholder="Enter client name"
                       />
                     ) : (
@@ -577,7 +574,7 @@ export default function ClientProfilePage() {
                         value={editData.status || 'active'} 
                         onValueChange={(value: 'active' | 'inactive' | 'prospect') => handleInputChange('status', value)}
                       >
-                        <SelectTrigger className="mt-1 focus:ring-purple-500 focus:border-purple-500">
+                        <SelectTrigger className="mt-1">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -599,7 +596,7 @@ export default function ClientProfilePage() {
                         type="email"
                         value={editData.email || ''}
                         onChange={(e) => handleInputChange('email', e.target.value)}
-                        className="mt-1 focus:ring-purple-500 focus:border-purple-500"
+                        className="mt-1"
                         placeholder="client@company.com"
                       />
                     ) : (
@@ -618,7 +615,7 @@ export default function ClientProfilePage() {
                         type="tel"
                         value={editData.phone || ''}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
-                        className="mt-1 focus:ring-purple-500 focus:border-purple-500"
+                        className="mt-1"
                         placeholder="+1 (555) 123-4567"
                       />
                     ) : (
@@ -636,7 +633,7 @@ export default function ClientProfilePage() {
                       <Input
                         value={editData.company || ''}
                         onChange={(e) => handleInputChange('company', e.target.value)}
-                        className="mt-1 focus:ring-purple-500 focus:border-purple-500"
+                        className="mt-1"
                         placeholder="Enter company name"
                       />
                     ) : (
@@ -654,7 +651,7 @@ export default function ClientProfilePage() {
                       <Input
                         value={editData.position || ''}
                         onChange={(e) => handleInputChange('position', e.target.value)}
-                        className="mt-1 focus:ring-purple-500 focus:border-purple-500"
+                        className="mt-1"
                         placeholder="e.g., CEO, CTO, Project Manager"
                       />
                     ) : (
@@ -672,7 +669,7 @@ export default function ClientProfilePage() {
                     <Textarea
                       value={editData.notes || ''}
                       onChange={(e) => handleInputChange('notes', e.target.value)}
-                      className="mt-1 focus:ring-purple-500 focus:border-purple-500"
+                      className="mt-1"
                       placeholder="Add notes about this client..."
                       rows={3}
                     />
@@ -706,16 +703,15 @@ export default function ClientProfilePage() {
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {editData.tags?.map((tag) => (
-                          <Badge
-                            key={tag}
-                            variant="secondary"
-                            className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
-                          >
+                           <Badge
+                             key={tag}
+                             variant="secondary"
+                           >
                             {tag}
                             <button
                               type="button"
                               onClick={() => handleRemoveTag(tag)}
-                              className="ml-1 hover:text-purple-600"
+                               className="ml-1"
                             >
                               <X className="h-3 w-3" />
                             </button>
@@ -741,11 +737,11 @@ export default function ClientProfilePage() {
             </Card>
 
             {/* Manager Info */}
-            <Card className="border-purple-200 dark:border-purple-800">
+            <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2">
-                    <User className="h-5 w-5 text-purple-600" />
+                    <User className="h-5 w-5" />
                     Assigned Manager
                   </CardTitle>
                   {isEditingManager ? (
@@ -754,7 +750,6 @@ export default function ClientProfilePage() {
                         onClick={handleSaveManager}
                         disabled={isSaving}
                         size="sm"
-                        className="bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
                       >
                         {isSaving ? 'Saving...' : 'Save'}
                       </Button>
@@ -772,7 +767,6 @@ export default function ClientProfilePage() {
                       variant="outline"
                       onClick={handleEditManager}
                       size="sm"
-                      className="border-purple-200 text-purple-600 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-900/20"
                     >
                       <Edit className="w-4 h-4 mr-2" />
                       Edit
@@ -790,7 +784,7 @@ export default function ClientProfilePage() {
                       value={editData.assignedManagerId || ''} 
                       onValueChange={handleManagerChange}
                     >
-                      <SelectTrigger className="mt-1 focus:ring-purple-500 focus:border-purple-500">
+                      <SelectTrigger className="mt-1">
                         <SelectValue placeholder="Select a manager" />
                       </SelectTrigger>
                       <SelectContent>
@@ -831,10 +825,10 @@ export default function ClientProfilePage() {
             </Card>
 
             {/* Project Stats */}
-            <Card className="border-purple-200 dark:border-purple-800">
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Building2 className="h-5 w-5 text-purple-600" />
+                  <Building2 className="h-5 w-5" />
                   Project Statistics
                 </CardTitle>
               </CardHeader>

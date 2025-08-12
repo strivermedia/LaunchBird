@@ -192,7 +192,7 @@ export default function LoginForm() {
         {/* Submit Button */}
         <Button
           type="submit"
-          className="w-full bg-[#9844fc] hover:bg-[#7b33cc] text-white"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
           disabled={isLoading}
         >
           {isLoading ? (
@@ -210,7 +210,7 @@ export default function LoginForm() {
       <div className="text-center space-y-2">
         <a
           href="/reset-password"
-          className="text-sm text-[#9844fc] hover:text-[#7b33cc] hover:underline"
+          className="text-sm text-primary hover:text-primary/90 hover:underline"
         >
           Forgot your password?
         </a>
@@ -218,7 +218,7 @@ export default function LoginForm() {
           Don&apos;t have an account?{' '}
           <a
             href="/signup"
-            className="text-[#9844fc] hover:text-[#7b33cc] hover:underline"
+            className="text-primary hover:text-primary/90 hover:underline"
           >
             Sign up
           </a>

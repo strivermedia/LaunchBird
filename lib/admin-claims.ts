@@ -1,5 +1,5 @@
 // Firebase functions removed. Provide mock implementations.
-import { auth } from './firebase'
+import { auth } from './platform'
 
 /**
  * Set admin custom claims for a user

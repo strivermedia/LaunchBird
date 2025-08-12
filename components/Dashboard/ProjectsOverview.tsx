@@ -80,7 +80,7 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
 
   if (loading) {
     return (
-          <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-[hsl(60,9.1%,97.8%)] dark:from-gray-900 dark:to-gray-700">
+          <Card className="border-0 shadow-sm bg-gradient-to-br from-background to-muted dark:from-background dark:to-muted">
       <CardHeader>
         <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
           Active Projects
@@ -106,7 +106,7 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
   )
 
   return (
-    <Card className="border-0 shadow-sm bg-gradient-to-br from-white to-[hsl(60,9.1%,97.8%)] dark:from-gray-900 dark:to-gray-700">
+    <Card className="border-0 shadow-sm bg-gradient-to-br from-background to-muted dark:from-background dark:to-muted">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div>
@@ -117,7 +117,7 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
               {activeProjects.length} projects in progress
             </p>
           </div>
-          <Button variant="outline" size="sm" className="border-[#9844fc] text-[#9844fc] hover:bg-[#9844fc] hover:text-white">
+          <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
             View All
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
@@ -126,8 +126,8 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
       <CardContent>
         {activeProjects.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-[#9844fc]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FolderOpen className="h-8 w-8 text-[#9844fc]" />
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FolderOpen className="h-8 w-8 text-primary" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
               No active projects
@@ -135,7 +135,7 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
             <p className="text-gray-500 dark:text-gray-400 mb-4">
               Create a new project to get started
             </p>
-            <Button className="bg-[#9844fc] hover:bg-[#7b33cc] text-white">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
               <Plus className="h-4 w-4 mr-2" />
               Create Project
             </Button>
@@ -161,7 +161,7 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                           {project.title}
                         </h3>
-                        <Button variant="ghost" size="sm" className="text-gray-400 hover:text-[#9844fc] transition-colors p-0 h-auto">
+                         <Button variant="ghost" size="sm" className="text-gray-400 hover:text-primary transition-colors p-0 h-auto">
                           <Star className="h-4 w-4" />
                         </Button>
                       </div>
@@ -245,14 +245,14 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
                     {/* Action Buttons */}
                     <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
                       <div className="flex space-x-2">
-                        <Button size="sm" variant="outline" className="border-[#9844fc] text-[#9844fc] hover:bg-[#9844fc] hover:text-white">
+                        <Button size="sm" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                           View Details
                         </Button>
-                        <Button size="sm" variant="outline" className="hover:bg-[#f5f5f5] dark:hover:bg-gray-700">
+                        <Button size="sm" variant="outline" className="hover:bg-muted">
                           Edit
                         </Button>
                       </div>
-                      <Button size="sm" className="bg-[#9844fc] hover:bg-[#7b33cc] text-white">
+                      <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground">
                         Open
                       </Button>
                     </div>
@@ -265,7 +265,7 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
 
         {activeProjects.length > 5 && (
           <div className="mt-6 text-center">
-            <Button variant="outline" className="border-[#9844fc] text-[#9844fc] hover:bg-[#9844fc] hover:text-white">
+            <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
               View all {activeProjects.length} projects
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>

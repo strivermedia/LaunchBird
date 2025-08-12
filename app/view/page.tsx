@@ -57,7 +57,7 @@ export default function ClientViewCodeEntryPage() {
       <div className="w-full max-w-md space-y-8">
         {/* Logo and Brand */}
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-[#6d28d9] dark:bg-[#7c3aed] rounded-3xl shadow-lg">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-primary rounded-3xl shadow-lg">
             <Zap className="w-10 h-10 text-white" />
           </div>
           <div>
@@ -97,7 +97,7 @@ export default function ClientViewCodeEntryPage() {
                     value={code}
                     onChange={handleCodeChange}
                     maxLength={4}
-                    className="text-center text-lg font-mono tracking-widest bg-background dark:bg-background border-border dark:border-border focus:border-[#6d28d9] dark:focus:border-[#7c3aed] focus:ring-[#6d28d9] dark:focus:ring-[#7c3aed]"
+                    className="text-center text-lg font-mono tracking-widest bg-background border-input focus:border-primary focus:ring-primary"
                     aria-describedby={error ? 'code-error' : undefined}
                   />
                   <Eye className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground dark:text-muted-foreground" />
@@ -111,7 +111,7 @@ export default function ClientViewCodeEntryPage() {
 
               <Button
                 type="submit"
-                className="w-full bg-[#6d28d9] hover:bg-[#5b21b6] dark:bg-[#7c3aed] dark:hover:bg-[#6d28d9] text-white shadow-lg dark:shadow-xl"
+                className="w-full"
                 disabled={isLoading || code.length !== 4}
               >
                 {isLoading ? (
@@ -129,8 +129,8 @@ export default function ClientViewCodeEntryPage() {
             </form>
 
             {/* Security Notice */}
-            <Alert className="border-[#6d28d9]/20 dark:border-[#7c3aed]/20 bg-[#6d28d9]/5 dark:bg-[#7c3aed]/5">
-              <Shield className="h-4 w-4 text-[#6d28d9] dark:text-[#7c3aed]" />
+            <Alert className="border-primary/20 bg-primary/5">
+              <Shield className="h-4 w-4 text-primary" />
               <AlertDescription className="text-sm text-muted-foreground dark:text-muted-foreground">
                 Your access is secure and encrypted. Codes expire automatically for your protection.
               </AlertDescription>

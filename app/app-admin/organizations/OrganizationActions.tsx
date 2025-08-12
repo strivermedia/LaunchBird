@@ -71,7 +71,7 @@ export function OrganizationActions({ organization }: OrganizationActionsProps) 
         <button
           onClick={() => setShowSuspendModal(true)}
           disabled={isLoading}
-          className="text-xs text-red-600 hover:underline disabled:opacity-50"
+          className="text-xs text-destructive hover:underline disabled:opacity-50"
         >
           Suspend
         </button>
@@ -79,7 +79,7 @@ export function OrganizationActions({ organization }: OrganizationActionsProps) 
       <button
         onClick={() => setShowPlanModal(true)}
         disabled={isLoading}
-        className="text-xs text-[#9844fc] hover:underline disabled:opacity-50"
+        className="text-xs text-primary hover:underline disabled:opacity-50"
       >
         Change Plan
       </button>
@@ -107,7 +107,7 @@ export function OrganizationActions({ organization }: OrganizationActionsProps) 
               <button
                 onClick={handleSuspend}
                 disabled={isLoading || !suspendReason.trim()}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+                className="px-4 py-2 bg-destructive text-destructive-foreground rounded hover:bg-destructive/90 disabled:opacity-50"
               >
                 {isLoading ? 'Suspending...' : 'Suspend'}
               </button>
@@ -128,10 +128,10 @@ export function OrganizationActions({ organization }: OrganizationActionsProps) 
                   key={plan}
                   onClick={() => handlePlanChange(plan)}
                   disabled={isLoading || organization.plan === plan}
-                  className={`w-full p-3 text-left border rounded ${
+                className={`w-full p-3 text-left border rounded ${
                     organization.plan === plan
-                      ? 'border-[#9844fc] bg-[#9844fc]/10'
-                      : 'border-border hover:border-[#9844fc]'
+                      ? 'border-primary bg-primary/10'
+                      : 'border-border hover:border-primary'
                   } disabled:opacity-50`}
                 >
                   <div className="font-medium capitalize">{plan}</div>

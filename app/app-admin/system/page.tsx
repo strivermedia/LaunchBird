@@ -37,8 +37,8 @@ export default function AdminSystemPage() {
         <div className="w-64 bg-card flex flex-col fixed left-0 top-0 h-full z-50 shadow-xs">
           <div className="p-4 border-b border-border">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                <Shield className="h-4 w-4 text-white" />
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                <Shield className="h-4 w-4 text-primary-foreground" />
               </div>
               <span className="font-semibold text-lg text-foreground">Admin Panel</span>
             </div>
@@ -59,7 +59,7 @@ export default function AdminSystemPage() {
                 <Users className="h-4 w-4" />
                 <span>Users</span>
               </div>
-              <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">5</span>
+              <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">5</span>
             </Link>
             <Link 
               href="/app-admin/organizations"
@@ -69,7 +69,7 @@ export default function AdminSystemPage() {
                 <Building2 className="h-4 w-4" />
                 <span>Organizations</span>
               </div>
-              <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">2</span>
+              <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">2</span>
             </Link>
             <Link 
               href="/app-admin/analytics"
@@ -80,7 +80,7 @@ export default function AdminSystemPage() {
             </Link>
             <Link 
               href="/app-admin/system"
-              className="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-red-600/10 text-red-600 hover:bg-red-600/20 transition-colors"
+              className="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
             >
               <Database className="h-4 w-4 mr-3" />
               <span>System</span>
@@ -88,13 +88,13 @@ export default function AdminSystemPage() {
           </div>
           <div className="mt-auto p-4">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-medium text-sm">A</span>
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                <span className="text-primary-foreground font-medium text-sm">A</span>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground truncate">Admin User</p>
                 <div className="flex items-center space-x-2">
-                  <span className="text-xs bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300 px-2 py-1 rounded-full font-medium">
+                  <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">
                     Admin
                   </span>
                 </div>
@@ -133,8 +133,8 @@ export default function AdminSystemPage() {
         {/* Logo */}
         <div className="p-4 border-b border-border">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-              <Shield className="h-4 w-4 text-white" />
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <Shield className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="font-semibold text-lg text-foreground">Admin Panel</span>
           </div>
@@ -158,7 +158,7 @@ export default function AdminSystemPage() {
               <Users className="h-4 w-4" />
               <span>Users</span>
             </div>
-            <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">5</span>
+            <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">5</span>
           </Link>
 
           <Link 
@@ -169,7 +169,7 @@ export default function AdminSystemPage() {
               <Building2 className="h-4 w-4" />
               <span>Organizations</span>
             </div>
-            <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">2</span>
+            <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">2</span>
           </Link>
 
           <Link 
@@ -182,7 +182,7 @@ export default function AdminSystemPage() {
 
           <Link 
             href="/app-admin/system"
-            className="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-red-600/10 text-red-600 hover:bg-red-600/20 transition-colors"
+            className="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
           >
             <Database className="h-4 w-4 mr-3" />
             <span>System</span>
@@ -192,13 +192,13 @@ export default function AdminSystemPage() {
         {/* Profile Section */}
         <div className="mt-auto p-4">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-medium text-sm">A</span>
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <span className="text-primary-foreground font-medium text-sm">A</span>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-foreground truncate">Admin User</p>
               <div className="flex items-center space-x-2">
-                <span className="text-xs bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300 px-2 py-1 rounded-full font-medium">
+                <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">
                   Admin
                 </span>
               </div>
@@ -226,7 +226,7 @@ export default function AdminSystemPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="bg-card border border-border rounded-lg p-6 text-center">
               <div className="text-lg font-semibold mb-2">Database</div>
-              <div className={health.dbStatus === 'healthy' ? 'text-green-600 font-bold' : 'text-red-600 font-bold'}>
+              <div className={health.dbStatus === 'healthy' ? 'text-green-600 font-bold' : 'text-destructive font-bold'}>
                 {health.dbStatus === 'healthy' ? 'Connected' : 'Error'}
               </div>
             </div>

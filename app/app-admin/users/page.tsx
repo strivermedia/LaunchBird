@@ -177,7 +177,7 @@ export default function AdminUsersPage() {
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case 'admin':
-        return 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300'
+        return 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary'
       case 'owner':
         return 'bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-300'
       case 'member':
@@ -197,7 +197,7 @@ export default function AdminUsersPage() {
       case 'inactive':
         return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300'
       case 'suspended':
-        return 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300'
+        return 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary'
       default:
         return 'bg-gray-100 text-gray-700 dark:bg-gray-900/20 dark:text-gray-300'
     }
@@ -210,8 +210,8 @@ export default function AdminUsersPage() {
         <div className="w-64 bg-card flex flex-col fixed left-0 top-0 h-full z-50 shadow-xs">
           <div className="p-4 border-b border-border">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                <Shield className="h-4 w-4 text-white" />
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                <Shield className="h-4 w-4 text-primary-foreground" />
               </div>
               <span className="font-semibold text-lg text-foreground">Admin Panel</span>
             </div>
@@ -226,13 +226,13 @@ export default function AdminUsersPage() {
             </Link>
             <Link 
               href="/app-admin/users"
-              className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md bg-red-600/10 text-red-600 hover:bg-red-600/20 transition-colors"
+              className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
             >
               <div className="flex items-center space-x-3">
                 <Users className="h-4 w-4" />
                 <span>Users</span>
               </div>
-              <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">5</span>
+              <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">5</span>
             </Link>
             <Link 
               href="/app-admin/organizations"
@@ -242,7 +242,7 @@ export default function AdminUsersPage() {
                 <Building2 className="h-4 w-4" />
                 <span>Organizations</span>
               </div>
-              <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">2</span>
+              <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">2</span>
             </Link>
             <Link 
               href="/app-admin/analytics"
@@ -261,13 +261,13 @@ export default function AdminUsersPage() {
           </div>
           <div className="mt-auto p-4">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-medium text-sm">A</span>
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                <span className="text-primary-foreground font-medium text-sm">A</span>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground truncate">Admin User</p>
                 <div className="flex items-center space-x-2">
-                  <span className="text-xs bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300 px-2 py-1 rounded-full font-medium">
+                  <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">
                     Admin
                   </span>
                 </div>
@@ -304,8 +304,8 @@ export default function AdminUsersPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md">
-          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Users className="h-8 w-8 text-red-600 dark:text-red-400" />
+            <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Users className="h-8 w-8 text-primary" />
           </div>
           <h1 className="text-2xl font-bold text-foreground mb-2">Access Denied</h1>
           <p className="text-muted-foreground">You don&apos;t have permission to access user management.</p>
@@ -318,7 +318,7 @@ export default function AdminUsersPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Unable to load user profile</p>
         </div>
       </div>
@@ -332,8 +332,8 @@ export default function AdminUsersPage() {
         {/* Logo */}
         <div className="p-4 border-b border-border">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-              <Shield className="h-4 w-4 text-white" />
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <Shield className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="font-semibold text-lg text-foreground">Admin Panel</span>
           </div>
@@ -351,13 +351,13 @@ export default function AdminUsersPage() {
 
           <Link 
             href="/app-admin/users"
-            className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md bg-red-600/10 text-red-600 hover:bg-red-600/20 transition-colors"
+            className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
           >
             <div className="flex items-center space-x-3">
               <Users className="h-4 w-4" />
               <span>Users</span>
             </div>
-            <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">
+            <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
               {users.length}
             </span>
           </Link>
@@ -370,7 +370,7 @@ export default function AdminUsersPage() {
               <Building2 className="h-4 w-4" />
               <span>Organizations</span>
             </div>
-            <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">
+            <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
               {organizations.length}
             </span>
           </Link>
@@ -395,8 +395,8 @@ export default function AdminUsersPage() {
         {/* Profile Section */}
         <div className="mt-auto p-4">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-medium text-sm">
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <span className="text-primary-foreground font-medium text-sm">
                 {userProfile?.title?.charAt(0) || userProfile?.email?.charAt(0)?.toUpperCase() || 'A'}
               </span>
             </div>
@@ -405,7 +405,7 @@ export default function AdminUsersPage() {
                 {userProfile?.title || userProfile?.email?.split('@')[0] || 'Admin User'}
               </p>
               <div className="flex items-center space-x-2">
-                <span className="text-xs bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300 px-2 py-1 rounded-full font-medium">
+                <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">
                   Admin
                 </span>
               </div>
@@ -469,7 +469,7 @@ export default function AdminUsersPage() {
             </Button>
 
             {/* Add User Button */}
-            <Button className="bg-red-600 hover:bg-red-700 text-white">
+             <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
               <UserPlus className="h-4 w-4 mr-2" />
               Add User
             </Button>
@@ -499,7 +499,7 @@ export default function AdminUsersPage() {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
-                className="bg-muted border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
+                 className="bg-muted border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="all">All Roles</option>
                 <option value="admin">Admin</option>
@@ -514,7 +514,7 @@ export default function AdminUsersPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="bg-muted border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
+                 className="bg-muted border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="all">All Status</option>
                 <option value="active">Active</option>
@@ -564,12 +564,12 @@ export default function AdminUsersPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Admins</p>
-                    <p className="text-3xl font-bold text-red-600">
+                    <p className="text-3xl font-bold text-primary">
                       {users.filter(u => u.role === 'admin').length}
                     </p>
                   </div>
-                  <div className="w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-lg flex items-center justify-center">
-                    <Shield className="h-6 w-6 text-red-600" />
+            <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center">
+              <Shield className="h-6 w-6 text-primary" />
                   </div>
                 </div>
               </CardContent>
@@ -610,7 +610,7 @@ export default function AdminUsersPage() {
                   <div key={user.uid} className="flex items-center justify-between p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
                     <div className="flex items-center space-x-4">
                       {/* Avatar */}
-                      <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
+                      <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center">
                         <span className="text-white font-semibold text-lg">
                           {user.title?.charAt(0) || user.email.charAt(0).toUpperCase()}
                         </span>
@@ -698,10 +698,10 @@ export default function AdminUsersPage() {
                                 Make Client
                               </Button>
                               <div className="border-t border-border my-1"></div>
-                              <Button
+                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="w-full justify-start text-red-600 hover:text-red-700"
+                                className="w-full justify-start text-destructive hover:text-destructive/80"
                                 onClick={() => handleDeleteUser(user.uid)}
                               >
                                 <Trash2 className="h-4 w-4 mr-2" />

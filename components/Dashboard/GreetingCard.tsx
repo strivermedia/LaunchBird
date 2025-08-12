@@ -75,7 +75,10 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
 
   if (loading) {
     return (
-      <Card className={`border-0 shadow-sm bg-gradient-to-br ${gradient.from} ${gradient.darkFrom}`}>
+      <Card className="relative border border-gray-200/80 dark:border-gray-800 shadow-sm overflow-hidden">
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-32">
+          <div className="mx-auto h-full w-[90%] rounded-b-xl bg-gradient-to-t from-primary/20 via-primary/5 to-transparent blur-2xl dark:from-primary/15 dark:via-primary/5" />
+        </div>
         <CardHeader>
           <Skeleton className="h-8 w-64" />
         </CardHeader>
@@ -93,7 +96,10 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
 
   
   return (
-    <Card className={`border-0 shadow-sm bg-gradient-to-br ${gradient.from} ${gradient.darkFrom}`}>
+    <Card className="relative border border-gray-200/80 dark:border-gray-800 shadow-sm overflow-hidden">
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-32">
+        <div className="mx-auto h-full w-[90%] rounded-b-xl bg-gradient-to-t from-primary/20 via-primary/5 to-transparent blur-2xl dark:from-primary/15 dark:via-primary/5" />
+      </div>
       <CardHeader className="pb-4">
         <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
           {greeting}
@@ -107,8 +113,8 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
           {/* Local Time */}
           <div className={`rounded-lg p-4 border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-300 ${gradient.cardBg} ${gradient.darkCardBg} backdrop-blur-sm`}>
             <div className="flex items-center space-x-3 mb-2">
-              <div className="w-10 h-10 bg-[#7c3aed]/10 rounded-lg flex items-center justify-center">
-                <Clock className="h-5 w-5 text-[#7c3aed]" />
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                <Clock className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-white">Local Time</h3>
@@ -123,11 +129,11 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
           {/* Weather Information */}
           <div className={`rounded-lg p-4 border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-300 ${gradient.cardBg} ${gradient.darkCardBg} backdrop-blur-sm`}>
             <div className="flex items-center space-x-3 mb-2">
-              <div className="w-10 h-10 bg-[#7c3aed]/10 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                 {weather?.condition === 'Clear' ? (
-                  <Sun className="h-5 w-5 text-[#7c3aed]" />
+                  <Sun className="h-5 w-5 text-primary" />
                 ) : (
-                  <Cloud className="h-5 w-5 text-[#7c3aed]" />
+                  <Cloud className="h-5 w-5 text-primary" />
                 )}
               </div>
               <div>
@@ -155,8 +161,8 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
           {/* Quick Stats */}
           <div className={`rounded-lg p-4 border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-300 ${gradient.cardBg} ${gradient.darkCardBg} backdrop-blur-sm`}>
             <div className="flex items-center space-x-3 mb-2">
-              <div className="w-10 h-10 bg-[#7c3aed]/10 rounded-lg flex items-center justify-center">
-                <MapPin className="h-5 w-5 text-[#7c3aed]" />
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                <MapPin className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-white">Location</h3>
