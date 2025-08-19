@@ -120,9 +120,9 @@ export default function ProfileManagement({ isOpen, onClose }: ProfileManagement
       const previewUrl = URL.createObjectURL(file)
       setProfileImage(previewUrl)
 
-      // Here you would typically upload to Firebase Storage
+      // Here you would typically upload to Supabase Storage
       // For now, we'll just store the preview URL
-      // In a real implementation, you'd upload to Firebase Storage and get the download URL
+      // In a real implementation, you'd upload to Supabase Storage and get the download URL
       
       setMessage({ type: 'success', text: 'Profile picture updated successfully' })
     } catch (error) {
@@ -183,7 +183,7 @@ export default function ProfileManagement({ isOpen, onClose }: ProfileManagement
         title: formData.title,
         jobTitle: formData.jobTitle,
         location: formData.location,
-        profileImageUrl: profileImage
+        profileImageUrl: profileImage || undefined
       })
 
       // Reload profile to get updated data

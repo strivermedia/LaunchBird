@@ -180,7 +180,7 @@ export default function EditClientForm({ client, onClose, onSuccess }: EditClien
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+        <CardHeader className="border-b border-border">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -412,7 +412,7 @@ export default function EditClientForm({ client, onClose, onSuccess }: EditClien
             </div>
 
             {/* Form Actions */}
-            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex justify-end gap-3 pt-4 border-t border-border">
               <Button
                 type="button"
                 variant="outline"

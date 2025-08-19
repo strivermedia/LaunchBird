@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import ProjectStatus from './ProjectStatus'
 import FeedbackForm from './FeedbackForm'
-import { logClientAccess } from '@/lib/client-view'
+import { logClientAccess } from '@/lib/client-profile'
 import { getDynamicGradient, getGradientColors } from '@/lib/dashboard'
 import type { Project, Activity } from '@/types'
 
@@ -22,7 +22,7 @@ interface ClientViewContentProps {
 }
 
 /**
- * Main Client View Content Component
+ * Main Client Profile Content Component
  * Displays project details, milestones, shared files, and feedback forms
  */
 export default function ClientViewContent({ 
@@ -121,13 +121,13 @@ export default function ClientViewContent({
                   LaunchBird
                 </h1>
                 <p className="text-sm text-muted-foreground dark:text-muted-foreground">
-                  Client View
+                  Client Profile
                 </p>
               </div>
             </div>
             
             {/* Manager Contact Card */}
-            <div className="bg-card/80 backdrop-blur-sm border border-border/50 dark:border-border/50 rounded-lg p-4 shadow-sm">
+            <div className="bg-card/80 backdrop-blur-sm rounded-lg p-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                   <span className="text-white font-semibold text-sm">
@@ -184,10 +184,10 @@ export default function ClientViewContent({
                     </CardDescription>
                   </div>
                   <div className="flex space-x-2">
-                    <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                    <Badge className="bg-white/20 text-white border-border/30 backdrop-blur-sm">
                       {project.status.replace('-', ' ')}
                     </Badge>
-                    <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                    <Badge className="bg-white/20 text-white border-border/30 backdrop-blur-sm">
                       {project.type.replace('-', ' ')}
                     </Badge>
                   </div>
@@ -196,7 +196,7 @@ export default function ClientViewContent({
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Progress */}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-border/20">
                     <div className="space-y-3">
                       <div className="flex items-center space-x-2">
                         <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
@@ -224,7 +224,7 @@ export default function ClientViewContent({
                   </div>
 
                   {/* Timeline */}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-border/20">
                     <div className="space-y-3">
                       <div className="flex items-center space-x-2">
                         <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
@@ -263,7 +263,7 @@ export default function ClientViewContent({
                   </div>
 
                   {/* Project Details */}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-border/20">
                     <div className="space-y-3">
                       <div className="flex items-center space-x-2">
                         <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">

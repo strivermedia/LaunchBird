@@ -150,7 +150,7 @@ export default function AdminUserManagement() {
             Admin User Management
           </CardTitle>
           <CardDescription>
-            Manage admin privileges for users using Firebase custom claims
+            Manage admin privileges for users using Supabase custom claims
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

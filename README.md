@@ -1,6 +1,6 @@
 # LaunchBird - Project Management Platform
 
-A modern, secure project management platform built with Next.js, TypeScript, Tailwind CSS, and Firebase.
+A modern, secure project management platform built with Next.js, TypeScript, Tailwind CSS, and Supabase.
 
 ## Features
 
@@ -12,9 +12,9 @@ A modern, secure project management platform built with Next.js, TypeScript, Tai
 - **Role-based Redirection** (Admins → Dashboard, Team Members → Tasks)
 
 ### Security Features
-- Firebase Authentication integration
+- Supabase Authentication integration
 - Role-based access control
-- Secure 4-character code generation for client views
+- Secure 4-character code generation for client profiles
 - Password protection for client access
 - GDPR/CCPA compliant data handling
 
@@ -33,8 +33,8 @@ A modern, secure project management platform built with Next.js, TypeScript, Tai
 - **Styling**: Tailwind CSS
 - **UI Components**: ShadCN
 - **Icons**: Lucide React
-- **Authentication**: Firebase Auth
-- **Database**: Firestore
+- **Authentication**: Supabase Auth
+- **Database**: Supabase (PostgreSQL)
 - **Forms**: React Hook Form + Zod validation
 - **Testing**: Jest + React Testing Library
 
@@ -44,7 +44,7 @@ A modern, secure project management platform built with Next.js, TypeScript, Tai
 
 - Node.js 18+ 
 - npm or yarn
-- Firebase project
+- Supabase project
 
 ### Installation
 
@@ -59,74 +59,25 @@ A modern, secure project management platform built with Next.js, TypeScript, Tai
    npm install
    ```
 
-3. **Set up Firebase**
-   - Create a new Firebase project
+3. **Set up Supabase**
+   - Create a new Supabase project
    - Enable Authentication (Email/Password, Anonymous)
-   - Create a Firestore database
-   - Get your Firebase config
+   - Set up your database schema
+   - Get your Supabase config
 
 4. **Environment Variables**
    Create a `.env.local` file:
    ```env
-   NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   NEXT_PUBLIC_OPENWEATHER_API_KEY=your_openweather_api_key
    ```
 
-5. **Firebase Analytics Setup**
-   - Enable Google Analytics in your Firebase project
-   - The app automatically initializes analytics when available
-   - Use the `logAnalyticsEvent` utility function to track custom events:
-   ```typescript
-   import { logAnalyticsEvent } from '@/lib/firebase'
-   
-   // Track user actions
-   logAnalyticsEvent('button_clicked', {
-     button_name: 'signup',
-     user_role: 'admin'
-   })
-   
-   // Track page views
-   logAnalyticsEvent('page_view', {
-     page_name: 'dashboard',
-     user_id: 'user123'
-   })
+5. **Development Mode**
+   For development with mock data, you can disable authentication:
+   ```env
+   NEXT_PUBLIC_DISABLE_AUTH=true
    ```
-
-5. **Firebase Security Rules**
-   Set up Firestore security rules for role-based access:
-   ```javascript
-   rules_version = '2';
-   service cloud.firestore {
-     match /databases/{database}/documents {
-       // Users collection
-       match /users/{userId} {
-         allow read, write: if request.auth != null && request.auth.uid == userId;
-         allow read: if request.auth != null && 
-           get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
-       }
-       
-       // Client view codes
-       match /clientViewCodes/{code} {
-         allow read: if true; // Public read for validation
-         allow write: if request.auth != null && 
-           get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
-       }
-     }
-   }
-   ```
-
-6. **Run the development server**
-   ```bash
-   npm run dev
-   ```
-
-7. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## Project Structure
 
@@ -136,7 +87,7 @@ launchbird/
 │   ├── login/             # Login page
 │   ├── signup/            # Signup page
 │   ├── reset-password/    # Password reset page
-│   ├── view/[code]/       # Client view with code
+│   ├── profile/[code]/       # Client profile with code
 │   ├── globals.css        # Global styles
 │   └── layout.tsx         # Root layout
 ├── components/            # React components
@@ -177,7 +128,7 @@ launchbird/
 
 ### Client Access
 1. Admin generates 4-character code for project
-2. Client visits `/view/[code]`
+2. Client visits `/profile/[code]`
 3. Optional password validation
 4. Anonymous authentication
 5. Access to read-only project view

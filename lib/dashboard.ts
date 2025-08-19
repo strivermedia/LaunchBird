@@ -1,5 +1,4 @@
-// Firebase removed; use mock data helpers
-import { db } from './platform'
+// Supabase removed; use mock data helpers
 import { isDevMode } from './auth'
 import {
   Project,
@@ -17,8 +16,7 @@ import {
 } from '@/types'
 
 /**
- * Dashboard service for Firestore operations
- * Handles all data fetching and manipulation for the dashboard
+ * Dashboard service - Mock implementations for development
  */
 
 /**
@@ -100,22 +98,22 @@ export const getGradientColors = () => {
   // Afternoon (12-5 PM): Purple to warm magenta
   else if (hour >= 12 && hour < 17) {
     return {
-      from: '#7c3aed', // purple-600 (app's primary color)
+      from: '#7c3aed', // purple-600
       to: '#be185d'    // pink-700
     }
   }
-  // Evening (5-8 PM): Deep purple to rose
+  // Evening (5-8 PM): Purple to deep magenta
   else if (hour >= 17 && hour < 20) {
     return {
-      from: '#6d28d9', // purple-700
-      to: '#e11d48'    // rose-600
+      from: '#7c3aed', // purple-600
+      to: '#9d174d'    // pink-800
     }
   }
   // Night (8 PM-5 AM): Deep purple to indigo
   else {
     return {
       from: '#5b21b6', // purple-800
-      to: '#4f46e5'    // indigo-600
+      to: '#3730a3'    // indigo-800
     }
   }
 }
@@ -153,150 +151,151 @@ export const getLocalTime = (): string => {
 
 /**
  * Get mock data for development mode
+ * @returns object with mock data
  */
 const getMockData = () => {
   const mockProjects: Project[] = [
     {
-      id: '1',
+      id: 'project-1',
       organizationId: 'org-1',
       title: 'Website Redesign',
-      description: 'Complete redesign of company website',
+      description: 'Complete redesign of the company website',
       type: 'one-time',
       status: 'in-progress',
       progress: 65,
-      startDate: new Date('2024-01-15'),
-      endDate: new Date('2024-03-15'),
-      deadline: new Date('2024-03-10'),
-      assignedTo: ['user1', 'user2'],
-      createdBy: 'admin',
-      createdAt: new Date('2024-01-10'),
-      updatedAt: new Date(),
+      startDate: new Date('2024-01-01'),
+      endDate: new Date('2024-03-31'),
+      deadline: new Date('2024-03-31'),
+      assignedTo: ['user-1', 'user-2'],
+      createdBy: 'user-1',
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-15'),
+      clientId: 'client-1',
       budget: 15000,
-      tags: ['design', 'web'],
+      tags: ['web', 'design'],
+      clientCode: 'ABC1',
+      assignedManagerId: 'user-1',
+      assignedManagerName: 'Sarah Johnson',
+      assignedManagerTitle: 'Senior Developer',
+      assignedManagerEmail: 'sarah@launchbird.com',
+      assignedManagerPhone: '+1-555-0123',
     },
     {
-      id: '2',
+      id: 'project-2',
       organizationId: 'org-1',
       title: 'Mobile App Development',
-      description: 'iOS and Android app for client',
+      description: 'iOS and Android app development',
       type: 'ongoing',
       status: 'planning',
       progress: 25,
       startDate: new Date('2024-02-01'),
-      assignedTo: ['user3'],
-      createdBy: 'admin',
-      createdAt: new Date('2024-01-20'),
-      updatedAt: new Date(),
+      assignedTo: ['user-3'],
+      createdBy: 'user-1',
+      createdAt: new Date('2024-02-01'),
+      updatedAt: new Date('2024-02-01'),
+      clientId: 'client-2',
       budget: 25000,
       tags: ['mobile', 'app'],
+      clientCode: 'XYZ2',
+      assignedManagerId: 'user-3',
+      assignedManagerName: 'Mike Chen',
+      assignedManagerTitle: 'Mobile Developer',
+      assignedManagerEmail: 'mike@launchbird.com',
+      assignedManagerPhone: '+1-555-0456',
     },
   ]
 
   const mockTasks: Task[] = [
     {
-      id: '1',
+      id: 'task-1',
       organizationId: 'org-1',
+      projectId: 'project-1',
       title: 'Design Homepage',
-      description: 'Create new homepage design',
-      projectId: '1',
-      assignedTo: 'user1',
-      priority: 'high',
+      description: 'Create wireframes and mockups for homepage',
       status: 'in-progress',
-      dueDate: new Date('2024-02-15'),
-      createdBy: 'admin',
-      createdAt: new Date('2024-01-15'),
-      updatedAt: new Date(),
-      estimatedHours: 8,
-      actualHours: 6,
+      priority: 'high',
+      assignedTo: 'user-1',
+      createdBy: 'user-1',
+      dueDate: new Date('2024-01-20'),
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-15'),
     },
     {
-      id: '2',
+      id: 'task-2',
       organizationId: 'org-1',
+      projectId: 'project-1',
       title: 'Implement Navigation',
-      description: 'Build responsive navigation menu',
-      projectId: '1',
-      assignedTo: 'user2',
-      priority: 'medium',
+      description: 'Build responsive navigation component',
       status: 'todo',
-      dueDate: new Date('2024-02-20'),
-      createdBy: 'admin',
-      createdAt: new Date('2024-01-16'),
-      updatedAt: new Date(),
-      estimatedHours: 4,
+      priority: 'medium',
+      assignedTo: 'user-2',
+      createdBy: 'user-1',
+      dueDate: new Date('2024-01-25'),
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-01'),
     },
   ]
 
   const mockActivities: Activity[] = [
     {
-      id: '1',
+      id: 'activity-1',
       organizationId: 'org-1',
       type: 'project_update',
-      title: 'Project Updated',
-      description: 'Website Redesign progress updated to 65%',
-      userId: 'user1',
-      userName: 'John Doe',
-      userTitle: 'Designer',
-      projectId: '1',
-      timestamp: new Date(),
+      title: 'Project Update',
+      description: 'Updated project status and timeline',
+      userId: 'user-1',
+      userName: 'Sarah Johnson',
+      userTitle: 'Senior Developer',
+      projectId: 'project-1',
+      timestamp: new Date('2024-01-15T10:00:00Z'),
     },
     {
-      id: '2',
+      id: 'activity-2',
       organizationId: 'org-1',
       type: 'task_completed',
       title: 'Task Completed',
-      description: 'Design Homepage task marked as completed',
-      userId: 'user1',
-      userName: 'John Doe',
+      description: 'Completed design phase and wireframes',
+      userId: 'user-2',
+      userName: 'Mike Chen',
       userTitle: 'Designer',
-      projectId: '1',
-      taskId: '1',
-      timestamp: new Date(Date.now() - 3600000),
-    },
-    {
-      id: '3',
-      organizationId: 'org-1',
-      type: 'client_feedback',
-      title: 'Client Feedback',
-      description: 'Great work on the initial designs!',
-      userId: 'client1',
-      userName: 'Client Name',
-      userTitle: 'Client',
-      projectId: '1',
-      timestamp: new Date(Date.now() - 7200000),
+      projectId: 'project-1',
+      timestamp: new Date('2024-01-14T15:30:00Z'),
     },
   ]
 
   const mockTimeSummary: TimeSummary = {
-    totalHours: 156,
+    totalHours: 42.5,
     todayHours: 6.5,
-    thisWeekHours: 32,
-    thisMonthHours: 128,
+    thisWeekHours: 32.0,
+    thisMonthHours: 156.0,
     projectBreakdown: [
-      { projectId: '1', projectTitle: 'Website Redesign', hours: 45 },
-      { projectId: '2', projectTitle: 'Mobile App Development', hours: 23 },
+      { projectId: 'project-1', projectTitle: 'Website Redesign', hours: 25.0 },
+      { projectId: 'project-2', projectTitle: 'Mobile App Development', hours: 17.5 },
     ],
   }
 
   const mockTeamWorkload: TeamMemberWorkload[] = [
     {
-      userId: 'user1',
-      userName: 'John Doe',
-      userTitle: 'Designer',
-      totalTasks: 8,
-      completedTasks: 5,
+      userId: 'user-1',
+      userName: 'Sarah Johnson',
+      userTitle: 'Senior Developer',
+      totalTasks: 15,
+      completedTasks: 12,
       inProgressTasks: 2,
       overdueTasks: 1,
-      totalHours: 45,
+      totalHours: 42.5,
+      avatar: '/avatars/sarah.jpg',
     },
     {
-      userId: 'user2',
-      userName: 'Jane Smith',
-      userTitle: 'Developer',
-      totalTasks: 6,
-      completedTasks: 3,
-      inProgressTasks: 2,
+      userId: 'user-2',
+      userName: 'Mike Chen',
+      userTitle: 'Designer',
+      totalTasks: 10,
+      completedTasks: 8,
+      inProgressTasks: 1,
       overdueTasks: 1,
-      totalHours: 38,
+      totalHours: 38.0,
+      avatar: '/avatars/mike.jpg',
     },
   ]
 
@@ -310,450 +309,119 @@ const getMockData = () => {
 }
 
 /**
- * Get projects from Firestore
- * @param userId - Current user ID
- * @param userRole - Current user role
- * @param organizationId - Organization ID for multi-tenant filtering
+ * Get projects for dashboard
+ * @param organizationId - Organization ID
+ * @param userId - User ID
+ * @param userRole - User role
  * @returns Promise<Project[]>
  */
-export const getProjects = async (
+export const getDashboardProjects = async (
+  organizationId: string,
   userId: string,
-  userRole: string,
-  organizationId?: string
+  userRole: string
 ): Promise<Project[]> => {
-  if (isDevMode()) {
-    return getMockData().projects
-  }
-
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    return []
-  }
-
-  try {
-    let projectsQuery
-
-    if (userRole === 'admin') {
-      // Admins see all projects in their organization
-      projectsQuery = query(
-        collection(db, 'projects'),
-        where('organizationId', '==', organizationId),
-        orderBy('createdAt', 'desc')
-      )
-    } else {
-      // Team members see assigned projects in their organization
-      projectsQuery = query(
-        collection(db, 'projects'),
-        where('organizationId', '==', organizationId),
-        where('assignedTo', 'array-contains', userId),
-        orderBy('createdAt', 'desc')
-      )
-    }
-
-    const querySnapshot = await getDocs(projectsQuery)
-    const projects: Project[] = []
-
-    querySnapshot.forEach((doc) => {
-      const data = doc.data()
-      projects.push({
-        id: doc.id,
-        ...data,
-        startDate: data.startDate?.toDate() || new Date(),
-        endDate: data.endDate?.toDate(),
-        deadline: data.deadline?.toDate(),
-        createdAt: data.createdAt?.toDate() || new Date(),
-        updatedAt: data.updatedAt?.toDate() || new Date(),
-      } as Project)
-    })
-
-    return projects
-  } catch (error) {
-    console.error('Error fetching projects:', error)
-    return []
-  }
+  // Mock implementation
+  return getMockData().projects
 }
 
 /**
- * Get tasks from Firestore
- * @param userId - Current user ID
- * @param userRole - Current user role
- * @param organizationId - Organization ID for multi-tenant filtering
+ * Get tasks for dashboard
+ * @param organizationId - Organization ID
+ * @param userId - User ID
+ * @param userRole - User role
  * @returns Promise<Task[]>
  */
-export const getTasks = async (
+export const getDashboardTasks = async (
+  organizationId: string,
   userId: string,
-  userRole: string,
-  organizationId?: string
+  userRole: string
 ): Promise<Task[]> => {
-  if (isDevMode()) {
-    return getMockData().tasks
-  }
-
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    return []
-  }
-
-  try {
-    let tasksQuery
-
-    if (userRole === 'admin') {
-      // Admins see all tasks in their organization
-      tasksQuery = query(
-        collection(db, 'tasks'),
-        where('organizationId', '==', organizationId),
-        orderBy('createdAt', 'desc')
-      )
-    } else {
-      // Team members see assigned tasks in their organization
-      tasksQuery = query(
-        collection(db, 'tasks'),
-        where('organizationId', '==', organizationId),
-        where('assignedTo', '==', userId),
-        orderBy('createdAt', 'desc')
-      )
-    }
-
-    const querySnapshot = await getDocs(tasksQuery)
-    const tasks: Task[] = []
-
-    querySnapshot.forEach((doc) => {
-      const data = doc.data()
-      tasks.push({
-        id: doc.id,
-        ...data,
-        dueDate: data.dueDate?.toDate(),
-        completedAt: data.completedAt?.toDate(),
-        createdAt: data.createdAt?.toDate() || new Date(),
-        updatedAt: data.updatedAt?.toDate() || new Date(),
-      } as Task)
-    })
-
-    return tasks
-  } catch (error) {
-    console.error('Error fetching tasks:', error)
-    return []
-  }
+  // Mock implementation
+  return getMockData().tasks
 }
 
 /**
- * Get recent activities from Firestore
- * @param userId - Current user ID
- * @param userRole - Current user role
- * @param limit - Number of activities to fetch
+ * Get activities for dashboard
+ * @param organizationId - Organization ID
+ * @param userId - User ID
+ * @param userRole - User role
  * @returns Promise<Activity[]>
  */
-export const getRecentActivities = async (
+export const getDashboardActivities = async (
+  organizationId: string,
   userId: string,
-  userRole: string,
-  limitCount: number = 10
+  userRole: string
 ): Promise<Activity[]> => {
-  if (isDevMode()) {
-    return getMockData().activities
-  }
-
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    return []
-  }
-
-  try {
-    let activitiesQuery
-
-    if (userRole === 'admin') {
-      // Admins see all activities
-      activitiesQuery = query(
-        collection(db, 'activities'),
-        orderBy('timestamp', 'desc'),
-        limit(limitCount)
-      )
-    } else {
-      // Team members see activities related to their projects/tasks
-      activitiesQuery = query(
-        collection(db, 'activities'),
-        where('userId', '==', userId),
-        orderBy('timestamp', 'desc'),
-        limit(limitCount)
-      )
-    }
-
-    const querySnapshot = await getDocs(activitiesQuery)
-    const activities: Activity[] = []
-
-    querySnapshot.forEach((doc) => {
-      const data = doc.data()
-      activities.push({
-        id: doc.id,
-        ...data,
-        timestamp: data.timestamp?.toDate() || new Date(),
-      } as Activity)
-    })
-
-    return activities
-  } catch (error) {
-    console.error('Error fetching activities:', error)
-    return []
-  }
+  // Mock implementation
+  return getMockData().activities
 }
 
 /**
- * Get time tracking summary
- * @param userId - Current user ID
+ * Get time summary for dashboard
+ * @param organizationId - Organization ID
+ * @param userId - User ID
  * @returns Promise<TimeSummary>
  */
-export const getTimeSummary = async (userId: string): Promise<TimeSummary> => {
-  if (isDevMode()) {
-    return getMockData().timeSummary
-  }
-
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    return {
-      totalHours: 0,
-      todayHours: 0,
-      thisWeekHours: 0,
-      thisMonthHours: 0,
-      projectBreakdown: [],
-    }
-  }
-
-  try {
-    // This would typically involve complex aggregation queries
-    // For now, returning mock data structure
-    return {
-      totalHours: 0,
-      todayHours: 0,
-      thisWeekHours: 0,
-      thisMonthHours: 0,
-      projectBreakdown: [],
-    }
-  } catch (error) {
-    console.error('Error fetching time summary:', error)
-    return {
-      totalHours: 0,
-      todayHours: 0,
-      thisWeekHours: 0,
-      thisMonthHours: 0,
-      projectBreakdown: [],
-    }
-  }
+export const getTimeSummary = async (
+  organizationId: string,
+  userId: string
+): Promise<TimeSummary> => {
+  // Mock implementation
+  return getMockData().timeSummary
 }
 
 /**
- * Get team workload data
- * @param userRole - Current user role
+ * Get team workload for dashboard
+ * @param organizationId - Organization ID
+ * @param userId - User ID
+ * @param userRole - User role
  * @returns Promise<TeamMemberWorkload[]>
  */
 export const getTeamWorkload = async (
-  userRole: string
-): Promise<TeamMemberWorkload[]> => {
-  if (isDevMode()) {
-    return getMockData().teamWorkload
-  }
-
-  if (!db || userRole !== 'admin') {
-    return []
-  }
-
-  try {
-    // This would typically involve complex aggregation queries
-    // For now, returning mock data structure
-    return []
-  } catch (error) {
-    console.error('Error fetching team workload:', error)
-    return []
-  }
-}
-
-/**
- * Get dashboard statistics
- * @param userId - Current user ID
- * @param userRole - Current user role
- * @returns Promise<DashboardStats>
- */
-export const getDashboardStats = async (
+  organizationId: string,
   userId: string,
   userRole: string
-): Promise<DashboardStats> => {
-  if (isDevMode()) {
-    return {
-      totalProjects: 2,
-      activeProjects: 1,
-      completedProjects: 0,
-      totalTasks: 8,
-      completedTasks: 5,
-      overdueTasks: 1,
-      teamMembers: 3,
-      totalHours: 156,
-      thisWeekHours: 32,
-    }
-  }
-
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    return {
-      totalProjects: 0,
-      activeProjects: 0,
-      completedProjects: 0,
-      totalTasks: 0,
-      completedTasks: 0,
-      overdueTasks: 0,
-      teamMembers: 0,
-      totalHours: 0,
-      thisWeekHours: 0,
-    }
-  }
-
-  try {
-    // This would typically involve complex aggregation queries
-    // For now, returning mock data structure
-    return {
-      totalProjects: 0,
-      activeProjects: 0,
-      completedProjects: 0,
-      totalTasks: 0,
-      completedTasks: 0,
-      overdueTasks: 0,
-      teamMembers: 0,
-      totalHours: 0,
-      thisWeekHours: 0,
-    }
-  } catch (error) {
-    console.error('Error fetching dashboard stats:', error)
-    return {
-      totalProjects: 0,
-      activeProjects: 0,
-      completedProjects: 0,
-      totalTasks: 0,
-      completedTasks: 0,
-      overdueTasks: 0,
-      teamMembers: 0,
-      totalHours: 0,
-      thisWeekHours: 0,
-    }
-  }
+): Promise<TeamMemberWorkload[]> => {
+  // Mock implementation
+  return getMockData().teamWorkload
 }
 
 /**
- * Subscribe to real-time updates for projects
- * @param userId - Current user ID
- * @param userRole - Current user role
+ * Subscribe to real-time project updates
+ * @param organizationId - Organization ID
+ * @param userId - User ID
+ * @param userRole - User role
  * @param callback - Callback function for updates
  * @returns Unsubscribe function
  */
 export const subscribeToProjects = (
+  organizationId: string,
   userId: string,
   userRole: string,
   callback: (projects: Project[]) => void
 ) => {
-  if (isDevMode()) {
-    // In dev mode, return mock data and no-op unsubscribe
-    callback(getMockData().projects)
-    return () => {}
-  }
-
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    callback([])
-    return () => {}
-  }
-
-  try {
-    let projectsQuery
-
-    if (userRole === 'admin') {
-      projectsQuery = query(
-        collection(db, 'projects'),
-        orderBy('createdAt', 'desc')
-      )
-    } else {
-      projectsQuery = query(
-        collection(db, 'projects'),
-        where('assignedTo', 'array-contains', userId),
-        orderBy('createdAt', 'desc')
-      )
-    }
-
-    return onSnapshot(projectsQuery, (querySnapshot) => {
-      const projects: Project[] = []
-      querySnapshot.forEach((doc) => {
-        const data = doc.data()
-        projects.push({
-          id: doc.id,
-          ...data,
-          startDate: data.startDate?.toDate() || new Date(),
-          endDate: data.endDate?.toDate(),
-          deadline: data.deadline?.toDate(),
-          createdAt: data.createdAt?.toDate() || new Date(),
-          updatedAt: data.updatedAt?.toDate() || new Date(),
-        } as Project)
-      })
-      callback(projects)
-    })
-  } catch (error) {
-    console.error('Error subscribing to projects:', error)
-    callback([])
-    return () => {}
-  }
+  // Mock implementation - return no-op unsubscribe
+  console.log('Mock implementation - subscribing to projects')
+  callback(getMockData().projects)
+  return () => {}
 }
 
 /**
- * Subscribe to real-time updates for activities
- * @param userId - Current user ID
- * @param userRole - Current user role
+ * Subscribe to real-time activity updates
+ * @param organizationId - Organization ID
+ * @param userId - User ID
+ * @param userRole - User role
  * @param callback - Callback function for updates
  * @returns Unsubscribe function
  */
 export const subscribeToActivities = (
+  organizationId: string,
   userId: string,
   userRole: string,
   callback: (activities: Activity[]) => void
 ) => {
-  if (isDevMode()) {
-    // In dev mode, return mock data and no-op unsubscribe
-    callback(getMockData().activities)
-    return () => {}
-  }
-
-  if (!db) {
-    console.warn('Firestore is not initialized')
-    callback([])
-    return () => {}
-  }
-
-  try {
-    let activitiesQuery
-
-    if (userRole === 'admin') {
-      activitiesQuery = query(
-        collection(db, 'activities'),
-        orderBy('timestamp', 'desc'),
-        limit(10)
-      )
-    } else {
-      activitiesQuery = query(
-        collection(db, 'activities'),
-        where('userId', '==', userId),
-        orderBy('timestamp', 'desc'),
-        limit(10)
-      )
-    }
-
-    return onSnapshot(activitiesQuery, (querySnapshot) => {
-      const activities: Activity[] = []
-      querySnapshot.forEach((doc) => {
-        const data = doc.data()
-        activities.push({
-          id: doc.id,
-          ...data,
-          timestamp: data.timestamp?.toDate() || new Date(),
-        } as Activity)
-      })
-      callback(activities)
-    })
-  } catch (error) {
-    console.error('Error subscribing to activities:', error)
-    callback([])
-    return () => {}
-  }
+  // Mock implementation - return no-op unsubscribe
+  console.log('Mock implementation - subscribing to activities')
+  callback(getMockData().activities)
+  return () => {}
 } 

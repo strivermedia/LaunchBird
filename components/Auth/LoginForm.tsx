@@ -74,7 +74,7 @@ export default function LoginForm() {
     } catch (err) {
       const authError = err as AuthError
       
-      // Handle specific Firebase auth errors
+      // Handle specific auth errors
       switch (authError.code) {
         case 'auth/user-not-found':
           setError('No account found with this email address')

@@ -224,7 +224,7 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
                 return (
                   <div
                     key={member.userId}
-                    className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-sm transition-shadow"
+                    className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-border hover:shadow-sm transition-shadow"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-3">
@@ -302,7 +302,7 @@ export default function TeamWorkload({ teamWorkload, loading = false }: TeamWork
                       </div>
                     </div>
 
-                    <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <div className="mt-3 pt-3 border-t border-border">
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-300">Total Hours</span>
                         <span className="font-semibold text-gray-900 dark:text-white">

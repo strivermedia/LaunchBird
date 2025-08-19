@@ -1,14 +1,14 @@
-# LaunchBird Client View System
+# LaunchBird Client Profile System
 
 ## Overview
 
-The LaunchBird Client View System provides a secure, read-only interface for clients to access their project information using 4-character access codes. The system supports both anonymous access and optional password protection.
+The LaunchBird Client Profile System provides a secure, read-only interface for clients to access their project information using 4-character access codes. The system supports both anonymous access and optional password protection.
 
 ## Architecture
 
 ### Pages
-- **`app/view/page.tsx`** - Code entry page for clients to enter their access code
-- **`app/view/[code]/page.tsx`** - Main client view page with static site generation (SSG)
+- **`app/profile/page.tsx`** - Code entry page for clients to enter their access code
+- **`app/profile/[code]/page.tsx`** - Main client profile page with static site generation (SSG)
 
 ### Components
 - **`components/ClientView/ClientViewContent.tsx`** - Main content component displaying project details
@@ -49,8 +49,8 @@ The LaunchBird Client View System provides a secure, read-only interface for cli
 
 ### For Clients
 
-1. **Access via URL**: Navigate to `https://app.launchbird.io/view/[CODE]`
-2. **Code Entry**: Visit `/view` and enter your 4-character access code
+1. **Access via URL**: Navigate to `https://app.launchbird.io/profile/[CODE]`
+2. **Code Entry**: Visit `/profile` and enter your 4-character access code
 3. **Password (if required)**: Enter project password when prompted
 4. **View Project**: Access project details, milestones, and shared files
 5. **Submit Feedback**: Use the feedback form to provide ratings and comments
@@ -59,14 +59,14 @@ The LaunchBird Client View System provides a secure, read-only interface for cli
 
 #### Creating Client Access
 ```typescript
-import { createClientAccess } from '@/lib/client-view'
+import { createClientAccess } from '@/lib/client-profile'
 
 const code = await createClientAccess(projectId, organizationId, 30) // 30 days expiry
 ```
 
 #### Validating Access
 ```typescript
-import { validateClientCode } from '@/lib/client-view'
+import { validateClientCode } from '@/lib/client-profile'
 
 const result = await validateClientCode('ABCD')
 if (result.valid) {
@@ -80,7 +80,7 @@ if (result.valid) {
 
 #### Logging Access
 ```typescript
-import { logClientAccess } from '@/lib/client-view'
+import { logClientAccess } from '@/lib/client-profile'
 
 await logClientAccess(code, projectId, organizationId)
 ```
@@ -90,7 +90,7 @@ await logClientAccess(code, projectId, organizationId)
 1. **Code Validation**: Client enters code → System validates against Firestore
 2. **Project Loading**: Valid code → Fetch project data and activities
 3. **Static Generation**: Next.js generates static pages for performance
-4. **Client Interaction**: Client views project details and submits feedback
+4. **Client Interaction**: Client profiles project details and submits feedback
 5. **Access Tracking**: System logs all access attempts with timestamps
 
 ## Security Features

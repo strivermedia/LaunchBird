@@ -1,4 +1,4 @@
-// Neutral platform stubs: no auth or database. Keeps app building without Firebase.
+// Neutral platform stubs: no auth or database. Keeps app building without Supabase.
 export const auth: any = null
 export const db: any = null
 export const analytics: any = null

@@ -1,11 +1,11 @@
-// Firebase removed. Provide stubs and allow full access without auth
+// Supabase removed. Provide stubs and allow full access without auth
 type User = any
 type UserCredential = any
 import { auth, db } from './platform'
 
 // Development mode flag - set to true to bypass authentication
 const DEV_MODE = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
-const DISABLE_FIREBASE = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
+const DISABLE_AUTH = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
 
 /**
  * User role types
@@ -33,7 +33,7 @@ export interface UserProfile {
 }
 
 /**
- * Client view code interface
+ * Client profile code interface
  */
 export interface ClientViewCode {
   code: string
@@ -123,7 +123,7 @@ export const getCurrentUserProfile = async (): Promise<UserProfile | null> => {
   }
   
   if (!auth) {
-    console.warn('Firebase Auth not initialized')
+    console.warn('Auth not initialized')
     return null
   }
   
@@ -184,7 +184,7 @@ export const signOutUser = async (): Promise<void> => {}
 export const sendPasswordReset = async (_email: string): Promise<void> => {}
 
 /**
- * Sign in anonymously for client view
+ * Sign in anonymously for client profile
  * @returns Promise<UserCredential>
  */
 export const signInAnonymouslyForClient = async (): Promise<UserCredential> => {
@@ -204,10 +204,10 @@ export const getUserProfile = async (_uid: string): Promise<UserProfile | null> 
  * @param updates - Profile updates
  * @returns Promise<void>
  */
-export const updateUserProfile = async (): Promise<void> => {}
+export const updateUserProfile = async (_uid: string, _updates: Partial<UserProfile>): Promise<void> => {}
 
 /**
- * Validate client view code
+ * Validate client profile code
  * @param code - 4-character code
  * @param password - Optional password
  * @returns Promise<ClientViewCode | null>
@@ -225,7 +225,7 @@ export const validateClientViewCode = async (
 })
 
 /**
- * Create client view code
+ * Create client profile code
  * @param projectId - Project ID
  * @param password - Optional password
  * @param expiresInDays - Days until expiration (default: 30)

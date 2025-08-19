@@ -1,7 +1,7 @@
 import React from 'react'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
-import { getProjectByClientCode, getProjectActivities, getClientByAccessCode, getClientProjects } from '@/lib/client-view'
+import { getProjectByClientCode, getProjectActivities, getClientByAccessCode, getClientProjects } from '@/lib/client-profile'
 import { validateClientViewCode } from '@/lib/auth'
 import ClientViewContent from '@/components/ClientView/ClientViewContent'
 import ClientDashboardView from '@/components/ClientView/ClientDashboardView'
@@ -17,7 +17,7 @@ interface ClientViewPageProps {
 }
 
 /**
- * Generate metadata for the client view page
+ * Generate metadata for the client profile page
  */
 export async function generateMetadata({ params }: ClientViewPageProps): Promise<Metadata> {
   const code = params.code
@@ -33,17 +33,17 @@ export async function generateMetadata({ params }: ClientViewPageProps): Promise
     }
     
     return {
-      title: `${project.title} - Client View - LaunchBird`,
+      title: `${project.title} - Client Profile - LaunchBird`,
       description: `View project details and progress for ${project.title}`,
       openGraph: {
-        title: `${project.title} - Client View`,
+        title: `${project.title} - Client Profile`,
         description: `View project details and progress for ${project.title}`,
         type: 'website',
       },
     }
   } catch (error) {
     return {
-      title: 'Client View - LaunchBird',
+      title: 'Client Profile - LaunchBird',
       description: 'View your project details and progress',
     }
   }
@@ -60,7 +60,7 @@ export async function generateStaticParams() {
 }
 
 /**
- * Client View Page Component
+ * Client Profile Page Component
  * Handles static site generation and client-side hydration
  */
 export default async function ClientViewPage({ params, searchParams }: ClientViewPageProps) {
@@ -107,7 +107,7 @@ export default async function ClientViewPage({ params, searchParams }: ClientVie
       activities = await getProjectActivities(project.id, project.organizationId, 20)
     }
   } catch (err) {
-    console.error('Error loading client view:', err)
+          console.error('Error loading client profile:', err)
     error = 'An error occurred while loading the project'
   }
   

@@ -1,4 +1,4 @@
-// Firebase functions removed. Provide mock implementations.
+// Supabase functions removed. Provide mock implementations.
 import { auth } from './platform'
 
 /**
@@ -7,20 +7,34 @@ import { auth } from './platform'
  * @param isAdmin - Whether to grant or revoke admin privileges
  * @returns Promise with the result of the operation
  */
-export const setAdminClaims = async (_userUid: string, _isAdmin: boolean) => ({ success: true })
+export const setAdminClaims = async (_userUid: string, _isAdmin: boolean) => ({ 
+  success: true, 
+  message: 'Operation completed successfully',
+  error: null
+})
 
 /**
  * Get custom claims for a user
  * @param userUid - The user's unique ID
  * @returns Promise with the user's custom claims
  */
-export const getUserClaims = async (_userUid: string) => ({ success: true, claims: { admin: true } })
+export const getUserClaims = async (_userUid: string) => ({ 
+  success: true, 
+  claims: { admin: true },
+  message: 'User claims retrieved successfully',
+  error: null
+})
 
 /**
  * List all users with admin privileges
  * @returns Promise with array of admin user IDs
  */
-export const listAdminUsers = async () => ({ success: true, adminUsers: ['dev-user-123'] })
+export const listAdminUsers = async () => ({ 
+  success: true, 
+  adminUsers: ['dev-user-123'],
+  message: 'Admin users retrieved successfully',
+  error: null
+})
 
 /**
  * Check if the current user has admin privileges

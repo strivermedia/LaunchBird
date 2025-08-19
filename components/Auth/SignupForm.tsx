@@ -99,7 +99,7 @@ export default function SignupForm() {
     } catch (err) {
       const authError = err as AuthError
       
-      // Handle specific Firebase auth errors
+      // Handle specific auth errors
       switch (authError.code) {
         case 'auth/email-already-in-use':
           setError('An account with this email already exists')

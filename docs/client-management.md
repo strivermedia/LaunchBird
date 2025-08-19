@@ -106,7 +106,7 @@ Located at `components/Client/ClientList.tsx`
 **Features:**
 - Displays clients in a table format
 - Search and filtering
-- Quick actions (email, SMS, view, client view)
+- Quick actions (email, SMS, view, client profile)
 - Status badges
 - Responsive design
 

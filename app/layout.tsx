@@ -184,8 +184,8 @@ export default function RootLayout({
                 variant={activeSection === 'home' ? 'default' : 'ghost'}
                 className={`w-full ${sidebarCollapsed ? 'justify-center px-0' : 'justify-start px-2'} rounded-lg ${
                   activeSection === 'home'
-                    ? 'bg-primary text-primary-foreground hover:bg-[var(--primary-hover)] hover:text-primary-foreground'
-                    : 'text-foreground/90 hover:bg-accent hover:text-foreground'
+                    ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground'
+                    : 'text-foreground/90 hover:bg-sidebar-accent hover:text-foreground'
                 }`}
               >
                 <Home className={`h-5 w-5 ${sidebarCollapsed ? '' : 'mr-3'}`} />
@@ -197,8 +197,8 @@ export default function RootLayout({
                 variant={activeSection === 'projects' ? 'default' : 'ghost'}
                 className={`w-full ${sidebarCollapsed ? 'justify-center px-0' : 'justify-between px-2'} rounded-lg ${
                   activeSection === 'projects'
-                    ? 'bg-primary text-primary-foreground hover:bg-[var(--primary-hover)] hover:text-primary-foreground'
-                    : 'text-foreground/90 hover:bg-accent hover:text-foreground'
+                    ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground'
+                    : 'text-foreground/90 hover:bg-sidebar-accent hover:text-foreground'
                 }`}
               >
                 <div className="flex items-center space-x-3">
@@ -220,8 +220,8 @@ export default function RootLayout({
                 variant={activeSection === 'clients' ? 'default' : 'ghost'}
                 className={`w-full ${sidebarCollapsed ? 'justify-center px-0' : 'justify-start px-2'} rounded-lg ${
                   activeSection === 'clients'
-                    ? 'bg-primary text-primary-foreground hover:bg-[var(--primary-hover)] hover:text-primary-foreground'
-                    : 'text-foreground/90 hover:bg-accent hover:text-foreground'
+                    ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground'
+                    : 'text-foreground/90 hover:bg-sidebar-accent hover:text-foreground'
                 }`}
               >
                 <Building2 className={`h-5 w-5 ${sidebarCollapsed ? '' : 'mr-3'}`} />
@@ -234,8 +234,8 @@ export default function RootLayout({
                   variant={activeSection === 'team' ? 'default' : 'ghost'}
                   className={`w-full ${sidebarCollapsed ? 'justify-center px-0' : 'justify-start px-2'} rounded-lg ${
                     activeSection === 'team'
-                      ? 'bg-primary text-primary-foreground hover:bg-[var(--primary-hover)] hover:text-primary-foreground'
-                      : 'text-foreground/90 hover:bg-accent hover:text-foreground'
+                      ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground'
+                      : 'text-foreground/90 hover:bg-sidebar-accent hover:text-foreground'
                   }`}
                 >
                   <Users className={`h-5 w-5 ${sidebarCollapsed ? '' : 'mr-3'}`} />
@@ -248,8 +248,8 @@ export default function RootLayout({
                 variant={activeSection === 'settings' ? 'default' : 'ghost'}
                 className={`w-full ${sidebarCollapsed ? 'justify-center px-0' : 'justify-start px-2'} rounded-lg ${
                   activeSection === 'settings'
-                    ? 'bg-primary text-primary-foreground hover:bg-[var(--primary-hover)] hover:text-primary-foreground'
-                    : 'text-foreground/90 hover:bg-accent hover:text-foreground'
+                    ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground'
+                    : 'text-foreground/90 hover:bg-sidebar-accent hover:text-foreground'
                 }`}
               >
                 <Settings className={`h-5 w-5 ${sidebarCollapsed ? '' : 'mr-3'}`} />

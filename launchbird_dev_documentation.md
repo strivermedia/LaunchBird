@@ -24,7 +24,7 @@
 - Implement **Firebase Security Rules** for role-based access:
   - **Admin**: Full access
   - **Team Member**: Assigned data, title editing
-  - **Client View**: Read-only via secure, expirable 4-character alphanumeric code (e.g., `AB12`)
+  - **Client Profile**: Read-only via secure, expirable 4-character alphanumeric code (e.g., `AB12`)
 - Ensure **GDPR/CCPA compliance** for user data (e.g., location, theme).
 - Use **HTTPS**, **JWT**, and **rate limiting** for 4-character code access.
 
@@ -50,7 +50,7 @@
 - Use **ShadCN** components and **Lucide React** icons.
 - Use **Firebase** (Firestore, Storage, Functions, Authentication).
 - Support **Admin** (full access) and **Team Member** (assigned data, title editing) roles.
-- Implement **4-character code access** for Client View (alphanumeric, secure, expirable, read-only).
+- Implement **4-character code access** for Client Profile (alphanumeric, secure, expirable, read-only).
 - Include **time-based greeting** on Home Dashboard:
   - “Good Morning” (12 AM–11:59 AM)
   - “Good Afternoon” (12 PM–11:59 PM)

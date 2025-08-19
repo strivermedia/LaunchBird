@@ -153,7 +153,7 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
               return (
                 <div
                   key={project.id}
-                  className="bg-white dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600 hover:shadow-md transition-shadow"
+                  className="bg-white dark:bg-gray-700 rounded-lg p-6 border border-border hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
@@ -243,7 +243,7 @@ export default function ProjectsOverview({ projects, loading = false }: Projects
                     )}
 
                     {/* Action Buttons */}
-                    <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center justify-between pt-2 border-t border-border">
                       <div className="flex space-x-2">
                         <Button size="sm" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                           View Details

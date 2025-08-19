@@ -85,6 +85,7 @@ export interface Project {
   updatedAt: Date
   clientId?: string
   budget?: number
+  budgetSpent?: number
   tags?: string[]
   clientCode?: string
   codeExpiry?: Date

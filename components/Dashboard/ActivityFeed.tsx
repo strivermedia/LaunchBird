@@ -150,7 +150,7 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
                 return (
                   <div
                     key={activity.id}
-                    className="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600 hover:shadow-sm transition-shadow"
+                    className="bg-white dark:bg-gray-700 rounded-lg p-4 border border-border hover:shadow-sm transition-shadow"
                   >
                     <div className="flex items-start space-x-3">
                       {/* Activity Icon */}
@@ -202,7 +202,7 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
         )}
 
         {activities.length > 0 && (
-          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-center">
+          <div className="mt-4 pt-4 border-t border-border text-center">
             <Button variant="ghost" className="text-sm text-primary hover:text-primary/90 transition-colors flex items-center justify-center space-x-1">
               <span>View all activity</span>
               <ArrowRight className="h-4 w-4" />

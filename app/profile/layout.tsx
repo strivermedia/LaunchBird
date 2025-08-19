@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 }
 
 /**
- * Client View Layout
+ * Client Profile Layout
  * Standalone layout for client-facing pages without main app navigation
  */
 export default function ClientViewLayout({

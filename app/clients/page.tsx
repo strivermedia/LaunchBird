@@ -185,7 +185,7 @@ export default function ClientsPage() {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card className="border border-gray-200 dark:border-gray-700 shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+        <Card className="border border-border shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Clients</CardTitle>
             <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
@@ -198,7 +198,7 @@ export default function ClientsPage() {
           </CardContent>
         </Card>
 
-        <Card className="border border-gray-200 dark:border-gray-700 shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+        <Card className="border border-border shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">Active Clients</CardTitle>
             <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
@@ -211,7 +211,7 @@ export default function ClientsPage() {
           </CardContent>
         </Card>
 
-        <Card className="border border-gray-200 dark:border-gray-700 shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+        <Card className="border border-border shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">Prospects</CardTitle>
             <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
@@ -224,7 +224,7 @@ export default function ClientsPage() {
           </CardContent>
         </Card>
 
-        <Card className="border border-gray-200 dark:border-gray-700 shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+        <Card className="border border-border shadow-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Projects</CardTitle>
             <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-// Firebase removed. Use placeholders for system health.
+// Supabase removed. Use placeholders for system health.
 import { 
   Shield,
   BarChart3,

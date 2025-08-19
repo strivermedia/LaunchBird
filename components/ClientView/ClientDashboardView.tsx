@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { logClientAccess } from '@/lib/client-view'
+import { logClientAccess } from '@/lib/client-profile'
 import { getDynamicGradient, getGradientColors } from '@/lib/dashboard'
 import type { Client, Project } from '@/types'
 
@@ -93,7 +93,7 @@ export default function ClientDashboardView({
   const getTypeColor = (type: string): string => {
     switch (type) {
       case 'one-time':
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
       case 'ongoing':
         return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200'
       default:
@@ -132,13 +132,13 @@ export default function ClientDashboardView({
                   LaunchBird
                 </h1>
                 <p className="text-sm text-muted-foreground dark:text-muted-foreground">
-                  Client View
+                  Client Profile
                 </p>
               </div>
             </div>
             
             {/* Manager Contact Card */}
-            <div className="bg-card/80 backdrop-blur-sm border border-border/50 dark:border-border/50 rounded-lg p-4 shadow-sm">
+            <div className="bg-card/80 backdrop-blur-sm rounded-lg p-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                   <span className="text-white font-semibold text-sm">
@@ -180,98 +180,46 @@ export default function ClientDashboardView({
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Client Information */}
-        <Card className="border-0 shadow-lg mb-8 overflow-hidden bg-primary">
-          <CardHeader className="pb-4">
-            <div className="flex items-start justify-between">
-              <div className="space-y-2">
-                <CardTitle className="text-2xl font-bold text-white">
-                  Welcome, {client.name}
-                </CardTitle>
-                <CardDescription className="text-white/80">
-                  View all your projects and track progress
-                </CardDescription>
-              </div>
-              <div className="flex space-x-2">
-                <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
-                  {client.status.charAt(0).toUpperCase() + client.status.slice(1)}
-                </Badge>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Client Details */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                      <Building2 className="h-4 w-4 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">
-                        Company
-                      </p>
-                      <p className="text-sm text-white/80">
-                        {client.company || 'Not specified'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                      <Mail className="h-4 w-4 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">
-                        Email
-                      </p>
-                      <p className="text-sm text-white/80">
-                        {client.email}
-                      </p>
-                    </div>
-                  </div>
-                  {client.phone && (
-                    <div className="flex items-center space-x-2">
-                      <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                        <Phone className="h-4 w-4 text-white" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-white">
-                          Phone
-                        </p>
-                        <p className="text-sm text-white/80">
-                          {client.phone}
-                        </p>
-                      </div>
-                    </div>
-                  )}
+        <Card className="relative border border-border/80 shadow-sm mb-8 overflow-hidden card-glow">
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-64">
+            <div className="mx-auto h-full w-full rounded-b-3xl bg-gradient-to-t from-primary/5 via-primary/2 to-transparent blur-3xl dark:from-primary/4 dark:via-primary/2" />
+          </div>
+          <CardHeader className="relative z-10 pb-4">
+                          <div className="flex items-start justify-between">
+                <div className="space-y-2">
+                  <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {client.company || 'Company'}
+                  </CardTitle>
                 </div>
               </div>
-
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Project Statistics */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-sm font-medium text-white">
+              <div className="bg-white/30 dark:bg-white/15 backdrop-blur-sm rounded-xl p-6 border border-border/40">
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wide">
                       Total Projects
                     </p>
-                    <p className="text-2xl font-bold text-white">
+                    <p className="text-4xl font-bold text-gray-900 dark:text-white mt-1">
                       {stats.totalProjects}
                     </p>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <p className="text-xs text-white/70">
+                  <div className="grid grid-cols-2 gap-4 pt-2">
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                         Active
                       </p>
-                      <p className="text-sm font-semibold text-green-300">
+                      <p className="text-xl font-bold text-green-600 dark:text-green-300 mt-1">
                         {stats.activeProjects}
                       </p>
                     </div>
-                    <div>
-                      <p className="text-xs text-white/70">
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                         Completed
                       </p>
-                      <p className="text-sm font-semibold text-blue-300">
+                      <p className="text-xl font-bold text-blue-600 dark:text-blue-300 mt-1">
                         {stats.completedProjects}
                       </p>
                     </div>
@@ -280,20 +228,42 @@ export default function ClientDashboardView({
               </div>
 
               {/* Overall Progress */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-sm font-medium text-white">
+              <div className="bg-white/30 dark:bg-white/15 backdrop-blur-sm rounded-xl p-6 border border-border/40">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="relative w-24 h-24">
+                    <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 36 36">
+                      <path
+                        className="text-gray-200 dark:text-gray-700"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        fill="none"
+                        d="M18 2.0845
+                          a 15.9155 15.9155 0 0 1 0 31.831
+                          a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                      <path
+                        className="text-primary"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        fill="none"
+                        strokeDasharray={`${stats.totalProgress}, 100`}
+                        d="M18 2.0845
+                          a 15.9155 15.9155 0 0 1 0 31.831
+                          a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-xl font-bold text-gray-900 dark:text-white">
+                        {Math.round(stats.totalProgress)}%
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wide">
                       Overall Progress
                     </p>
-                    <p className="text-2xl font-bold text-white">
-                      {Math.round(stats.totalProgress)}%
-                    </p>
                   </div>
-                  <Progress 
-                    value={stats.totalProgress} 
-                    className="h-2"
-                  />
                 </div>
               </div>
             </div>
@@ -328,7 +298,7 @@ export default function ClientDashboardView({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project) => (
-                <Card key={project.id} className="border-border/50 dark:border-border/50 shadow-lg dark:shadow-xl hover:shadow-xl dark:hover:shadow-2xl transition-shadow">
+                <Card key={project.id} className="bg-white dark:bg-gray-800/90 backdrop-blur-sm hover:bg-white/95 dark:hover:bg-gray-800/95 transition-all duration-200">
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="space-y-1">
@@ -339,11 +309,11 @@ export default function ClientDashboardView({
                           {project.description || 'No description'}
                         </CardDescription>
                       </div>
-                      <div className="flex space-x-1">
-                        <Badge className={getStatusColor(project.status)}>
+                      <div className="flex space-x-2">
+                        <Badge className={`${getStatusColor(project.status)} whitespace-nowrap text-xs font-medium px-2.5 py-1 rounded-full`}>
                           {project.status.replace('-', ' ')}
                         </Badge>
-                        <Badge className={getTypeColor(project.type)}>
+                        <Badge className={`${getTypeColor(project.type)} whitespace-nowrap text-xs font-medium px-2.5 py-1 rounded-full`}>
                           {project.type.replace('-', ' ')}
                         </Badge>
                       </div>
@@ -362,10 +332,10 @@ export default function ClientDashboardView({
                       </div>
                       <Progress 
                         value={project.progress} 
-                        className="h-2 bg-muted dark:bg-muted"
+                        className="h-3 bg-gray-50 dark:bg-gray-700/50 rounded-full overflow-hidden"
                         style={{
-                          '--progress-background': '#6d28d9',
-                          '--progress-foreground': '#7c3aed',
+                          '--progress-background': 'oklch(0.9067 0 0)',
+                          '--progress-foreground': 'oklch(0.5106 0.2301 276.9656)',
                         } as React.CSSProperties}
                       />
                     </div>
@@ -390,8 +360,8 @@ export default function ClientDashboardView({
 
                     {/* Action Button */}
                     <Button
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                      onClick={() => window.open(`/view/${project.clientCode}`, '_blank')}
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium transition-all duration-200 shadow-none"
+                      onClick={() => window.open(`/profile/${project.clientCode}`, '_blank')}
                       disabled={!project.clientCode}
                     >
                       <ExternalLink className="h-4 w-4 mr-2" />

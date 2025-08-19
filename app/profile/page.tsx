@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
 /**
- * Client View Code Entry Page
+ * Client Profile Code Entry Page
  * Allows clients to enter their 4-character access code
  */
 export default function ClientViewCodeEntryPage() {
@@ -34,8 +34,8 @@ export default function ClientViewCodeEntryPage() {
     setError(null)
 
     try {
-      // Redirect to the client view page with the code
-      router.push(`/view/${code.toUpperCase()}`)
+          // Redirect to the client profile page with the code
+    router.push(`/profile/${code.toUpperCase()}`)
     } catch (err) {
       setError('An error occurred. Please try again.')
     } finally {
@@ -65,7 +65,7 @@ export default function ClientViewCodeEntryPage() {
               LaunchBird
             </h1>
             <p className="text-muted-foreground dark:text-muted-foreground mt-2">
-              Client View
+              Client Profile
             </p>
           </div>
         </div>

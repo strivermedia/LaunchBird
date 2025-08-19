@@ -75,9 +75,9 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
 
   if (loading) {
     return (
-      <Card className="relative border border-gray-200/80 dark:border-gray-800 shadow-sm overflow-hidden">
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-32">
-          <div className="mx-auto h-full w-[90%] rounded-b-xl bg-gradient-to-t from-primary/20 via-primary/5 to-transparent blur-2xl dark:from-primary/15 dark:via-primary/5" />
+      <Card className="relative border border-border/80 shadow-sm overflow-hidden">
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-64">
+          <div className="mx-auto h-full w-full rounded-b-3xl bg-gradient-to-t from-primary/5 via-primary/2 to-transparent blur-3xl dark:from-primary/4 dark:via-primary/2" />
         </div>
         <CardHeader>
           <Skeleton className="h-8 w-64" />
@@ -96,9 +96,9 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
 
   
   return (
-    <Card className="relative border border-gray-200/80 dark:border-gray-800 shadow-sm overflow-hidden">
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-32">
-        <div className="mx-auto h-full w-[90%] rounded-b-xl bg-gradient-to-t from-primary/20 via-primary/5 to-transparent blur-2xl dark:from-primary/15 dark:via-primary/5" />
+    <Card className="relative border border-border/80 shadow-sm overflow-hidden">
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-64">
+        <div className="mx-auto h-full w-full rounded-b-3xl bg-gradient-to-t from-primary/5 via-primary/2 to-transparent blur-3xl dark:from-primary/4 dark:via-primary/2" />
       </div>
       <CardHeader className="pb-4">
         <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -111,9 +111,9 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Local Time */}
-          <div className={`rounded-lg p-4 border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-300 ${gradient.cardBg} ${gradient.darkCardBg} backdrop-blur-sm`}>
+          <div className={`rounded-lg p-4 transition-all duration-300 bg-white/20 dark:bg-white/10 backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-md`}>
             <div className="flex items-center space-x-3 mb-2">
-              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/40 to-white/10 dark:from-white/10 dark:to-white/5 backdrop-blur-md flex items-center justify-center">
                 <Clock className="h-5 w-5 text-primary" />
               </div>
               <div>
@@ -127,9 +127,9 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
           </div>
 
           {/* Weather Information */}
-          <div className={`rounded-lg p-4 border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-300 ${gradient.cardBg} ${gradient.darkCardBg} backdrop-blur-sm`}>
+          <div className={`rounded-lg p-4 transition-all duration-300 bg-white/20 dark:bg-white/10 backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-md`}>
             <div className="flex items-center space-x-3 mb-2">
-              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/40 to-white/10 dark:from-white/10 dark:to-white/5 backdrop-blur-md flex items-center justify-center">
                 {weather?.condition === 'Clear' ? (
                   <Sun className="h-5 w-5 text-primary" />
                 ) : (
@@ -159,7 +159,7 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
           </div>
 
           {/* Quick Stats */}
-          <div className={`rounded-lg p-4 border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-300 ${gradient.cardBg} ${gradient.darkCardBg} backdrop-blur-sm`}>
+          <div className={`rounded-lg p-4 border border-border/50 hover:shadow-md transition-all duration-300 ${gradient.cardBg} ${gradient.darkCardBg} backdrop-blur-sm`}>
             <div className="flex items-center space-x-3 mb-2">
               <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                 <MapPin className="h-5 w-5 text-primary" />

@@ -96,7 +96,7 @@ export default function ClientProfilePage() {
     const mockViewCodes: ClientViewCode[] = [
       {
         id: 'code1',
-        clientId: clientId,
+        clientId,
         code: 'ABC1',
         accessType: 'code',
         isActive: true,
@@ -108,7 +108,7 @@ export default function ClientProfilePage() {
       },
       {
         id: 'code2',
-        clientId: clientId,
+        clientId,
         code: 'XYZ2',
         accessType: 'login',
         isActive: false,
@@ -123,7 +123,7 @@ export default function ClientProfilePage() {
     const mockCommunications: ClientCommunication[] = [
       {
         id: 'comm1',
-        clientId: clientId,
+        clientId,
         type: 'email',
         subject: 'Project Update - Website Redesign',
         content: 'Hi John, here\'s the latest update on your website redesign project...',
@@ -134,7 +134,7 @@ export default function ClientProfilePage() {
       },
       {
         id: 'comm2',
-        clientId: clientId,
+        clientId,
         type: 'call',
         content: 'Discussed timeline for mobile app development',
         sentBy: 'manager1',
@@ -147,7 +147,7 @@ export default function ClientProfilePage() {
     const mockNotes: ClientNote[] = [
       {
         id: 'note1',
-        clientId: clientId,
+        clientId,
         content: 'John prefers detailed technical specifications and weekly progress reports. He\'s very hands-on with project management.',
         createdBy: 'manager1',
         createdByName: 'Sarah Johnson',
@@ -158,7 +158,7 @@ export default function ClientProfilePage() {
       },
       {
         id: 'note2',
-        clientId: clientId,
+        clientId,
         content: 'Budget approval process takes 2-3 weeks. Plan accordingly for new project proposals.',
         createdBy: 'manager1',
         createdByName: 'Sarah Johnson',
@@ -172,7 +172,7 @@ export default function ClientProfilePage() {
     const mockProjects: ClientProject[] = [
       {
         id: 'proj1',
-        clientId: clientId,
+        clientId,
         projectId: 'project1',
         projectTitle: 'Website Redesign',
         projectType: 'one-time',
@@ -186,7 +186,7 @@ export default function ClientProfilePage() {
       },
       {
         id: 'proj2',
-        clientId: clientId,
+        clientId,
         projectId: 'project2',
         projectTitle: 'Mobile App Development',
         projectType: 'ongoing',
@@ -474,7 +474,7 @@ export default function ClientProfilePage() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
+              <div className="border-b border-border">
         <nav className="-mb-px flex space-x-8">
           {[
             { id: 'overview', label: 'Overview' },
@@ -489,7 +489,7 @@ export default function ClientProfilePage() {
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.id
                   ? 'border-purple-500 text-purple-600 dark:text-purple-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-border dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
               {tab.label}
@@ -876,7 +876,7 @@ export default function ClientProfilePage() {
                   {projects.map((project) => (
                     <div
                       key={project.id}
-                      className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      className="border border-border rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
@@ -940,7 +940,7 @@ export default function ClientProfilePage() {
                   {communications.map((comm) => (
                     <div
                       key={comm.id}
-                      className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                      className="border border-border rounded-lg p-4"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -1000,7 +1000,7 @@ export default function ClientProfilePage() {
                   {notes.map((note) => (
                     <div
                       key={note.id}
-                      className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                      className="border border-border rounded-lg p-4"
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
@@ -1043,7 +1043,7 @@ export default function ClientProfilePage() {
                 Access Codes
               </CardTitle>
               <CardDescription>
-                Manage 4-character codes for client view access
+                Manage 4-character codes for client profile access
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -1086,7 +1086,7 @@ export default function ClientProfilePage() {
                     {viewCodes.map((code) => (
                       <div
                         key={code.id}
-                        className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                        className="border border-border rounded-lg p-4"
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">

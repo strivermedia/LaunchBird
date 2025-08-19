@@ -20,38 +20,7 @@ jest.mock('next/navigation', () => ({
   },
 }))
 
-// Mock Firebase
-jest.mock('firebase/app', () => ({
-  initializeApp: jest.fn(),
-  getApps: jest.fn(() => []),
-}))
-
-jest.mock('firebase/auth', () => ({
-  getAuth: jest.fn(),
-  signInWithEmailAndPassword: jest.fn(),
-  createUserWithEmailAndPassword: jest.fn(),
-  signOut: jest.fn(),
-  sendPasswordResetEmail: jest.fn(),
-  signInAnonymously: jest.fn(),
-  onAuthStateChanged: jest.fn(),
-}))
-
-jest.mock('firebase/firestore', () => ({
-  getFirestore: jest.fn(),
-  doc: jest.fn(),
-  setDoc: jest.fn(),
-  getDoc: jest.fn(),
-  collection: jest.fn(),
-  query: jest.fn(),
-  where: jest.fn(),
-  getDocs: jest.fn(),
-  serverTimestamp: jest.fn(() => new Date()),
-}))
-
-// Mock environment variables
-process.env.NEXT_PUBLIC_FIREBASE_API_KEY = 'test-api-key'
-process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = 'test.firebaseapp.com'
-process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID = 'test-project'
-process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = 'test.appspot.com'
-process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID = '123456789'
-process.env.NEXT_PUBLIC_FIREBASE_APP_ID = 'test-app-id' 
+// Mock environment variables for testing
+process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
+process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key'
+process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY = 'test-weather-key' 

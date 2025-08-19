@@ -5,7 +5,7 @@ import { logAnalyticsEvent } from '@/lib/platform'
 import { getCurrentWeather, getWeatherEmoji } from '@/lib/weather'
 import { Clock, Sun, Cloud, CloudRain, Plus } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'
-import RingsAccent from '@/components/ui/rings-accent'
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import type { WeatherData } from '@/types'
@@ -91,8 +91,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div className="lg:col-span-2">
           <Card className="relative overflow-hidden border card-glow with-bottom-glow">
-            {/* Top-right rings accent */}
-            <RingsAccent className="absolute top-0 right-0 h-[24rem] w-[24rem] text-primary/30 dark:text-primary/25 translate-x-1/2 -translate-y-1/2" />
+
             <CardContent className="relative p-6">
               <div className="relative">
                 <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
@@ -102,10 +101,10 @@ export default function DashboardPage() {
                 {/* Weather and Time Information */}
                 <div className="flex flex-wrap gap-5">
                   {/* Local Time Widget */}
-                  <div className="relative min-w-72 rounded-xl border p-5 bg-white/60 dark:bg-white/5 backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-md card-glow with-bottom-glow">
+                  <div className="relative min-w-72 rounded-xl p-5 bg-white/20 dark:bg-white/10 backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-md card-glow with-bottom-glow">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-white/40 to-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm border border-white/30">
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/40 to-white/10 dark:from-white/10 dark:to-white/5 backdrop-blur-md flex items-center justify-center">
                           <Clock className="h-6 w-6 text-primary" />
                         </div>
                         <div>
@@ -118,10 +117,10 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Weather Widget */}
-                  <div className="relative min-w-72 rounded-xl border p-5 pr-4 bg-white/60 dark:bg-white/5 backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-md card-glow with-bottom-glow">
+                  <div className="relative min-w-72 rounded-xl p-5 pr-4 bg-white/20 dark:bg-white/10 backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-md card-glow with-bottom-glow">
                     <div className="flex items-center">
                       <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-white/40 to-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm border border-white/30">
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/40 to-white/10 dark:from-white/10 dark:to-white/5 backdrop-blur-md flex items-center justify-center">
                           {weather?.condition === 'Clear' ? (
                             <Sun className="h-6 w-6 text-primary" />
                           ) : weather?.condition === 'Clouds' ? (
