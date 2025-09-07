@@ -9,7 +9,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Client } from '@/types'
 import ClientList from '@/components/Client/ClientList'
 import AddClientForm from '@/components/Client/AddClientForm'
-import { getGradientColors } from '@/lib/dashboard'
 
 /**
  * Clients Dashboard Page

@@ -13,7 +13,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
  * Client Profile Code Entry Page
  * Allows clients to enter their 4-character access code
  */
-export default function ClientViewCodeEntryPage() {
+export default function ClientProfileCodeEntryPage() {
   const router = useRouter()
   const [code, setCode] = useState('')
   const [isLoading, setIsLoading] = useState(false)

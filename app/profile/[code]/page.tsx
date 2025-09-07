@@ -2,12 +2,12 @@ import React from 'react'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { getProjectByClientCode, getProjectActivities, getClientByAccessCode, getClientProjects } from '@/lib/client-profile'
-import { validateClientViewCode } from '@/lib/auth'
-import ClientViewContent from '@/components/ClientView/ClientViewContent'
-import ClientDashboardView from '@/components/ClientView/ClientDashboardView'
+import { validateClientProfileCode } from '@/lib/auth'
+import ClientProfileContent from '@/components/ClientProfile/ClientProfileContent'
+import ClientProfileDashboard from '@/components/ClientProfile/ClientProfileDashboard'
 import type { Project, Activity, Client } from '@/types'
 
-interface ClientViewPageProps {
+interface ClientProfilePageProps {
   params: {
     code: string
   }
@@ -19,7 +19,7 @@ interface ClientViewPageProps {
 /**
  * Generate metadata for the client profile page
  */
-export async function generateMetadata({ params }: ClientViewPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: ClientProfilePageProps): Promise<Metadata> {
   const code = params.code
   
   try {
@@ -63,7 +63,7 @@ export async function generateStaticParams() {
  * Client Profile Page Component
  * Handles static site generation and client-side hydration
  */
-export default async function ClientViewPage({ params, searchParams }: ClientViewPageProps) {
+export default async function ClientProfilePage({ params, searchParams }: ClientProfilePageProps) {
   const code = params.code
   const password = searchParams.password
   
@@ -81,7 +81,7 @@ export default async function ClientViewPage({ params, searchParams }: ClientVie
       // This is a client access code - show client dashboard
       const projects = await getClientProjects(client.id, client.organizationId)
       return (
-        <ClientDashboardView 
+        <ClientProfileDashboard 
           client={client}
           projects={projects}
           code={code}
@@ -91,7 +91,7 @@ export default async function ClientViewPage({ params, searchParams }: ClientVie
     
     // If not a client code, try project code
     if (password) {
-      const codeData = await validateClientViewCode(code, password)
+      const codeData = await validateClientProfileCode(code, password)
       if (!codeData) {
         error = 'Invalid access code or password'
       }
@@ -117,7 +117,7 @@ export default async function ClientViewPage({ params, searchParams }: ClientVie
   }
   
   return (
-    <ClientViewContent 
+    <ClientProfileContent 
       project={project} 
       activities={activities}
       code={code}

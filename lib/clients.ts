@@ -1,7 +1,7 @@
 // Supabase removed: provide mock data implementations
 import { 
   Client, 
-  ClientViewCode, 
+  ClientProfileCode, 
   ClientCommunication, 
   ClientNote, 
   ClientProject 
@@ -104,12 +104,12 @@ export async function deleteClient(_clientId: string, _userId: string): Promise<
 }
 
 /**
- * Get client view codes
+ * Get client profile codes
  * @param clientId - The client ID
  * @param userId - The current user ID
- * @returns Promise<ClientViewCode[]> - Array of view codes
+ * @returns Promise<ClientProfileCode[]> - Array of profile codes
  */
-export async function getClientViewCodes(_clientId: string, _userId: string): Promise<ClientViewCode[]> {
+export async function getClientProfileCodes(_clientId: string, _userId: string): Promise<ClientProfileCode[]> {
   // Mock implementation
   return [
     {

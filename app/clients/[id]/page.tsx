@@ -30,7 +30,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { 
   Client, 
-  ClientViewCode, 
+  ClientProfileCode, 
   ClientCommunication, 
   ClientNote, 
   ClientProject 
@@ -49,7 +49,7 @@ export default function ClientProfilePage() {
   const clientId = params.id as string
 
   const [client, setClient] = useState<Client | null>(null)
-  const [viewCodes, setViewCodes] = useState<ClientViewCode[]>([])
+  const [profileCodes, setProfileCodes] = useState<ClientProfileCode[]>([])
   const [communications, setCommunications] = useState<ClientCommunication[]>([])
   const [notes, setNotes] = useState<ClientNote[]>([])
   const [projects, setProjects] = useState<ClientProject[]>([])
@@ -93,7 +93,7 @@ export default function ClientProfilePage() {
       completedProjects: 3,
     }
 
-    const mockViewCodes: ClientViewCode[] = [
+    const mockProfileCodes: ClientProfileCode[] = [
       {
         id: 'code1',
         clientId,
@@ -200,7 +200,7 @@ export default function ClientProfilePage() {
     ]
 
     setClient(mockClient)
-    setViewCodes(mockViewCodes)
+    setProfileCodes(mockProfileCodes)
     setCommunications(mockCommunications)
     setNotes(mockNotes)
     setProjects(mockProjects)
@@ -1077,13 +1077,13 @@ export default function ClientProfilePage() {
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                   Active Codes
                 </h3>
-                {viewCodes.length === 0 ? (
+                {profileCodes.length === 0 ? (
                   <p className="text-gray-600 dark:text-gray-400 text-center py-8">
                     No access codes generated yet.
                   </p>
                 ) : (
                   <div className="space-y-4">
-                    {viewCodes.map((code) => (
+                    {profileCodes.map((code) => (
                       <div
                         key={code.id}
                         className="border border-border rounded-lg p-4"

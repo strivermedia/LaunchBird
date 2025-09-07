@@ -13,7 +13,7 @@ export const metadata: Metadata = {
  * Client Profile Layout
  * Standalone layout for client-facing pages without main app navigation
  */
-export default function ClientViewLayout({
+export default function ClientProfileLayout({
   children,
 }: {
   children: React.ReactNode

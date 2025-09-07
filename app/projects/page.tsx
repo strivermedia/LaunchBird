@@ -6,7 +6,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Filter, Search, Calendar, Users, Folder, BarChart3, TrendingUp, ChevronDown } from 'lucide-react'
+import { Plus, Filter, Search, Calendar, Users, Folder, BarChart3, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -23,121 +23,101 @@ import { useAuth } from '@/lib/useAuth'
 import { Project, ProjectType, ProjectStatus } from '@/types'
 import ProjectList from '@/components/Projects/ProjectList'
 import ProjectWizard from '@/components/Projects/ProjectWizard'
-import ProgressView from '@/components/Projects/ProgressView'
+
+// Mock data for development
+const mockProjects: Project[] = [
+  {
+    id: '1',
+    organizationId: 'org-1',
+    title: 'E-commerce Website Redesign',
+    description: 'Complete redesign of client e-commerce platform with modern UI/UX',
+    type: 'one-time',
+    status: 'in-progress',
+    progress: 65,
+    startDate: new Date('2024-01-15'),
+    endDate: new Date('2024-03-15'),
+    deadline: new Date('2024-03-15'),
+    assignedTo: ['user-1', 'user-2'],
+    createdBy: 'user-1',
+    createdAt: new Date('2024-01-10'),
+    updatedAt: new Date('2024-01-25'),
+    clientId: 'client-1',
+    budget: 15000,
+    budgetSpent: 9750,
+    tags: ['web-design', 'e-commerce'],
+    clientCode: 'AB12',
+    assignedManagerId: 'user-1',
+    assignedManagerName: 'John Doe',
+    assignedManagerTitle: 'Senior Developer',
+    assignedManagerEmail: 'john@launchbird.com',
+    assignedManagerPhone: '+1-555-0123'
+  },
+  {
+    id: '2',
+    organizationId: 'org-1',
+    title: 'PPC Campaign Management',
+    description: 'Ongoing PPC campaign management and optimization',
+    type: 'ongoing',
+    status: 'in-progress',
+    progress: 85,
+    startDate: new Date('2024-01-01'),
+    assignedTo: ['user-3'],
+    createdBy: 'user-1',
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-25'),
+    clientId: 'client-2',
+    budget: 5000,
+    budgetSpent: 4250,
+    tags: ['ppc', 'marketing'],
+    clientCode: 'CD34',
+    assignedManagerId: 'user-3',
+    assignedManagerName: 'Jane Smith',
+    assignedManagerTitle: 'Marketing Specialist',
+    assignedManagerEmail: 'jane@launchbird.com',
+    assignedManagerPhone: '+1-555-0456'
+  },
+  {
+    id: '3',
+    organizationId: 'org-1',
+    title: 'Mobile App Development',
+    description: 'Cross-platform mobile application for iOS and Android',
+    type: 'one-time',
+    status: 'planning',
+    progress: 25,
+    startDate: new Date('2024-02-01'),
+    endDate: new Date('2024-06-01'),
+    deadline: new Date('2024-06-01'),
+    assignedTo: ['user-1', 'user-4'],
+    createdBy: 'user-1',
+    createdAt: new Date('2024-01-20'),
+    updatedAt: new Date('2024-01-25'),
+    clientId: 'client-3',
+    budget: 25000,
+    budgetSpent: 6250,
+    tags: ['mobile', 'app-development'],
+    clientCode: 'EF56',
+    assignedManagerId: 'user-1',
+    assignedManagerName: 'John Doe',
+    assignedManagerTitle: 'Senior Developer',
+    assignedManagerEmail: 'john@launchbird.com',
+    assignedManagerPhone: '+1-555-0123'
+  }
+]
 
 /**
  * Projects page component
  * Displays project list, creation wizard, and progress tracking
  */
 export default function ProjectsPage() {
-  const { user } = useAuth()
-  const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
+  // const { user } = useAuth() // Temporarily disabled for debugging
+  const [projects, setProjects] = useState<Project[]>(mockProjects)
+  const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [typeFilter, setTypeFilter] = useState<string>('all')
   const [showWizard, setShowWizard] = useState(false)
-  const [viewMode, setViewMode] = useState<'list' | 'progress'>('list')
 
-  // Mock data for development
-  const mockProjects: Project[] = [
-    {
-      id: '1',
-      organizationId: 'org-1',
-      title: 'E-commerce Website Redesign',
-      description: 'Complete redesign of client e-commerce platform with modern UI/UX',
-      type: 'one-time',
-      status: 'in-progress',
-      progress: 65,
-      startDate: new Date('2024-01-15'),
-      endDate: new Date('2024-03-15'),
-      deadline: new Date('2024-03-15'),
-      assignedTo: ['user-1', 'user-2'],
-      createdBy: 'user-1',
-      createdAt: new Date('2024-01-10'),
-      updatedAt: new Date('2024-01-25'),
-      clientId: 'client-1',
-      budget: 15000,
-      budgetSpent: 9750, // 65% of budget
-      tags: ['web-design', 'e-commerce'],
-      clientCode: 'AB12',
-      assignedManagerId: 'user-1',
-      assignedManagerName: 'John Doe',
-      assignedManagerTitle: 'Senior Developer',
-      assignedManagerEmail: 'john@launchbird.com',
-      assignedManagerPhone: '+1-555-0123'
-    },
-    {
-      id: '2',
-      organizationId: 'org-1',
-      title: 'PPC Campaign Management',
-      description: 'Ongoing PPC campaign management and optimization',
-      type: 'ongoing',
-      status: 'in-progress',
-      progress: 85,
-      startDate: new Date('2024-01-01'),
-      assignedTo: ['user-3'],
-      createdBy: 'user-1',
-      createdAt: new Date('2024-01-01'),
-      updatedAt: new Date('2024-01-25'),
-      clientId: 'client-2',
-      budget: 5000,
-      budgetSpent: 4250, // 85% of budget
-      tags: ['ppc', 'marketing'],
-      clientCode: 'CD34',
-      assignedManagerId: 'user-3',
-      assignedManagerName: 'Jane Smith',
-      assignedManagerTitle: 'Marketing Specialist',
-      assignedManagerEmail: 'jane@launchbird.com',
-      assignedManagerPhone: '+1-555-0456'
-    },
-    {
-      id: '3',
-      organizationId: 'org-1',
-      title: 'Mobile App Development',
-      description: 'Cross-platform mobile application for iOS and Android',
-      type: 'one-time',
-      status: 'planning',
-      progress: 25,
-      startDate: new Date('2024-02-01'),
-      endDate: new Date('2024-06-01'),
-      deadline: new Date('2024-06-01'),
-      assignedTo: ['user-1', 'user-4'],
-      createdBy: 'user-1',
-      createdAt: new Date('2024-01-20'),
-      updatedAt: new Date('2024-01-25'),
-      clientId: 'client-3',
-      budget: 25000,
-      budgetSpent: 6250, // 25% of budget
-      tags: ['mobile', 'app-development'],
-      clientCode: 'EF56',
-      assignedManagerId: 'user-1',
-      assignedManagerName: 'John Doe',
-      assignedManagerTitle: 'Senior Developer',
-      assignedManagerEmail: 'john@launchbird.com',
-      assignedManagerPhone: '+1-555-0123'
-    }
-  ]
 
-  // Mock client data for development
-  const mockClients = {
-    'client-1': { id: 'client-1', name: 'Acme Corporation', company: 'Acme Corp' },
-    'client-2': { id: 'client-2', name: 'TechStart Inc', company: 'TechStart' },
-    'client-3': { id: 'client-3', name: 'Global Solutions', company: 'Global Solutions LLC' }
-  }
-
-  useEffect(() => {
-    // Simulate API call
-    const loadProjects = async () => {
-      setLoading(true)
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      setProjects(mockProjects)
-      setLoading(false)
-    }
-
-    loadProjects()
-  }, [])
 
   const filteredProjects = projects.filter(project => {
     const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -148,7 +128,10 @@ export default function ProjectsPage() {
     return matchesSearch && matchesStatus && matchesType
   })
 
-  const canCreateProject = user?.role === 'admin' || user?.role === 'team_member'
+  // In development mode, always allow project creation
+  const canCreateProject = true
+
+
 
   if (loading) {
     return (
@@ -188,31 +171,14 @@ export default function ProjectsPage() {
         </div>
         
         <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setViewMode(viewMode === 'list' ? 'progress' : 'list')}
-            className="hidden sm:flex"
-          >
-            {viewMode === 'list' ? (
-              <>
-                <TrendingUp className="h-4 w-4 mr-2" />
-                Progress View
-              </>
-            ) : (
-              <>
-                <Folder className="h-4 w-4 mr-2" />
-                List View
-              </>
-            )}
-          </Button>
-          
           {canCreateProject && (
             <Button
               onClick={() => setShowWizard(true)}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
+              size="lg"
             >
               <Plus className="h-4 w-4 mr-2" />
-              New Project
+              Add Project
             </Button>
           )}
         </div>
@@ -334,16 +300,12 @@ export default function ProjectsPage() {
       </Card>
 
       {/* Project Content */}
-      {viewMode === 'list' ? (
-        <ProjectList 
-          projects={filteredProjects}
-          onProjectUpdate={(updatedProject) => {
-            setProjects(prev => prev.map(p => p.id === updatedProject.id ? updatedProject : p))
-          }}
-        />
-      ) : (
-        <ProgressView projects={filteredProjects} />
-      )}
+      <ProjectList 
+        projects={filteredProjects}
+        onProjectUpdate={(updatedProject) => {
+          setProjects(prev => prev.map(p => p.id === updatedProject.id ? updatedProject : p))
+        }}
+      />
 
       {/* Project Creation Wizard */}
       {showWizard && (

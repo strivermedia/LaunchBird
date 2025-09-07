@@ -499,7 +499,7 @@ export interface Client {
   clientAccessEnabled?: boolean
 }
 
-export interface ClientViewCode {
+export interface ClientProfileCode {
   id: string
   clientId: string
   code: string

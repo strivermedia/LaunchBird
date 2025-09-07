@@ -84,7 +84,7 @@ Reusable client list component with:
 
 ### Backend Services
 
-#### `functions/shareClientViewLink.ts`
+#### `functions/shareClientProfileLink.ts`
 Firebase Functions for:
 - **Code Generation**: Creates unique 4-character alphanumeric codes
 - **Code Storage**: Manages codes in Firestore with expiration and usage tracking
@@ -127,9 +127,9 @@ interface Client {
 }
 ```
 
-#### ClientViewCode Interface
+#### ClientProfileCode Interface
 ```typescript
-interface ClientViewCode {
+interface ClientProfileCode {
   id: string
   clientId: string
   code: string

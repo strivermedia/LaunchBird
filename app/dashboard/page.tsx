@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from 'react'
 import { logAnalyticsEvent } from '@/lib/platform'
 import { getCurrentWeather, getWeatherEmoji } from '@/lib/weather'
-import { Clock, Sun, Cloud, CloudRain, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import GreetingCard from '@/components/Dashboard/GreetingCard'
 import type { WeatherData } from '@/types'
 
 /**
@@ -15,8 +16,6 @@ import type { WeatherData } from '@/types'
  * Displays the main dashboard content with dynamic welcome banner
  */
 export default function DashboardPage() {
-  const [localTime, setLocalTime] = useState<string>('7:15 PM')
-  const [greeting, setGreeting] = useState<string>('Good Evening')
   const [weather, setWeather] = useState<WeatherData | null>({
     temperature: 72,
     condition: 'Clear',
@@ -27,39 +26,9 @@ export default function DashboardPage() {
     feelsLike: 74,
     lastUpdated: new Date(),
   })
-  // Removed dynamic gradient hardcoded styling
 
-  // Update time, greeting, and weather
+  // Fetch weather data for GreetingCard
   useEffect(() => {
-    const updateTime = () => {
-      const now = new Date()
-      const hour = now.getHours()
-      
-      setLocalTime(now.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-      }))
-      
-      // Update greeting based on time of day
-      if (hour >= 5 && hour < 12) {
-        setGreeting('Good Morning')
-      } else if (hour >= 12 && hour < 17) {
-        setGreeting('Good Afternoon')
-      } else if (hour >= 17 && hour < 22) {
-        setGreeting('Good Evening')
-      } else {
-        setGreeting('Good Night')
-      }
-    }
-    
-    // Removed dynamic gradient updater
-    updateTime()
-    const timeInterval = setInterval(() => {
-      updateTime()
-    }, 60000) // Update every minute
-
-    // Fetch weather data
     const fetchWeather = async () => {
       try {
         const weatherData = await getCurrentWeather()
@@ -81,73 +50,14 @@ export default function DashboardPage() {
     }
 
     fetchWeather()
-
-    return () => clearInterval(timeInterval)
   }, [])
 
   return (
     <div className="min-h-screen p-6 bg-background">
-      {/* Welcome Banner aligned to left column width */}
+      {/* Welcome Banner using GreetingCard component */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div className="lg:col-span-2">
-          <Card className="relative overflow-hidden border card-glow with-bottom-glow">
-
-            <CardContent className="relative p-6">
-              <div className="relative">
-                <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-                  {greeting}, Developer!
-                </h2>
-
-                {/* Weather and Time Information */}
-                <div className="flex flex-wrap gap-5">
-                  {/* Local Time Widget */}
-                  <div className="relative min-w-72 rounded-xl p-5 bg-white/20 dark:bg-white/10 backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-md card-glow with-bottom-glow">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/40 to-white/10 dark:from-white/10 dark:to-white/5 backdrop-blur-md flex items-center justify-center">
-                          <Clock className="h-6 w-6 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                            {localTime}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Weather Widget */}
-                  <div className="relative min-w-72 rounded-xl p-5 pr-4 bg-white/20 dark:bg-white/10 backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-md card-glow with-bottom-glow">
-                    <div className="flex items-center">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/40 to-white/10 dark:from-white/10 dark:to-white/5 backdrop-blur-md flex items-center justify-center">
-                          {weather?.condition === 'Clear' ? (
-                            <Sun className="h-6 w-6 text-primary" />
-                          ) : weather?.condition === 'Clouds' ? (
-                            <Cloud className="h-6 w-6 text-primary" />
-                          ) : weather?.condition === 'Rain' ? (
-                            <CloudRain className="h-6 w-6 text-primary" />
-                          ) : (
-                            <Cloud className="h-6 w-6 text-primary" />
-                          )}
-                        </div>
-                        <div>
-                          <div className="flex items-center space-x-3 mb-2">
-                            <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                              {weather?.temperature}°
-                            </span>
-                            <div className="text-2xl">
-                              {getWeatherEmoji(weather?.condition || 'Clear')}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <GreetingCard userName="Developer" userLocation={weather?.location} />
         </div>
         {/* Right column: Recent Activity aligned with welcome banner */}
         <div className="hidden lg:block">

@@ -35,7 +35,7 @@ export interface UserProfile {
 /**
  * Client profile code interface
  */
-export interface ClientViewCode {
+export interface ClientProfileCode {
   code: string
   projectId: string
   password?: string
@@ -210,12 +210,12 @@ export const updateUserProfile = async (_uid: string, _updates: Partial<UserProf
  * Validate client profile code
  * @param code - 4-character code
  * @param password - Optional password
- * @returns Promise<ClientViewCode | null>
+ * @returns Promise<ClientProfileCode | null>
  */
-export const validateClientViewCode = async (
+export const validateClientProfileCode = async (
   code: string,
   password?: string
-): Promise<ClientViewCode | null> => ({
+): Promise<ClientProfileCode | null> => ({
   code: code.toUpperCase(),
   projectId: 'dev-project-123',
   password,
@@ -231,7 +231,7 @@ export const validateClientViewCode = async (
  * @param expiresInDays - Days until expiration (default: 30)
  * @returns Promise<string>
  */
-export const createClientViewCode = async (): Promise<string> => Math.random().toString(36).substring(2, 6).toUpperCase()
+export const createClientProfileCode = async (): Promise<string> => Math.random().toString(36).substring(2, 6).toUpperCase()
 
 /**
  * Get redirect path based on user role
@@ -245,7 +245,7 @@ export const getRedirectPath = (role: UserRole): string => {
     case 'team_member':
       return '/tasks'
     case 'client':
-      return '/view'
+      return '/profile'
     default:
       return '/dashboard'
   }

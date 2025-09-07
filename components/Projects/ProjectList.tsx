@@ -6,6 +6,8 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { 
   Calendar, 
   Users, 
@@ -20,7 +22,19 @@ import {
   Play,
   Pause,
   DollarSign,
-  Building2
+  Building2,
+  ChevronDown,
+  ChevronUp,
+  Plus,
+  Upload,
+  File,
+  FileText,
+  Image,
+  FileVideo,
+  FileAudio,
+  Archive,
+  Download,
+  Trash2 as TrashIcon
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -41,6 +55,7 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table'
+import { Separator } from '@/components/ui/separator'
 import { useAuth } from '@/lib/useAuth'
 import { Project, ProjectStatus, ProjectType } from '@/types'
 
@@ -55,6 +70,68 @@ const mockClients = {
   'client-2': { id: 'client-2', name: 'TechStart Inc', company: 'TechStart' },
   'client-3': { id: 'client-3', name: 'Global Solutions', company: 'Global Solutions LLC' }
 }
+
+// Mock project items/tasks
+const createMockProjectItems = (projectId: string) => [
+  {
+    id: 'item-1',
+    title: 'Design System Setup',
+    description: 'Create comprehensive design system with components and guidelines',
+    status: 'completed',
+    priority: 'high',
+    dueDate: new Date('2024-01-20'),
+    assignedTo: 'John Doe'
+  },
+  {
+    id: 'item-2',
+    title: 'Homepage Wireframes',
+    description: 'Create wireframes for homepage and main landing pages',
+    status: 'in-progress',
+    priority: 'high',
+    dueDate: new Date('2024-01-25'),
+    assignedTo: 'Jane Smith'
+  },
+  {
+    id: 'item-3',
+    title: 'Mobile Responsive Design',
+    description: 'Ensure all pages are mobile-friendly and responsive',
+    status: 'planning',
+    priority: 'medium',
+    dueDate: new Date('2024-02-01'),
+    assignedTo: 'Mike Johnson'
+  }
+]
+
+// Mock project files
+const createMockProjectFiles = (projectId: string) => [
+  {
+    id: 'file-1',
+    name: 'design-system.figma',
+    size: 2048576,
+    type: 'application/figma',
+    uploadedBy: 'John Doe',
+    uploadedAt: new Date('2024-01-18'),
+    category: 'design'
+  },
+  {
+    id: 'file-2',
+    name: 'homepage-wireframes.pdf',
+    size: 1048576,
+    type: 'application/pdf',
+    uploadedBy: 'Jane Smith',
+    uploadedAt: new Date('2024-01-20'),
+    category: 'document'
+  },
+  {
+    id: 'file-3',
+    name: 'product-catalog-mockup.png',
+    size: 3145728,
+    type: 'image/png',
+    uploadedBy: 'John Doe',
+    uploadedAt: new Date('2024-01-22'),
+    category: 'image'
+  }
+]
 
 /**
  * Get status badge variant and styling based on project status
@@ -187,7 +264,9 @@ const getBudgetStatusColor = (progress: number) => {
  */
 export default function ProjectList({ projects, onProjectUpdate }: ProjectListProps) {
   const { user } = useAuth()
+  const router = useRouter()
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
+  const [expandedProjectId, setExpandedProjectId] = useState<string | null>(null)
 
   const canEditProject = (project: Project) => {
     return user?.role === 'admin' || 
@@ -215,6 +294,38 @@ export default function ProjectList({ projects, onProjectUpdate }: ProjectListPr
     }
   }
 
+  const toggleProjectExpansion = (projectId: string) => {
+    setExpandedProjectId(expandedProjectId === projectId ? null : projectId)
+  }
+
+  const getFileIcon = (category: string) => {
+    switch (category) {
+      case 'design': return <File className="h-4 w-4" />
+      case 'document': return <FileText className="h-4 w-4" />
+      case 'image': return <Image className="h-4 w-4" />
+      case 'video': return <FileVideo className="h-4 w-4" />
+      case 'audio': return <FileAudio className="h-4 w-4" />
+      case 'archive': return <Archive className="h-4 w-4" />
+      default: return <File className="h-4 w-4" />
+    }
+  }
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
+
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    }).format(date)
+  }
+
   if (projects.length === 0) {
     return (
       <Card>
@@ -240,7 +351,7 @@ export default function ProjectList({ projects, onProjectUpdate }: ProjectListPr
   return (
     <div className="space-y-6">
       {/* Mobile Card View */}
-      <div className="block md:hidden space-y-4">
+      <div className="block md:hidden space-y-3">
         {projects.map((project) => {
           const statusConfig = getStatusConfig(project.status)
           const clientName = getClientName(project.clientId)
@@ -248,120 +359,67 @@ export default function ProjectList({ projects, onProjectUpdate }: ProjectListPr
           const budgetProgress = getBudgetProgress(project.budget, project.budgetSpent)
           const budgetStatusColor = getBudgetStatusColor(budgetProgress)
           return (
-            <Card key={project.id}>
-              <CardHeader className="pb-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 space-y-2">
-                    <CardTitle className="text-lg font-semibold text-foreground">
-                      {project.title}
-                    </CardTitle>
-                    {project.description && (
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {project.description}
-                      </p>
-                    )}
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Details
-                      </DropdownMenuItem>
-                      {canEditProject(project) && (
-                        <>
-                          <DropdownMenuItem>
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit Project
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete Project
-                          </DropdownMenuItem>
-                        </>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="space-y-4">
-                {/* Status and Type */}
+            <Card key={project.id} className="hover:shadow-md transition-shadow duration-200">
+              <CardContent className="p-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Badge variant={statusConfig.variant} className="text-xs">
-                      {project.status.replace('-', ' ')}
-                    </Badge>
-                  </div>
-                  <Badge variant="outline" className="text-xs">
-                    {project.type.replace('-', ' ')}
-                  </Badge>
-                </div>
-
-                {/* Progress */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Progress</span>
-                    <span className="font-semibold">{project.progress}%</span>
-                  </div>
-                  <Progress 
-                    value={project.progress} 
-                    className="h-2"
-                  />
-                </div>
-
-                {/* Timeline and Team */}
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    <span>
-                      {formatDate(project.startDate)}
-                      {project.endDate && ` - ${formatDate(project.endDate)}`}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Users className="h-4 w-4" />
-                    <span>{project.assignedTo.length} members</span>
-                  </div>
-                </div>
-
-                {/* Client and Budget */}
-                <div className="flex items-center justify-between">
-                  {clientName && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">Client:</span>
-                      <div className="flex items-center gap-1">
-                        <Building2 className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">{clientName}</span>
-                        {clientCompany && (
-                          <span className="text-xs text-muted-foreground">({clientCompany})</span>
+                  {/* Project Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-foreground truncate">
+                          {project.title}
+                        </h3>
+                        {project.description && (
+                          <p className="text-sm text-muted-foreground truncate">
+                            {project.description}
+                          </p>
                         )}
                       </div>
+                      <Badge variant={statusConfig.variant} className="text-xs shrink-0">
+                        {project.status.replace('-', ' ')}
+                      </Badge>
                     </div>
-                  )}
-                  {project.budget && (
-                    <div className="flex items-center gap-2">
-                      <div className="text-center">
-                        <RadialProgress 
-                          value={budgetProgress} 
-                          size={40} 
-                          strokeWidth={3}
-                          showValue={false}
-                          className={budgetStatusColor}
-                        />
+                    
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        <span>{formatDate(project.startDate)}</span>
                       </div>
-                      <div className="flex flex-col">
-                        <span className="text-xs text-muted-foreground">Budget</span>
-                        <span className="text-sm font-semibold">
-                          ${project.budgetSpent?.toLocaleString() || 0} / ${project.budget.toLocaleString()}
-                        </span>
+                      <div className="flex items-center gap-1">
+                        <Users className="h-4 w-4" />
+                        <span>{project.assignedTo.length}</span>
                       </div>
+                      {clientName && (
+                        <div className="flex items-center gap-1">
+                          <Building2 className="h-4 w-4" />
+                          <span className="truncate">{clientName}</span>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
+                  
+                  {/* Progress and Actions */}
+                  <div className="flex items-center gap-3 ml-4">
+                    <div className="text-center">
+                      <div className="text-sm font-semibold">{project.progress}%</div>
+                      <Progress 
+                        value={project.progress} 
+                        className="w-16 h-2"
+                      />
+                    </div>
+                    
+                    <Link 
+                      href={`/projects/${project.id}`}
+                      className="block"
+                    >
+                      <Button
+                        size="sm"
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4 py-2"
+                      >
+                        View Details
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -399,7 +457,7 @@ export default function ProjectList({ projects, onProjectUpdate }: ProjectListPr
                 <TableHead className="font-semibold text-gray-700 dark:text-gray-300 py-4">
                   Budget
                 </TableHead>
-                <TableHead className="font-semibold text-gray-700 dark:text-gray-300 py-4 text-right">
+                <TableHead className="font-semibold text-gray-700 dark:text-gray-300 py-4">
                   Actions
                 </TableHead>
               </TableRow>
@@ -420,9 +478,15 @@ export default function ProjectList({ projects, onProjectUpdate }: ProjectListPr
                   >
                     <TableCell className="py-4">
                       <div className="space-y-1">
-                        <div className="font-semibold text-gray-900 dark:text-white">
+                        <button
+                          onClick={() => {
+                            console.log('Project title clicked for project:', project.id)
+                            router.push(`/projects/${project.id}`)
+                          }}
+                          className="font-semibold text-gray-900 dark:text-white hover:text-primary transition-colors duration-200 text-left cursor-pointer"
+                        >
                           {project.title}
-                        </div>
+                        </button>
                         {project.description && (
                           <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-1 max-w-xs">
                             {project.description}
@@ -518,32 +582,18 @@ export default function ProjectList({ projects, onProjectUpdate }: ProjectListPr
                       )}
                     </TableCell>
                     
-                    <TableCell className="py-4">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <Eye className="h-4 w-4 mr-2" />
+                    <TableCell className="py-4 relative">
+                                              <Link 
+                          href={`/projects/${project.id}`}
+                          className="block"
+                        >
+                          <Button
+                            size="sm"
+                            className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4 py-2 cursor-pointer z-10 relative"
+                          >
                             View Details
-                          </DropdownMenuItem>
-                          {canEditProject(project) && (
-                            <>
-                              <DropdownMenuItem>
-                                <Edit className="h-4 w-4 mr-2" />
-                                Edit Project
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Delete Project
-                              </DropdownMenuItem>
-                            </>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                          </Button>
+                        </Link>
                     </TableCell>
                   </TableRow>
                 )

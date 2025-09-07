@@ -11,12 +11,12 @@ The LaunchBird Client Profile System provides a secure, read-only interface for 
 - **`app/profile/[code]/page.tsx`** - Main client profile page with static site generation (SSG)
 
 ### Components
-- **`components/ClientView/ClientViewContent.tsx`** - Main content component displaying project details
-- **`components/ClientView/ProjectStatus.tsx`** - Project milestones and timeline component
-- **`components/ClientView/FeedbackForm.tsx`** - Client feedback submission form
+- **`components/ClientProfile/ClientProfileContent.tsx`** - Main content component displaying project details
+- **`components/ClientProfile/ProjectStatus.tsx`** - Project milestones and timeline component
+- **`components/ClientProfile/FeedbackForm.tsx`** - Client feedback submission form
 
 ### Library Functions
-- **`lib/client-view.ts`** - Core functionality for client access, validation, and data retrieval
+- **`lib/client-profile.ts`** - Core functionality for client access, validation, and data retrieval
 
 ## Features
 
@@ -120,7 +120,7 @@ The system includes comprehensive tests covering:
 
 Run tests with:
 ```bash
-npm test -- tests/clientView.test.ts
+npm test -- tests/projects.test.ts
 ```
 
 ## Customization

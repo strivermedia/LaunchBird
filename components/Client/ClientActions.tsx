@@ -35,7 +35,7 @@ export default function ClientActions({
   onSendEmail, 
   onSendSMS 
 }: ClientActionsProps) {
-  const handleClientView = async () => {
+  const handleClientProfile = async () => {
     try {
       // Get or create client access code
       const accessCode = await createClientAccessCode(
@@ -110,7 +110,7 @@ export default function ClientActions({
         </DropdownMenuItem>
         
         <DropdownMenuItem 
-          onClick={handleClientView}
+          onClick={handleClientProfile}
           className="flex items-center gap-2 cursor-pointer"
         >
           <ExternalLink className="h-4 w-4 text-orange-600" />

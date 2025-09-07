@@ -12,9 +12,11 @@ import ProjectStatus from './ProjectStatus'
 import FeedbackForm from './FeedbackForm'
 import { logClientAccess } from '@/lib/client-profile'
 import { getDynamicGradient, getGradientColors } from '@/lib/dashboard'
+import { formatDate } from '@/lib/date-utils'
+import { getStatusColor, getTypeColor } from '@/lib/status-utils'
 import type { Project, Activity } from '@/types'
 
-interface ClientViewContentProps {
+interface ClientProfileContentProps {
   project: Project
   activities: Activity[]
   code: string
@@ -25,12 +27,12 @@ interface ClientViewContentProps {
  * Main Client Profile Content Component
  * Displays project details, milestones, shared files, and feedback forms
  */
-export default function ClientViewContent({ 
+export default function ClientProfileContent({ 
   project, 
   activities, 
   code, 
   password 
-}: ClientViewContentProps) {
+}: ClientProfileContentProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [accessLogged, setAccessLogged] = useState(false)
   const [gradient, setGradient] = useState(getDynamicGradient())
@@ -62,49 +64,6 @@ export default function ClientViewContent({
     return () => clearInterval(gradientInterval)
   }, [code, project.id, project.organizationId, accessLogged])
 
-  /**
-   * Format date for display
-   */
-  const formatDate = (date: Date | undefined): string => {
-    if (!date) return 'Not set'
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).format(date)
-  }
-
-  /**
-   * Get status color for badges
-   */
-  const getStatusColor = (status: string): string => {
-    switch (status) {
-      case 'completed':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-      case 'in-progress':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-      case 'review':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-      case 'on-hold':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-      default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
-    }
-  }
-
-  /**
-   * Get type color for badges
-   */
-  const getTypeColor = (type: string): string => {
-    switch (type) {
-      case 'one-time':
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
-      case 'ongoing':
-        return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200'
-      default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
-    }
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 dark:from-background dark:via-background dark:to-muted/20">
@@ -454,4 +413,5 @@ export default function ClientViewContent({
       </footer>
     </div>
   )
-} 
+}
+
