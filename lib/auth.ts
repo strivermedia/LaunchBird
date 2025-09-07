@@ -1,6 +1,5 @@
-// Supabase removed. Provide stubs and allow full access without auth
-type User = any
-type UserCredential = any
+// Supabase authentication implementation
+import { User, AuthError } from '@supabase/supabase-js'
 import { auth, db } from './platform'
 
 // Development mode flag - set to true to bypass authentication
@@ -81,35 +80,32 @@ export const getCurrentUser = async (): Promise<User | null> => {
   if (DEV_MODE) {
     // Return a mock user for development
     return {
-      uid: 'dev-user-123',
+      id: 'dev-user-123',
       email: 'dev@launchbird.com',
-      emailVerified: true,
-      isAnonymous: false,
-      metadata: {},
-      providerData: [],
-      refreshToken: '',
-      tenantId: null,
-      delete: async () => {},
-      getIdToken: async () => 'dev-token',
-      getIdTokenResult: async () => ({ 
-        authTime: '', 
-        issuedAtTime: '', 
-        signInProvider: null, 
-        signInSecondFactor: null,
-        claims: {}, 
-        expirationTime: '', 
-        token: 'dev-token' 
-      }),
-      reload: async () => {},
-      toJSON: () => ({}),
-      displayName: 'Developer',
-      phoneNumber: null,
-      photoURL: null,
-      providerId: 'password',
+      email_confirmed_at: new Date().toISOString(),
+      phone: null,
+      confirmed_at: new Date().toISOString(),
+      last_sign_in_at: new Date().toISOString(),
+      app_metadata: {},
+      user_metadata: {},
+      role: 'authenticated',
+      aud: 'authenticated',
+      created_at: new Date().toISOString(),
     } as User
   }
-  // Auth is disabled
-  return null
+  
+  if (!auth) {
+    console.warn('Auth not initialized')
+    return null
+  }
+  
+  const { data: { user }, error } = await auth.getUser()
+  if (error) {
+    console.error('Error getting current user:', error)
+    return null
+  }
+  
+  return user
 }
 
 /**
@@ -127,13 +123,13 @@ export const getCurrentUserProfile = async (): Promise<UserProfile | null> => {
     return null
   }
   
-  const user = auth.currentUser
+  const user = await getCurrentUser()
   if (!user) {
     console.log('No current user found')
     return null
   }
   
-  return getUserProfile(user.uid)
+  return getUserProfile(user.id)
 }
 
 /**
@@ -144,11 +140,23 @@ export const getCurrentUserProfile = async (): Promise<UserProfile | null> => {
  * @returns Promise<UserCredential>
  */
 export const signInWithEmail = async (
-  _email: string,
-  _password: string,
-  _rememberMe: boolean = false
-): Promise<UserCredential> => {
-  throw new Error('Authentication is disabled')
+  email: string,
+  password: string,
+  rememberMe: boolean = false
+): Promise<{ user: User | null; error: AuthError | null }> => {
+  if (!auth) {
+    throw new Error('Auth not initialized')
+  }
+  
+  const { data, error } = await auth.signInWithPassword({
+    email,
+    password,
+  })
+  
+  return {
+    user: data.user,
+    error: error as AuthError | null
+  }
 }
 
 /**
@@ -161,42 +169,138 @@ export const signInWithEmail = async (
  * @returns Promise<UserCredential>
  */
 export const createUserAccount = async (
-  _email: string,
-  _password: string,
-  _role: UserRole,
-  _title?: string,
-  _location?: string
-): Promise<UserCredential> => {
-  throw new Error('Authentication is disabled')
+  email: string,
+  password: string,
+  role: UserRole,
+  title?: string,
+  location?: string
+): Promise<{ user: User | null; error: AuthError | null }> => {
+  if (!auth) {
+    throw new Error('Auth not initialized')
+  }
+  
+  const { data, error } = await auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        role,
+        title,
+        location,
+      }
+    }
+  })
+  
+  if (data.user && !error) {
+    // Create user profile in database
+    await createUserProfile(data.user.id, {
+      email,
+      role,
+      title,
+      location,
+    })
+  }
+  
+  return {
+    user: data.user,
+    error: error as AuthError | null
+  }
 }
 
 /**
  * Sign out user
  * @returns Promise<void>
  */
-export const signOutUser = async (): Promise<void> => {}
+export const signOutUser = async (): Promise<void> => {
+  if (!auth) {
+    throw new Error('Auth not initialized')
+  }
+  
+  const { error } = await auth.signOut()
+  if (error) {
+    throw error
+  }
+}
 
 /**
  * Send password reset email
  * @param email - User email
  * @returns Promise<void>
  */
-export const sendPasswordReset = async (_email: string): Promise<void> => {}
+export const sendPasswordReset = async (email: string): Promise<void> => {
+  if (!auth) {
+    throw new Error('Auth not initialized')
+  }
+  
+  const { error } = await auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/reset-password`,
+  })
+  
+  if (error) {
+    throw error
+  }
+}
 
 /**
  * Sign in anonymously for client profile
  * @returns Promise<UserCredential>
  */
-export const signInAnonymouslyForClient = async (): Promise<UserCredential> => {
-  throw new Error('Authentication is disabled')
+export const signInAnonymouslyForClient = async (): Promise<{ user: User | null; error: AuthError | null }> => {
+  if (!auth) {
+    throw new Error('Auth not initialized')
+  }
+  
+  const { data, error } = await auth.signInAnonymously()
+  
+  return {
+    user: data.user,
+    error: error as AuthError | null
+  }
 }
 
 /**
- * Get user profile from Firestore
+ * Get user profile from Supabase
  * @param uid - User ID
  * @returns Promise<UserProfile | null>
  */
-export const getUserProfile = async (_uid: string): Promise<UserProfile | null> => getMockUser()
+export const getUserProfile = async (uid: string): Promise<UserProfile | null> => {
+  if (DEV_MODE) {
+    return getMockUser()
+  }
+  
+  if (!db) {
+    console.warn('Database not initialized')
+    return null
+  }
+  
+  const { data, error } = await db
+    .from('users')
+    .select('*')
+    .eq('id', uid)
+    .single()
+  
+  if (error) {
+    console.error('Error fetching user profile:', error)
+    return null
+  }
+  
+  return data ? {
+    uid: data.id,
+    email: data.email,
+    role: data.role,
+    title: data.title,
+    jobTitle: data.job_title,
+    location: data.location,
+    profileImageUrl: data.profile_image_url,
+    theme: data.theme,
+    organizationId: data.organization_id,
+    organizationRole: data.organization_role,
+    invitedBy: data.invited_by,
+    joinedAt: data.joined_at,
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
+  } : null
+}
 
 /**
  * Update user profile
@@ -204,7 +308,29 @@ export const getUserProfile = async (_uid: string): Promise<UserProfile | null> 
  * @param updates - Profile updates
  * @returns Promise<void>
  */
-export const updateUserProfile = async (_uid: string, _updates: Partial<UserProfile>): Promise<void> => {}
+export const updateUserProfile = async (uid: string, updates: Partial<UserProfile>): Promise<void> => {
+  if (!db) {
+    throw new Error('Database not initialized')
+  }
+  
+  const { error } = await db
+    .from('users')
+    .update({
+      title: updates.title,
+      job_title: updates.jobTitle,
+      location: updates.location,
+      profile_image_url: updates.profileImageUrl,
+      theme: updates.theme,
+      organization_id: updates.organizationId,
+      organization_role: updates.organizationRole,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', uid)
+  
+  if (error) {
+    throw error
+  }
+}
 
 /**
  * Validate client profile code
@@ -215,14 +341,48 @@ export const updateUserProfile = async (_uid: string, _updates: Partial<UserProf
 export const validateClientProfileCode = async (
   code: string,
   password?: string
-): Promise<ClientProfileCode | null> => ({
-  code: code.toUpperCase(),
-  projectId: 'dev-project-123',
-  password,
-  expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-  createdAt: new Date(),
-  createdBy: 'dev-user-123',
-})
+): Promise<ClientProfileCode | null> => {
+  if (DEV_MODE) {
+    return {
+      code: code.toUpperCase(),
+      projectId: 'dev-project-123',
+      password,
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      createdAt: new Date(),
+      createdBy: 'dev-user-123',
+    }
+  }
+  
+  if (!db) {
+    console.warn('Database not initialized')
+    return null
+  }
+  
+  const { data, error } = await db
+    .from('client_profile_codes')
+    .select('*')
+    .eq('code', code.toUpperCase())
+    .gt('expires_at', new Date().toISOString())
+    .single()
+  
+  if (error || !data) {
+    return null
+  }
+  
+  // Check password if required
+  if (data.password && data.password !== password) {
+    return null
+  }
+  
+  return {
+    code: data.code,
+    projectId: data.project_id,
+    password: data.password,
+    expiresAt: data.expires_at,
+    createdAt: data.created_at,
+    createdBy: data.created_by,
+  }
+}
 
 /**
  * Create client profile code
@@ -231,7 +391,38 @@ export const validateClientProfileCode = async (
  * @param expiresInDays - Days until expiration (default: 30)
  * @returns Promise<string>
  */
-export const createClientProfileCode = async (): Promise<string> => Math.random().toString(36).substring(2, 6).toUpperCase()
+export const createClientProfileCode = async (
+  projectId: string,
+  password?: string,
+  expiresInDays: number = 30
+): Promise<string> => {
+  if (DEV_MODE) {
+    return Math.random().toString(36).substring(2, 6).toUpperCase()
+  }
+  
+  if (!db) {
+    throw new Error('Database not initialized')
+  }
+  
+  const code = Math.random().toString(36).substring(2, 6).toUpperCase()
+  const expiresAt = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000)
+  
+  const { error } = await db
+    .from('client_profile_codes')
+    .insert({
+      code,
+      project_id: projectId,
+      password,
+      expires_at: expiresAt.toISOString(),
+      created_by: (await getCurrentUser())?.id || 'system',
+    })
+  
+  if (error) {
+    throw error
+  }
+  
+  return code
+}
 
 /**
  * Get redirect path based on user role
@@ -256,4 +447,42 @@ export const getRedirectPath = (role: UserRole): string => {
  * @param callback - Callback function
  * @returns Unsubscribe function
  */
-export const onAuthStateChange = (callback: (user: User | null) => void) => { callback(null); return () => {} }
+export const onAuthStateChange = (callback: (user: User | null) => void) => {
+  if (!auth) {
+    callback(null)
+    return () => {}
+  }
+  
+  const { data: { subscription } } = auth.onAuthStateChange(callback)
+  return () => subscription.unsubscribe()
+}
+
+/**
+ * Create user profile in database
+ * @param uid - User ID
+ * @param profileData - Profile data
+ * @returns Promise<void>
+ */
+const createUserProfile = async (uid: string, profileData: Partial<UserProfile>): Promise<void> => {
+  if (!db) {
+    throw new Error('Database not initialized')
+  }
+  
+  const { error } = await db
+    .from('users')
+    .insert({
+      id: uid,
+      email: profileData.email,
+      role: profileData.role,
+      title: profileData.title,
+      job_title: profileData.jobTitle,
+      location: profileData.location,
+      theme: profileData.theme || 'light',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+  
+  if (error) {
+    throw error
+  }
+}
