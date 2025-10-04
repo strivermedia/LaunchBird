@@ -62,13 +62,18 @@ export default function LoginForm() {
       )
 
       // Get user profile to determine redirect path
-      const userProfile = await getUserProfile(result.user.uid)
-      
-      if (userProfile) {
-        const redirectPath = getRedirectPath(userProfile.role)
-        router.push(redirectPath)
+      if (result.user?.id) {
+        const userProfile = await getUserProfile(result.user.id)
+        
+        if (userProfile) {
+          const redirectPath = getRedirectPath(userProfile.role)
+          router.push(redirectPath)
+        } else {
+          // Fallback to dashboard if no profile found
+          router.push('/dashboard')
+        }
       } else {
-        // Fallback to dashboard if no profile found
+        // Default redirect if no user ID
         router.push('/dashboard')
       }
     } catch (err) {

@@ -1,5 +1,6 @@
-// Supabase removed; use mock data helpers
+// Dashboard with local storage for development
 import { isDevMode } from './auth'
+import { DashboardStorage } from './localStorage'
 import {
   Project,
   Task,
@@ -150,6 +151,19 @@ export const getLocalTime = (): string => {
 }
 
 /**
+ * Get current date formatted
+ * @returns string
+ */
+export const getCurrentDate = (): string => {
+  return new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
+/**
  * Get mock data for development mode
  * @returns object with mock data
  */
@@ -214,8 +228,15 @@ const getMockData = () => {
       description: 'Create wireframes and mockups for homepage',
       status: 'in-progress',
       priority: 'high',
-      assignedTo: 'user-1',
+      assignedTo: ['user-1'],
+      assignedToNames: ['John Doe'],
       createdBy: 'user-1',
+      createdByName: 'John Doe',
+      dependencies: [],
+      isRecurring: false,
+      tags: [],
+      comments: [],
+      attachments: [],
       dueDate: new Date('2024-01-20'),
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-15'),
@@ -228,8 +249,15 @@ const getMockData = () => {
       description: 'Build responsive navigation component',
       status: 'todo',
       priority: 'medium',
-      assignedTo: 'user-2',
+      assignedTo: ['user-2'],
+      assignedToNames: ['Jane Smith'],
       createdBy: 'user-1',
+      createdByName: 'John Doe',
+      dependencies: [],
+      isRecurring: false,
+      tags: [],
+      comments: [],
+      attachments: [],
       dueDate: new Date('2024-01-25'),
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01'),
@@ -252,7 +280,7 @@ const getMockData = () => {
     {
       id: 'activity-2',
       organizationId: 'org-1',
-      type: 'task_completed',
+      type: 'project_update',
       title: 'Task Completed',
       description: 'Completed design phase and wireframes',
       userId: 'user-2',
@@ -320,7 +348,7 @@ export const getDashboardProjects = async (
   userId: string,
   userRole: string
 ): Promise<Project[]> => {
-  // Mock implementation
+  // Use local storage
   return getMockData().projects
 }
 
@@ -336,7 +364,7 @@ export const getDashboardTasks = async (
   userId: string,
   userRole: string
 ): Promise<Task[]> => {
-  // Mock implementation
+  // Use local storage
   return getMockData().tasks
 }
 
@@ -352,8 +380,8 @@ export const getDashboardActivities = async (
   userId: string,
   userRole: string
 ): Promise<Activity[]> => {
-  // Mock implementation
-  return getMockData().activities
+  // Use local storage
+  return DashboardStorage.getActivities(organizationId)
 }
 
 /**
@@ -366,8 +394,8 @@ export const getTimeSummary = async (
   organizationId: string,
   userId: string
 ): Promise<TimeSummary> => {
-  // Mock implementation
-  return getMockData().timeSummary
+  // Use local storage
+  return DashboardStorage.getTimeSummary(organizationId)
 }
 
 /**
@@ -382,8 +410,8 @@ export const getTeamWorkload = async (
   userId: string,
   userRole: string
 ): Promise<TeamMemberWorkload[]> => {
-  // Mock implementation
-  return getMockData().teamWorkload
+  // Use local storage
+  return DashboardStorage.getTeamWorkload(organizationId)
 }
 
 /**

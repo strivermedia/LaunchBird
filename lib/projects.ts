@@ -1,9 +1,14 @@
 /**
  * Projects Database Integration
- * Handles project data operations with Supabase/PostgreSQL
+ * Handles project data operations with local storage for development
  */
 
 import { Project, ProjectType, ProjectStatus } from '@/types'
+import { ProjectStorage } from './localStorage'
+import { db } from './platform'
+
+// Development mode flag
+const DEV_MODE = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
 
 // Mock data for development (will be replaced with Supabase calls)
 const mockProjects: Project[] = [
@@ -106,6 +111,8 @@ export interface CreateProjectData {
   assignedManagerTitle?: string
   assignedManagerEmail?: string
   assignedManagerPhone?: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface UpdateProjectData {
@@ -141,20 +148,18 @@ export async function getProjects(
   userId?: string,
   userRole?: string
 ): Promise<Project[]> {
+  // Use local storage in development mode
+  if (DEV_MODE) {
+    console.log('🔧 Development mode: Using local storage for projects')
+    return ProjectStorage.getProjects(organizationId)
+  }
+
   try {
-    // TODO: Replace with Supabase query when migration is complete
-    // const { data, error } = await supabase
-    //   .from('projects')
-    //   .select('*')
-    //   .eq('organization_id', organizationId)
-    //   .order('created_at', { ascending: false })
-
-    // if (error) throw error
-
+    // Fallback to local storage if Supabase is not available
+    const projects = await ProjectStorage.getProjects(organizationId)
+    
     // Role-based filtering
-    let filteredProjects = mockProjects.filter(project => 
-      project.organizationId === organizationId
-    )
+    let filteredProjects = projects
 
     // Team members can only see assigned projects
     if (userRole === 'team_member' && userId) {
@@ -182,17 +187,16 @@ export async function getProject(
   userId?: string,
   userRole?: string
 ): Promise<Project | null> {
+  // Use local storage in development mode
+  if (DEV_MODE) {
+    console.log('🔧 Development mode: Using local storage for project')
+    const organizationId = 'dev-org-123' // In a real app, this would come from user context
+    return ProjectStorage.getProject(organizationId, projectId)
+  }
+
   try {
-    // TODO: Replace with Supabase query when migration is complete
-    // const { data, error } = await supabase
-    //   .from('projects')
-    //   .select('*')
-    //   .eq('id', projectId)
-    //   .single()
-
-    // if (error) throw error
-
-    const project = mockProjects.find(p => p.id === projectId)
+    const organizationId = 'dev-org-123' // In a real app, this would come from user context
+    const project = await ProjectStorage.getProject(organizationId, projectId)
     
     if (!project) return null
 
@@ -215,28 +219,7 @@ export async function getProject(
  */
 export async function createProject(projectData: CreateProjectData): Promise<Project> {
   try {
-    // TODO: Replace with Supabase insert when migration is complete
-    // const { data, error } = await supabase
-    //   .from('projects')
-    //   .insert([{
-    //     ...projectData,
-    //     created_at: new Date().toISOString(),
-    //     updated_at: new Date().toISOString()
-    //   }])
-    //   .select()
-    //   .single()
-
-    // if (error) throw error
-
-    const newProject: Project = {
-      id: `project-${Date.now()}`,
-      ...projectData,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }
-
-    mockProjects.push(newProject)
-    return newProject
+    return ProjectStorage.createProject(projectData.organizationId, projectData)
   } catch (error) {
     console.error('Error creating project:', error)
     throw new Error('Failed to create project')
@@ -258,39 +241,24 @@ export async function updateProject(
   userRole?: string
 ): Promise<Project> {
   try {
-    // TODO: Replace with Supabase update when migration is complete
-    // const { data, error } = await supabase
-    //   .from('projects')
-    //   .update({
-    //     ...updateData,
-    //     updated_at: new Date().toISOString()
-    //   })
-    //   .eq('id', projectId)
-    //   .select()
-    //   .single()
-
-    // if (error) throw error
-
-    const projectIndex = mockProjects.findIndex(p => p.id === projectId)
+    const organizationId = 'dev-org-123' // In a real app, this would come from user context
     
-    if (projectIndex === -1) {
+    // First, get the current project to check access
+    const currentProject = await ProjectStorage.getProject(organizationId, projectId)
+    if (!currentProject) {
       throw new Error('Project not found')
     }
 
-    const project = mockProjects[projectIndex]
-
     // Role-based access control
-    if (userRole === 'team_member' && userId && !project.assignedTo.includes(userId)) {
+    if (userRole === 'team_member' && userId && !currentProject.assignedTo.includes(userId)) {
       throw new Error('Access denied')
     }
 
-    const updatedProject: Project = {
-      ...project,
-      ...updateData,
-      updatedAt: new Date()
+    const updatedProject = await ProjectStorage.updateProject(organizationId, projectId, updateData)
+    if (!updatedProject) {
+      throw new Error('Project not found')
     }
 
-    mockProjects[projectIndex] = updatedProject
     return updatedProject
   } catch (error) {
     console.error('Error updating project:', error)
@@ -311,27 +279,23 @@ export async function deleteProject(
   userRole?: string
 ): Promise<void> {
   try {
-    // TODO: Replace with Supabase delete when migration is complete
-    // const { error } = await supabase
-    //   .from('projects')
-    //   .delete()
-    //   .eq('id', projectId)
-
-    // if (error) throw error
-
-    const project = mockProjects.find(p => p.id === projectId)
+    const organizationId = 'dev-org-123' // In a real app, this would come from user context
     
-    if (!project) {
+    // First, get the current project to check access
+    const currentProject = await ProjectStorage.getProject(organizationId, projectId)
+    if (!currentProject) {
       throw new Error('Project not found')
     }
 
-    // Only admins can delete projects
+    // Only organization admins can delete projects
     if (userRole !== 'admin') {
-      throw new Error('Access denied')
+      throw new Error('Access denied - only organization admins can delete projects')
     }
 
-    const projectIndex = mockProjects.findIndex(p => p.id === projectId)
-    mockProjects.splice(projectIndex, 1)
+    const success = await ProjectStorage.deleteProject(organizationId, projectId)
+    if (!success) {
+      throw new Error('Project not found')
+    }
   } catch (error) {
     console.error('Error deleting project:', error)
     throw new Error('Failed to delete project')
@@ -345,17 +309,21 @@ export async function deleteProject(
  */
 export async function generateClientCode(organizationId: string): Promise<string> {
   try {
-    // TODO: Replace with Supabase query when migration is complete
-    // Check for existing codes to ensure uniqueness
-    // const { data: existingCodes } = await supabase
-    //   .from('projects')
-    //   .select('client_code')
-    //   .eq('organization_id', organizationId)
-    //   .not('client_code', 'is', null)
+    if (!db) {
+      throw new Error('Database not initialized')
+    }
 
-    const existingCodes = mockProjects
-      .filter(p => p.organizationId === organizationId && p.clientCode)
-      .map(p => p.clientCode!)
+    // Check for existing codes to ensure uniqueness
+    const { data: existingCodes } = await db
+      .from('client_profile_codes')
+      .select('code')
+      .eq('project_id', 
+        db.from('projects')
+          .select('id')
+          .eq('organization_id', organizationId)
+      )
+
+    const existingCodeList = (existingCodes || []).map((item: any) => item.code)
 
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
     let code: string
@@ -368,7 +336,7 @@ export async function generateClientCode(organizationId: string): Promise<string
         code += chars.charAt(Math.floor(Math.random() * chars.length))
       }
       attempts++
-    } while (existingCodes.includes(code) && attempts < maxAttempts)
+    } while (existingCodeList.includes(code) && attempts < maxAttempts)
 
     if (attempts >= maxAttempts) {
       throw new Error('Unable to generate unique client code')

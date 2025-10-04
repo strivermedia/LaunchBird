@@ -79,7 +79,7 @@ export const getProjectActivities = async (
     {
       id: 'activity-2',
       organizationId: 'dev-org-123',
-      type: 'task_completed',
+      type: 'project_update',
       title: 'Task Completed',
       description: 'Completed design phase and wireframes',
       userId: 'user-2',

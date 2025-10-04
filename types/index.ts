@@ -97,34 +97,11 @@ export interface Project {
   assignedManagerPhone?: string
 }
 
-/**
- * Task types
- */
-export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent'
-export type TaskStatus = 'todo' | 'in-progress' | 'review' | 'completed'
-
-export interface Task {
-  id: string
-  organizationId: string
-  title: string
-  description?: string
-  projectId: string
-  assignedTo: string
-  priority: TaskPriority
-  status: TaskStatus
-  dueDate?: Date
-  completedAt?: Date
-  createdBy: string
-  createdAt: Date
-  updatedAt: Date
-  estimatedHours?: number
-  actualHours?: number
-}
 
 /**
  * Activity types
  */
-export type ActivityType = 'project_update' | 'task_completed' | 'client_feedback' | 'shoutout' | 'message' | 'deadline_reminder'
+export type ActivityType = 'project_update' | 'client_feedback' | 'shoutout' | 'message' | 'deadline_reminder'
 
 export interface Activity {
   id: string
@@ -136,7 +113,6 @@ export interface Activity {
   userName: string
   userTitle?: string
   projectId?: string
-  taskId?: string
   timestamp: Date
   metadata?: Record<string, any>
 }
@@ -178,7 +154,6 @@ export interface TimeEntry {
   id: string
   userId: string
   projectId?: string
-  taskId?: string
   description: string
   startTime: Date
   endTime?: Date
@@ -220,11 +195,11 @@ export interface TeamMemberWorkload {
   userId: string
   userName: string
   userTitle?: string
+  totalHours: number
   totalTasks: number
   completedTasks: number
   inProgressTasks: number
   overdueTasks: number
-  totalHours: number
   avatar?: string
 }
 
@@ -237,10 +212,16 @@ export interface DashboardStats {
   completedProjects: number
   totalTasks: number
   completedTasks: number
+  inProgressTasks: number
   overdueTasks: number
-  teamMembers: number
-  totalHours: number
-  thisWeekHours: number
+  totalClients: number
+  activeClients: number
+  totalUsers: number
+  totalTeamMembers: number
+  activeTeamMembers: number
+  upcomingDeadlines: number
+  totalRevenue: number
+  monthlyRevenue: number
 }
 
 /**
@@ -253,7 +234,6 @@ export type Theme = 'light' | 'dark' | 'system'
  */
 export interface DashboardFilters {
   projectStatus?: ProjectStatus[]
-  taskStatus?: TaskStatus[]
   dateRange?: {
     start: Date
     end: Date
@@ -264,7 +244,7 @@ export interface DashboardFilters {
 /**
  * Quick action types
  */
-export type QuickActionType = 'create_project' | 'create_task' | 'create_shoutout' | 'send_message'
+export type QuickActionType = 'create_project' | 'create_shoutout' | 'send_message' | 'create_task'
 
 export interface QuickAction {
   type: QuickActionType
@@ -368,7 +348,6 @@ export interface DeadlineReminder {
   description: string
   deadline: Date
   projectId?: string
-  taskId?: string
   assignedTo: string[]
   priority: 'low' | 'medium' | 'high' | 'urgent'
   isCompleted: boolean
@@ -385,7 +364,6 @@ export interface DashboardContextType {
   setTheme: (theme: Theme) => void
   stats: DashboardStats | null
   projects: Project[]
-  tasks: Task[]
   activities: Activity[]
   timeSummary: TimeSummary | null
   weather: WeatherData | null
@@ -410,15 +388,6 @@ export interface CreateProjectForm {
   tags?: string[]
 }
 
-export interface CreateTaskForm {
-  title: string
-  description?: string
-  projectId: string
-  assignedTo: string
-  priority: TaskPriority
-  dueDate?: Date
-  estimatedHours?: number
-}
 
 export interface CreateShoutoutForm {
   content: string
@@ -550,4 +519,117 @@ export interface ClientProject {
   endDate?: Date
   progress: number
   lastUpdate?: Date
+}
+
+/**
+ * Task Management Types
+ */
+export type TaskStatus = 'todo' | 'in-progress' | 'review' | 'completed'
+export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent'
+export type TaskRecurrence = 'none' | 'daily' | 'weekly' | 'monthly'
+
+export interface Task {
+  id: string
+  organizationId: string
+  title: string
+  description?: string
+  status: TaskStatus
+  priority: TaskPriority
+  dueDate?: Date
+  startDate?: Date
+  assignedTo: string[]
+  assignedToNames: string[]
+  createdBy: string
+  createdByName: string
+  projectId?: string
+  projectTitle?: string
+  parentTaskId?: string // ID of parent task for subtasks
+  taskType?: string
+  dependencies: string[] // Array of task IDs
+  isRecurring: boolean
+  recurrencePattern?: TaskRecurrence
+  recurrenceEndDate?: Date
+  tags: string[]
+  comments: TaskComment[]
+  attachments: TaskAttachment[]
+  createdAt: Date
+  updatedAt: Date
+  completedAt?: Date
+  estimatedHours?: number
+  actualHours?: number
+  subtasks?: Task[]
+}
+
+export interface TaskComment {
+  id: string
+  taskId: string
+  content: string
+  authorId: string
+  authorName: string
+  authorTitle?: string
+  createdAt: Date
+  updatedAt: Date
+  isEdited: boolean
+}
+
+export interface TaskAttachment {
+  id: string
+  taskId: string
+  fileName: string
+  fileSize: number
+  fileType: string
+  fileUrl: string
+  uploadedBy: string
+  uploadedByName: string
+  createdAt: Date
+}
+
+export interface TaskReminder {
+  id: string
+  taskId: string
+  reminderType: 'due_date' | 'overdue' | 'recurring'
+  scheduledFor: Date
+  isSent: boolean
+  sentAt?: Date
+  userId: string
+}
+
+export interface TaskFilter {
+  status?: TaskStatus[]
+  priority?: TaskPriority[]
+  assignedTo?: string[]
+  createdBy?: string
+  projectId?: string
+  dueDateRange?: {
+    start: Date
+    end: Date
+  }
+  startDateFrom?: Date
+  startDateTo?: Date
+  dueDateFrom?: Date
+  dueDateTo?: Date
+  createdDateFrom?: Date
+  createdDateTo?: Date
+  modifiedDateFrom?: Date
+  modifiedDateTo?: Date
+  completedDateFrom?: Date
+  completedDateTo?: Date
+  taskType?: string
+  tags?: string[]
+  isOverdue?: boolean
+}
+
+export interface TaskSort {
+  field: 'title' | 'dueDate' | 'priority' | 'createdAt' | 'updatedAt'
+  direction: 'asc' | 'desc'
+}
+
+export interface CreateSubtaskForm {
+  title: string
+  description?: string
+  priority: TaskPriority
+  dueDate?: Date
+  assignedTo: string[]
+  estimatedHours?: number
+  tags: string[]
 } 

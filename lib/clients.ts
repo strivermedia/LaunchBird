@@ -1,4 +1,4 @@
-// Supabase removed: provide mock data implementations
+// Client management with local storage for development
 import { 
   Client, 
   ClientProfileCode, 
@@ -6,6 +6,50 @@ import {
   ClientNote, 
   ClientProject 
 } from '@/types'
+import { ClientStorage } from './localStorage'
+
+// Development mode flag
+const DEV_MODE = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
+
+// Mock data for development
+const mockClients: Client[] = [
+  {
+    id: 'client-1',
+    organizationId: 'org-1',
+    name: 'Acme Corporation',
+    email: 'contact@acme.com',
+    company: 'Acme Corporation',
+    phone: '+1-555-0123',
+    assignedManagerId: 'user-1',
+    assignedManagerName: 'John Doe',
+    status: 'active',
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-25'),
+    totalProjects: 3,
+    activeProjects: 2,
+    completedProjects: 1,
+    lastContactDate: new Date('2024-01-20'),
+    notes: '',
+  },
+  {
+    id: 'client-2',
+    organizationId: 'org-1',
+    name: 'TechStart Inc',
+    email: 'hello@techstart.com',
+    company: 'TechStart Inc',
+    phone: '+1-555-0456',
+    assignedManagerId: 'user-2',
+    assignedManagerName: 'Jane Smith',
+    status: 'active',
+    createdAt: new Date('2024-01-15'),
+    updatedAt: new Date('2024-01-25'),
+    totalProjects: 1,
+    activeProjects: 1,
+    completedProjects: 0,
+    lastContactDate: new Date('2024-01-22'),
+    notes: '',
+  }
+]
 
 /**
  * Client Data Management Library
@@ -19,22 +63,19 @@ import {
  * @returns Promise<Client[]> - Array of clients
  */
 export async function getClients(organizationId: string, userId: string): Promise<Client[]> {
-  return [
-    {
-      id: 'client-1',
-      organizationId,
-      name: 'John Smith',
-      email: 'john.smith@acme.com',
-      assignedManagerId: userId,
-      assignedManagerName: 'Sarah Johnson',
-      status: 'active',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      totalProjects: 2,
-      activeProjects: 1,
-      completedProjects: 1,
-    },
-  ]
+  // Use local storage in development mode
+  if (DEV_MODE) {
+    console.log('🔧 Development mode: Using local storage for clients')
+    return ClientStorage.getClients(organizationId)
+  }
+
+  try {
+    // Fallback to local storage if Supabase is not available
+    return ClientStorage.getClients(organizationId)
+  } catch (error) {
+    console.error('Error fetching clients:', error)
+    throw new Error('Failed to fetch clients')
+  }
 }
 
 /**
@@ -43,21 +84,15 @@ export async function getClients(organizationId: string, userId: string): Promis
  * @param userId - The current user ID for permission checking
  * @returns Promise<Client | null> - The client data or null if not found
  */
-export async function getClient(clientId: string, _userId: string): Promise<Client | null> {
-  return {
-    id: clientId,
-    organizationId: 'org1',
-    name: 'John Smith',
-    email: 'john.smith@acme.com',
-    assignedManagerId: 'manager1',
-    assignedManagerName: 'Sarah Johnson',
-    status: 'active',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    totalProjects: 2,
-    activeProjects: 1,
-    completedProjects: 1,
-  } as Client
+export async function getClient(clientId: string, userId: string): Promise<Client | null> {
+  try {
+    // Extract organizationId from userId or use default
+    const organizationId = 'dev-org-123' // In a real app, this would come from user context
+    return ClientStorage.getClient(organizationId, clientId)
+  } catch (error) {
+    console.error('Error fetching client:', error)
+    throw new Error('Failed to fetch client')
+  }
 }
 
 /**
@@ -68,12 +103,26 @@ export async function getClient(clientId: string, _userId: string): Promise<Clie
  * @returns Promise<string> - The new client ID
  */
 export async function createClient(
-  _clientData: Omit<Client, 'id'>,
-  _userId: string,
-  _retryCount: number = 0
+  clientData: Omit<Client, 'id'>,
+  userId: string,
+  retryCount: number = 0
 ): Promise<string> {
-  await new Promise(r => setTimeout(r, 300))
-  return `dev-client-${Math.random().toString(36).slice(2, 11)}`
+  try {
+    const organizationId = clientData.organizationId || 'dev-org-123'
+    const newClient = await ClientStorage.createClient(organizationId, clientData)
+    return newClient.id
+  } catch (error) {
+    console.error('Error creating client:', error)
+    
+    // Retry logic for transient errors
+    if (retryCount < 3) {
+      console.log(`Retrying client creation (attempt ${retryCount + 1})`)
+      await new Promise(r => setTimeout(r, 1000 * (retryCount + 1)))
+      return createClient(clientData, userId, retryCount + 1)
+    }
+    
+    throw new Error('Failed to create client')
+  }
 }
 
 /**
@@ -84,11 +133,20 @@ export async function createClient(
  * @returns Promise<void>
  */
 export async function updateClient(
-  _clientId: string,
-  _updates: Partial<Client>,
-  _userId: string
+  clientId: string,
+  updates: Partial<Client>,
+  userId: string
 ): Promise<void> { 
-  await new Promise(r => setTimeout(r, 200)) 
+  try {
+    const organizationId = 'dev-org-123' // In a real app, this would come from user context
+    const updatedClient = await ClientStorage.updateClient(organizationId, clientId, updates)
+    if (!updatedClient) {
+      throw new Error('Client not found')
+    }
+  } catch (error) {
+    console.error('Error updating client:', error)
+    throw new Error('Failed to update client')
+  }
 }
 
 /**
@@ -97,10 +155,17 @@ export async function updateClient(
  * @param userId - The current user ID
  * @returns Promise<void>
  */
-export async function deleteClient(_clientId: string, _userId: string): Promise<void> {
-  // Mock implementation - no actual delete
-  console.log('Mock implementation - deleting client:', _clientId)
-  await new Promise(r => setTimeout(r, 200))
+export async function deleteClient(clientId: string, userId: string): Promise<void> {
+  try {
+    const organizationId = 'dev-org-123' // In a real app, this would come from user context
+    const success = await ClientStorage.deleteClient(organizationId, clientId)
+    if (!success) {
+      throw new Error('Client not found')
+    }
+  } catch (error) {
+    console.error('Error deleting client:', error)
+    throw new Error('Failed to delete client')
+  }
 }
 
 /**

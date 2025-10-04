@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Clock, Thermometer, Cloud, Sun, Moon } from 'lucide-react'
-import { getGreeting, getLocalTime, getDynamicGradient } from '@/lib/dashboard'
+import { Clock, Thermometer, Cloud, Sun, Moon, Calendar } from 'lucide-react'
+import { getGreeting, getLocalTime, getCurrentDate, getDynamicGradient } from '@/lib/dashboard'
 import { getCurrentWeather, getWeatherEmoji } from '@/lib/weather'
 import { WeatherData } from '@/types'
 
@@ -21,20 +21,23 @@ interface GreetingCardProps {
 export default function GreetingCard({ userName, userLocation }: GreetingCardProps) {
   const [greeting, setGreeting] = useState<string>('')
   const [localTime, setLocalTime] = useState<string>('')
+  const [currentDate, setCurrentDate] = useState<string>('')
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(true)
   const [gradient, setGradient] = useState(getDynamicGradient())
 
   useEffect(() => {
-    // Set initial greeting, time, and gradient immediately
+    // Set initial greeting, time, date, and gradient immediately
     setGreeting(getGreeting(userName))
     setLocalTime(getLocalTime())
+    setCurrentDate(getCurrentDate())
     setGradient(getDynamicGradient())
     setLoading(false) // Don't wait for weather to load
 
-    // Update time and gradient every minute
+    // Update time, date, and gradient every minute
     const timeInterval = setInterval(() => {
       setLocalTime(getLocalTime())
+      setCurrentDate(getCurrentDate())
       setGradient(getDynamicGradient())
     }, 60000)
 
@@ -101,7 +104,7 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
         <div 
           className="mx-auto h-full w-full"
           style={{
-            background: 'linear-gradient(to bottom, transparent 0%, transparent 60%, oklch(0.5106 0.2301 276.9656 / 0.08) 80%, oklch(0.5106 0.2301 276.9656 / 0.15) 100%)'
+            background: 'linear-gradient(to bottom, transparent 0%, oklch(0.5106 0.2301 276.9656 / 0.05) 30%, oklch(0.5106 0.2301 276.9656 / 0.15) 60%, oklch(0.5106 0.2301 276.9656 / 0.25) 80%, oklch(0.5106 0.2301 276.9656 / 0.35) 100%)'
           }}
         />
       </div>
@@ -112,7 +115,7 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Local Time */}
           <div className="flex items-center space-x-4 p-4 rounded-lg bg-white/20 dark:bg-white/10 backdrop-blur-md">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/40 to-white/10 dark:from-white/10 dark:to-white/5 backdrop-blur-md flex items-center justify-center">
@@ -122,6 +125,19 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
               <p className="text-sm text-gray-500 dark:text-gray-400">Local Time</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {localTime}
+              </p>
+            </div>
+          </div>
+
+          {/* Current Date */}
+          <div className="flex items-center space-x-4 p-4 rounded-lg bg-white/20 dark:bg-white/10 backdrop-blur-md">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/40 to-white/10 dark:from-white/10 dark:to-white/5 backdrop-blur-md flex items-center justify-center">
+              <Calendar className="h-6 w-6 text-black dark:text-white" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Today</p>
+              <p className="text-lg font-bold text-gray-900 dark:text-white">
+                {currentDate}
               </p>
             </div>
           </div>

@@ -100,13 +100,20 @@ const createMockTasks = (projectId: string): Task[] => [
     organizationId: 'org-1',
     title: 'Design System Setup',
     description: 'Create comprehensive design system with components and guidelines',
-    projectId: projectId,
-    assignedTo: 'user-1',
+    projectId,
+    assignedTo: ['user-1'],
+    assignedToNames: ['John Doe'],
     priority: 'high',
     status: 'completed',
     dueDate: new Date('2024-01-20'),
     completedAt: new Date('2024-01-18'),
     createdBy: 'user-1',
+    createdByName: 'John Doe',
+    dependencies: [],
+    isRecurring: false,
+    tags: [],
+    comments: [],
+    attachments: [],
     createdAt: new Date('2024-01-10'),
     updatedAt: new Date('2024-01-18'),
     estimatedHours: 16,
@@ -117,12 +124,19 @@ const createMockTasks = (projectId: string): Task[] => [
     organizationId: 'org-1',
     title: 'Homepage Wireframes',
     description: 'Create wireframes for homepage and main landing pages',
-    projectId: projectId,
-    assignedTo: 'user-2',
+    projectId,
+    assignedTo: ['user-2'],
+    assignedToNames: ['Jane Smith'],
     priority: 'high',
     status: 'in-progress',
     dueDate: new Date('2024-01-25'),
     createdBy: 'user-1',
+    createdByName: 'John Doe',
+    dependencies: [],
+    isRecurring: false,
+    tags: [],
+    comments: [],
+    attachments: [],
     createdAt: new Date('2024-01-12'),
     updatedAt: new Date('2024-01-22'),
     estimatedHours: 12,
@@ -140,20 +154,19 @@ const createMockActivities = (projectId: string): Activity[] => [
     userId: 'user-1',
     userName: 'John Doe',
     userTitle: 'Senior Developer',
-    projectId: projectId,
+    projectId,
     timestamp: new Date('2024-01-25 10:30:00')
   },
   {
     id: 'activity-2',
     organizationId: 'org-1',
-    type: 'task_completed',
+    type: 'project_update',
     title: 'Task Completed',
     description: 'Design System Setup completed ahead of schedule',
     userId: 'user-1',
     userName: 'John Doe',
     userTitle: 'Senior Developer',
-    projectId: projectId,
-    taskId: 'task-1',
+    projectId,
     timestamp: new Date('2024-01-18 16:45:00')
   }
 ]
@@ -291,7 +304,7 @@ export default function ProjectDetailsPage() {
     const k = 1024
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`
   }
 
   const getFileIcon = (category: string) => {
@@ -361,7 +374,7 @@ export default function ProjectDetailsPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center space-y-4">
           <h1 className="text-2xl font-bold">Project Not Found</h1>
-          <p className="text-muted-foreground">The project you're looking for doesn't exist.</p>
+          <p className="text-muted-foreground">The project you&apos;re looking for doesn&apos;t exist.</p>
           <Button onClick={() => router.push('/projects')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Projects

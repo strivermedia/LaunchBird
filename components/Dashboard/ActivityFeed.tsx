@@ -31,10 +31,9 @@ interface ActivityFeedProps {
 export default function ActivityFeed({ activities, loading = false }: ActivityFeedProps) {
   const getActivityIcon = (type: ActivityTypeEnum) => {
     const iconMap: Record<ActivityTypeEnum, React.ComponentType<any>> = {
-      task_completed: CheckCircle,
+      project_update: FileText,
       message: MessageSquare,
       shoutout: Star,
-      project_update: FileText,
       client_feedback: AlertCircle,
       deadline_reminder: Clock,
     }
@@ -43,10 +42,9 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
 
   const getActivityColor = (type: ActivityTypeEnum) => {
     const colorMap: Record<ActivityTypeEnum, string> = {
-      task_completed: 'text-green-600 dark:text-green-400',
+      project_update: 'text-purple-600 dark:text-purple-400',
       message: 'text-blue-600 dark:text-blue-400',
       shoutout: 'text-yellow-600 dark:text-yellow-400',
-      project_update: 'text-purple-600 dark:text-purple-400',
       client_feedback: 'text-orange-600 dark:text-orange-400',
       deadline_reminder: 'text-red-600 dark:text-red-400',
     }
@@ -55,10 +53,9 @@ export default function ActivityFeed({ activities, loading = false }: ActivityFe
 
   const getActivityBgColor = (type: ActivityTypeEnum) => {
     const bgColorMap: Record<ActivityTypeEnum, string> = {
-      task_completed: 'bg-green-50 dark:bg-green-900/20',
+      project_update: 'bg-purple-50 dark:bg-purple-900/20',
       message: 'bg-blue-50 dark:bg-blue-900/20',
       shoutout: 'bg-yellow-50 dark:bg-yellow-900/20',
-      project_update: 'bg-purple-50 dark:bg-purple-900/20',
       client_feedback: 'bg-orange-50 dark:bg-orange-900/20',
       deadline_reminder: 'bg-red-50 dark:bg-red-900/20',
     }

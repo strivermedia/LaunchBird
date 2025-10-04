@@ -97,6 +97,14 @@ export default function AdminOrganizationsPage() {
               <Database className="h-4 w-4 mr-3" />
               <span>System</span>
             </Link>
+            
+            <Link 
+              href="/admin/organization"
+              className="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            >
+              <Building2 className="h-4 w-4 mr-3" />
+              <span>My Organization</span>
+            </Link>
           </div>
           <div className="mt-auto p-4">
             <div className="flex items-center space-x-3">
@@ -195,6 +203,14 @@ export default function AdminOrganizationsPage() {
           >
             <Database className="h-4 w-4 mr-3" />
             <span>System</span>
+          </Link>
+          
+          <Link 
+            href="/admin/organization"
+            className="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          >
+            <Building2 className="h-4 w-4 mr-3" />
+            <span>My Organization</span>
           </Link>
         </div>
 

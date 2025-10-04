@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { getCurrentUserProfile } from '@/lib/auth'
 import { isAppAdmin } from '@/lib/app-admin'
@@ -13,16 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [loading, setLoading] = useState(true)
   const [authInitialized, setAuthInitialized] = useState(false)
 
-  // Disable auth: allow access directly
-  useEffect(() => {
-    const load = async () => {
-      setAuthInitialized(true)
-      await checkAdminAccess('dev-user-123')
-    }
-    load()
-  }, [router])
-
-  const checkAdminAccess = async (userId: string) => {
+  const checkAdminAccess = useCallback(async (userId: string) => {
     try {
       console.log('AdminLayout: Starting admin access check for user:', userId)
       
@@ -45,7 +36,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       console.log('AdminLayout: Setting loading to false')
       setLoading(false)
     }
-  }
+  }, [router])
+
+  // Disable auth: allow access directly
+  useEffect(() => {
+    const load = async () => {
+      setAuthInitialized(true)
+      await checkAdminAccess('dev-user-123')
+    }
+    load()
+  }, [router, checkAdminAccess])
 
   if (loading || !authInitialized) {
     return (

@@ -40,6 +40,11 @@ Thumbs.db
 # Coverage
 coverage/
 
+# Cypress
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+
 # SWC
 .swc/
 

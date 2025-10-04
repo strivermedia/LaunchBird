@@ -2,6 +2,41 @@
 
 A modern, secure project management platform built with Next.js, TypeScript, Tailwind CSS, and Supabase.
 
+## 🚀 Quick Start (Development Mode)
+
+To run the app without setting up Supabase:
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Set up development mode:**
+   ```bash
+   npm run setup:dev
+   ```
+
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+The app will run with mock data and bypass all database connections! 🎉
+
+### Manual Setup (Alternative)
+
+If the setup script doesn't work:
+
+1. **Copy the environment file:**
+   ```bash
+   cp env.example .env.local
+   ```
+
+2. **Edit `.env.local` and set:**
+   ```
+   NEXT_PUBLIC_DISABLE_AUTH=true
+   ```
+
 ## Features
 
 ### Authentication System

@@ -21,7 +21,8 @@ import {
   Building2,
   User,
   LogOut,
-  ChevronLeft
+  ChevronLeft,
+  CheckSquare,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -67,6 +68,8 @@ export default function RootLayout({
       setActiveSection('clients')
     } else if (pathname.startsWith('/projects')) {
       setActiveSection('projects')
+    } else if (pathname.startsWith('/tasks')) {
+      setActiveSection('tasks')
     } else if (pathname.startsWith('/team')) {
       setActiveSection('team')
     } else if (pathname.startsWith('/settings')) {
@@ -115,6 +118,9 @@ export default function RootLayout({
         break
       case 'projects':
         router.push('/projects')
+        break
+      case 'tasks':
+        router.push('/tasks')
         break
       case 'team':
         router.push('/team')
@@ -215,6 +221,7 @@ export default function RootLayout({
                 )}
               </Button>
 
+
               <Button
                 onClick={() => handleSectionChange('clients')}
                 variant={activeSection === 'clients' ? 'default' : 'ghost'}
@@ -226,6 +233,19 @@ export default function RootLayout({
               >
                 <Building2 className={`h-5 w-5 ${sidebarCollapsed ? '' : 'mr-3'}`} />
                 {!sidebarCollapsed && <span>Clients</span>}
+              </Button>
+
+              <Button
+                onClick={() => handleSectionChange('tasks')}
+                variant={activeSection === 'tasks' ? 'default' : 'ghost'}
+                className={`w-full ${sidebarCollapsed ? 'justify-center px-0' : 'justify-start px-2'} rounded-lg ${
+                  activeSection === 'tasks'
+                    ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground'
+                    : 'text-foreground/90 hover:bg-sidebar-accent hover:text-foreground'
+                }`}
+              >
+                <CheckSquare className={`h-5 w-5 ${sidebarCollapsed ? '' : 'mr-3'}`} />
+                {!sidebarCollapsed && <span>Tasks</span>}
               </Button>
 
               {userProfile?.role === 'admin' && (
@@ -283,6 +303,7 @@ export default function RootLayout({
                   {activeSection === 'home' && 'Dashboard'}
                   {activeSection === 'clients' && 'Clients'}
                   {activeSection === 'projects' && 'Projects'}
+                  {activeSection === 'tasks' && 'Tasks'}
                   {activeSection === 'team' && 'Team'}
                   {activeSection === 'settings' && 'Settings'}
                 </h1>

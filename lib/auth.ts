@@ -1,5 +1,5 @@
 // Supabase authentication implementation
-import { User, AuthError } from '@supabase/supabase-js'
+import { User, AuthError as SupabaseAuthError } from '@supabase/supabase-js'
 import { auth, db } from './platform'
 
 // Development mode flag - set to true to bypass authentication
@@ -83,7 +83,7 @@ export const getCurrentUser = async (): Promise<User | null> => {
       id: 'dev-user-123',
       email: 'dev@launchbird.com',
       email_confirmed_at: new Date().toISOString(),
-      phone: null,
+      phone: undefined,
       confirmed_at: new Date().toISOString(),
       last_sign_in_at: new Date().toISOString(),
       app_metadata: {},
@@ -143,7 +143,7 @@ export const signInWithEmail = async (
   email: string,
   password: string,
   rememberMe: boolean = false
-): Promise<{ user: User | null; error: AuthError | null }> => {
+): Promise<{ user: User | null; error: SupabaseAuthError | null }> => {
   if (!auth) {
     throw new Error('Auth not initialized')
   }
@@ -155,7 +155,7 @@ export const signInWithEmail = async (
   
   return {
     user: data.user,
-    error: error as AuthError | null
+    error
   }
 }
 
@@ -174,7 +174,7 @@ export const createUserAccount = async (
   role: UserRole,
   title?: string,
   location?: string
-): Promise<{ user: User | null; error: AuthError | null }> => {
+): Promise<{ user: User | null; error: SupabaseAuthError | null }> => {
   if (!auth) {
     throw new Error('Auth not initialized')
   }
@@ -203,7 +203,7 @@ export const createUserAccount = async (
   
   return {
     user: data.user,
-    error: error as AuthError | null
+    error
   }
 }
 
@@ -245,7 +245,7 @@ export const sendPasswordReset = async (email: string): Promise<void> => {
  * Sign in anonymously for client profile
  * @returns Promise<UserCredential>
  */
-export const signInAnonymouslyForClient = async (): Promise<{ user: User | null; error: AuthError | null }> => {
+export const signInAnonymouslyForClient = async (): Promise<{ user: User | null; error: SupabaseAuthError | null }> => {
   if (!auth) {
     throw new Error('Auth not initialized')
   }
@@ -254,7 +254,7 @@ export const signInAnonymouslyForClient = async (): Promise<{ user: User | null;
   
   return {
     user: data.user,
-    error: error as AuthError | null
+    error
   }
 }
 
@@ -285,20 +285,20 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
   }
   
   return data ? {
-    uid: data.id,
-    email: data.email,
-    role: data.role,
-    title: data.title,
-    jobTitle: data.job_title,
-    location: data.location,
-    profileImageUrl: data.profile_image_url,
-    theme: data.theme,
-    organizationId: data.organization_id,
-    organizationRole: data.organization_role,
-    invitedBy: data.invited_by,
-    joinedAt: data.joined_at,
-    createdAt: data.created_at,
-    updatedAt: data.updated_at,
+    uid: (data as any).id,
+    email: (data as any).email,
+    role: (data as any).role,
+    title: (data as any).title,
+    jobTitle: (data as any).job_title,
+    location: (data as any).location,
+    profileImageUrl: (data as any).profile_image_url,
+    theme: (data as any).theme,
+    organizationId: (data as any).organization_id,
+    organizationRole: (data as any).organization_role,
+    invitedBy: (data as any).invited_by,
+    joinedAt: (data as any).joined_at,
+    createdAt: (data as any).created_at,
+    updatedAt: (data as any).updated_at,
   } : null
 }
 
@@ -370,17 +370,17 @@ export const validateClientProfileCode = async (
   }
   
   // Check password if required
-  if (data.password && data.password !== password) {
+  if ((data as any).password && (data as any).password !== password) {
     return null
   }
   
   return {
-    code: data.code,
-    projectId: data.project_id,
-    password: data.password,
-    expiresAt: data.expires_at,
-    createdAt: data.created_at,
-    createdBy: data.created_by,
+    code: (data as any).code,
+    projectId: (data as any).project_id,
+    password: (data as any).password,
+    expiresAt: (data as any).expires_at,
+    createdAt: (data as any).created_at,
+    createdBy: (data as any).created_by,
   }
 }
 
@@ -453,7 +453,9 @@ export const onAuthStateChange = (callback: (user: User | null) => void) => {
     return () => {}
   }
   
-  const { data: { subscription } } = auth.onAuthStateChange(callback)
+  const { data: { subscription } } = auth.onAuthStateChange((event: any, session: any) => {
+    callback(session?.user || null)
+  })
   return () => subscription.unsubscribe()
 }
 
@@ -478,9 +480,133 @@ const createUserProfile = async (uid: string, profileData: Partial<UserProfile>)
       job_title: profileData.jobTitle,
       location: profileData.location,
       theme: profileData.theme || 'light',
+      organization_id: profileData.organizationId,
+      organization_role: profileData.organizationRole,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     })
+  
+  if (error) {
+    throw error
+  }
+}
+
+/**
+ * Update organization plan
+ * @param organizationId - Organization ID
+ * @param plan - New plan
+ * @param userId - Current user ID for access control
+ * @returns Promise<void>
+ */
+export const updateOrganizationPlan = async (
+  organizationId: string,
+  plan: 'free' | 'pro' | 'enterprise',
+  userId: string
+): Promise<void> => {
+  if (!db) {
+    throw new Error('Database not initialized')
+  }
+  
+  const { error } = await db
+    .from('organizations')
+    .update({
+      plan,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', organizationId)
+  
+  if (error) {
+    throw error
+  }
+}
+
+/**
+ * Create a new organization
+ * @param name - Organization name
+ * @param description - Organization description
+ * @param userId - User ID creating the organization
+ * @returns Promise<string> - Organization ID
+ */
+export const createOrganization = async (
+  name: string,
+  description: string,
+  userId: string
+): Promise<string> => {
+  if (!db) {
+    throw new Error('Database not initialized')
+  }
+  
+  const { data, error } = await db
+    .from('organizations')
+    .insert([{
+      name,
+      description,
+      created_by: userId,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }])
+    .select()
+    .single()
+  
+  if (error) {
+    throw error
+  }
+  
+  return (data as any)?.id || ''
+}
+
+/**
+ * Get user's organization
+ * @param userId - User ID
+ * @returns Promise<any> - Organization data
+ */
+export const getUserOrganization = async (userId: string): Promise<any> => {
+  if (!db) {
+    throw new Error('Database not initialized')
+  }
+  
+  const { data, error } = await db
+    .from('users')
+    .select(`
+      organization_id,
+      organization_role,
+      organizations!inner(*)
+    `)
+    .eq('id', userId)
+    .single()
+  
+  if (error || !data) {
+    console.error('Error fetching user organization:', error)
+    return null
+  }
+  
+  return data.organizations
+}
+
+/**
+ * Add user to organization
+ * @param userId - User ID
+ * @param organizationId - Organization ID
+ * @param organizationRole - Role in organization
+ * @returns Promise<void>
+ */
+export const addUserToOrganization = async (
+  userId: string,
+  organizationId: string,
+  organizationRole: 'owner' | 'admin' | 'member' | 'client'
+): Promise<void> => {
+  if (!db) {
+    throw new Error('Database not initialized')
+  }
+  
+  const { error } = await db
+    .from('users')
+    .update({
+      organization_id: organizationId,
+      organization_role: organizationRole,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', userId)
   
   if (error) {
     throw error
