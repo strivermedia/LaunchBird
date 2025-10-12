@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { getCurrentUserProfile, isDevMode } from '@/lib/auth'
+import { getCurrentUserProfile, isDevMode, signOutUser } from '@/lib/auth'
+import { isAuthenticated, isPublicRoute } from '@/lib/auth-middleware'
 import { 
   Sun, 
   Moon, 
@@ -45,8 +46,8 @@ export default function RootLayout({
   const router = useRouter()
   const pathname = usePathname()
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [authInitialized, setAuthInitialized] = useState(true)
+  const [loading, setLoading] = useState(true)
+  const [authInitialized, setAuthInitialized] = useState(false)
   const [devMode] = useState(isDevMode())
   
   // Theme state
@@ -77,7 +78,40 @@ export default function RootLayout({
     }
   }, [pathname])
 
-  // With auth disabled, skip async auth init entirely
+  // Authentication check
+  useEffect(() => {
+    async function checkAuth() {
+      // Skip auth check for public routes
+      if (isPublicRoute(pathname)) {
+        setAuthInitialized(true)
+        setLoading(false)
+        return
+      }
+
+      try {
+        const authenticated = await isAuthenticated()
+        
+        if (!authenticated) {
+          // Not authenticated, redirect to login
+          console.log('Not authenticated, redirecting to login')
+          router.push('/login')
+          return
+        }
+
+        // Load user profile
+        const profile = await getCurrentUserProfile()
+        setUserProfile(profile)
+        setAuthInitialized(true)
+      } catch (error) {
+        console.error('Auth check error:', error)
+        router.push('/login')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    checkAuth()
+  }, [pathname, router])
 
   // Theme management
   useEffect(() => {

@@ -49,7 +49,7 @@ The LaunchBird Client Profile System provides a secure, read-only interface for 
 
 ### For Clients
 
-1. **Access via URL**: Navigate to `https://app.launchbird.io/profile/[CODE]`
+1. **Access via URL**: Navigate to `https://launchbird.io/profile/[CODE]`
 2. **Code Entry**: Visit `/profile` and enter your 4-character access code
 3. **Password (if required)**: Enter project password when prompted
 4. **View Project**: Access project details, milestones, and shared files

@@ -50,3 +50,9 @@ cypress/downloads/
 
 # Cursor
 .cursor/
+
+# Supabase
+.branches/
+.temp/
+supabase/.branches/
+supabase/.temp/

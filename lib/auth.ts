@@ -216,8 +216,21 @@ export const signOutUser = async (): Promise<void> => {
     throw new Error('Auth not initialized')
   }
   
-  const { error } = await auth.signOut()
-  if (error) {
+  try {
+    // Sign out from Supabase (clears cookies and localStorage)
+    const { error } = await auth.signOut()
+    if (error) {
+      console.error('Supabase sign out error:', error)
+      throw error
+    }
+    
+    // Clear any additional local storage
+    if (typeof window !== 'undefined') {
+      // Clear theme preference if needed (optional)
+      // localStorage.removeItem('theme')
+    }
+  } catch (error) {
+    console.error('Error during sign out:', error)
     throw error
   }
 }

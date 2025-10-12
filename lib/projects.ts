@@ -155,8 +155,36 @@ export async function getProjects(
   }
 
   try {
-    // Fallback to local storage if Supabase is not available
-    const projects = await ProjectStorage.getProjects(organizationId)
+    // Fetch from Supabase
+    const { db } = await import('./platform')
+    const { data, error } = await db
+      .from('projects')
+      .select('*')
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('Supabase error fetching projects:', error)
+      throw error
+    }
+
+    // Transform Supabase data to Project type
+    const projects = (data || []).map((project: any) => ({
+      id: project.id,
+      organizationId: project.organization_id,
+      title: project.name,
+      description: project.description,
+      type: 'one-time' as ProjectType, // Default
+      status: project.status as ProjectStatus,
+      progress: 0, // Would need to calculate
+      startDate: project.created_at ? new Date(project.created_at) : undefined,
+      assignedTo: [], // Would need separate table
+      createdBy: project.created_by,
+      createdAt: new Date(project.created_at),
+      updatedAt: new Date(project.updated_at),
+      clientId: project.client_id,
+      tags: []
+    }))
     
     // Role-based filtering
     let filteredProjects = projects

@@ -129,28 +129,79 @@ const MOCK_PROJECTS = [
  * Get tasks from local storage or return mock data
  */
 export const getTasks = async (organizationId: string): Promise<Task[]> => {
-  if (typeof window === 'undefined') {
-    return MOCK_TASKS.filter(task => task.organizationId === organizationId)
+  // Check if auth is disabled (dev mode)
+  const DEV_MODE = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
+  
+  if (DEV_MODE) {
+    // Use localStorage in dev mode
+    if (typeof window === 'undefined') {
+      return MOCK_TASKS.filter(task => task.organizationId === organizationId)
+    }
+
+    try {
+      const storedTasks = localStorage.getItem(`tasks-${organizationId}`)
+      if (storedTasks) {
+        const tasks = JSON.parse(storedTasks)
+        return tasks.map((task: any) => ({
+          ...task,
+          dueDate: task.dueDate ? new Date(task.dueDate) : undefined,
+          createdAt: new Date(task.createdAt),
+          updatedAt: new Date(task.updatedAt),
+          completedAt: task.completedAt ? new Date(task.completedAt) : undefined,
+          recurrenceEndDate: task.recurrenceEndDate ? new Date(task.recurrenceEndDate) : undefined,
+        }))
+      }
+      return MOCK_TASKS.filter(task => task.organizationId === organizationId)
+    } catch (error) {
+      console.error('Error loading tasks from localStorage:', error)
+      return MOCK_TASKS.filter(task => task.organizationId === organizationId)
+    }
   }
 
+  // Use Supabase
   try {
-    const storedTasks = localStorage.getItem(`tasks-${organizationId}`)
-    if (storedTasks) {
-      const tasks = JSON.parse(storedTasks)
-      // Convert date strings back to Date objects
-      return tasks.map((task: any) => ({
-        ...task,
-        dueDate: task.dueDate ? new Date(task.dueDate) : undefined,
-        createdAt: new Date(task.createdAt),
-        updatedAt: new Date(task.updatedAt),
-        completedAt: task.completedAt ? new Date(task.completedAt) : undefined,
-        recurrenceEndDate: task.recurrenceEndDate ? new Date(task.recurrenceEndDate) : undefined,
-      }))
+    const { db } = await import('./platform')
+    const { data, error } = await db
+      .from('tasks')
+      .select('*')
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('Supabase error fetching tasks:', error)
+      throw error
     }
-    return MOCK_TASKS.filter(task => task.organizationId === organizationId)
+
+    // Transform Supabase data to Task type
+    return (data || []).map((task: any) => ({
+      id: task.id,
+      organizationId: task.organization_id,
+      title: task.title,
+      description: task.description || '',
+      status: task.status as TaskStatus,
+      priority: task.priority as TaskPriority,
+      dueDate: task.due_date ? new Date(task.due_date) : undefined,
+      assignedTo: task.assigned_to || [],
+      assignedToNames: task.assigned_to_names || [],
+      createdBy: task.created_by,
+      createdByName: task.created_by_name,
+      projectId: task.project_id,
+      projectTitle: task.project_title,
+      parentTaskId: task.parent_task_id,
+      dependencies: task.dependencies || [],
+      isRecurring: task.is_recurring || false,
+      recurrencePattern: task.recurrence_pattern || 'none',
+      recurrenceEndDate: task.recurrence_end_date ? new Date(task.recurrence_end_date) : undefined,
+      tags: task.tags || [],
+      estimatedHours: task.estimated_hours || 0,
+      actualHours: task.actual_hours || 0,
+      completedAt: task.completed_at ? new Date(task.completed_at) : undefined,
+      createdAt: new Date(task.created_at),
+      updatedAt: new Date(task.updated_at)
+    }))
   } catch (error) {
-    console.error('Error loading tasks from localStorage:', error)
-    return MOCK_TASKS.filter(task => task.organizationId === organizationId)
+    console.error('Error fetching tasks:', error)
+    throw new Error('Failed to fetch tasks')
   }
 }
 

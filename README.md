@@ -2,18 +2,47 @@
 
 A modern, secure project management platform built with Next.js, TypeScript, Tailwind CSS, and Supabase.
 
-## 🚀 Quick Start (Development Mode)
+## 🚀 Quick Start
 
-To run the app without setting up Supabase:
+### Option 1: Local Supabase (Recommended)
+
+**Best for:** Full-stack development with real database, authentication, and RLS testing
+
+1. **Prerequisites:**
+   - Docker Desktop installed and running
+   - Node.js 18+
+
+2. **Run the automated setup:**
+   ```bash
+   npm install
+   ./scripts/setup-local-supabase.sh
+   ```
+
+3. **Create a test user:**
+   ```bash
+   supabase auth create --email admin@launchbird.dev --password admin123
+   ```
+
+4. **Start development:**
+   ```bash
+   npm run dev
+   ```
+
+📚 **Full Guide:** See [LOCAL_SUPABASE_SETUP.md](./LOCAL_SUPABASE_SETUP.md)
+
+### Option 2: Mock Mode (Quick Testing)
+
+**Best for:** UI development without database setup
 
 1. **Install dependencies:**
    ```bash
    npm install
    ```
 
-2. **Set up development mode:**
+2. **Set up mock mode:**
    ```bash
-   npm run setup:dev
+   cp env.example .env.local
+   # Edit .env.local and set: NEXT_PUBLIC_DISABLE_AUTH=true
    ```
 
 3. **Start the development server:**
@@ -22,20 +51,6 @@ To run the app without setting up Supabase:
    ```
 
 The app will run with mock data and bypass all database connections! 🎉
-
-### Manual Setup (Alternative)
-
-If the setup script doesn't work:
-
-1. **Copy the environment file:**
-   ```bash
-   cp env.example .env.local
-   ```
-
-2. **Edit `.env.local` and set:**
-   ```
-   NEXT_PUBLIC_DISABLE_AUTH=true
-   ```
 
 ## Features
 
@@ -79,39 +94,83 @@ If the setup script doesn't work:
 
 - Node.js 18+ 
 - npm or yarn
-- Supabase project
+- Docker Desktop (for local Supabase)
 
-### Installation
+### Local Development Setup
 
-1. **Clone the repository**
+#### Recommended: Local Supabase
+
+1. **Install Docker Desktop**
+   - Download from https://www.docker.com/products/docker-desktop
+   - Start Docker Desktop
+
+2. **Clone and Install**
    ```bash
    git clone <repository-url>
    cd launchbird
-   ```
-
-2. **Install dependencies**
-   ```bash
    npm install
    ```
 
-3. **Set up Supabase**
-   - Create a new Supabase project
-   - Enable Authentication (Email/Password, Anonymous)
-   - Set up your database schema
-   - Get your Supabase config
+3. **Run Setup Script**
+   ```bash
+   ./scripts/setup-local-supabase.sh
+   ```
+   
+   This will:
+   - Create `.env.local` with local credentials
+   - Start Supabase services (PostgreSQL, Auth, Studio)
+   - Apply database migrations
+   - Display connection information
 
-4. **Environment Variables**
-   Create a `.env.local` file:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   NEXT_PUBLIC_OPENWEATHER_API_KEY=your_openweather_api_key
+4. **Create Auth User**
+   ```bash
+   supabase auth create --email admin@launchbird.dev --password admin123
    ```
 
-5. **Development Mode**
-   For development with mock data, you can disable authentication:
+5. **Start Development**
+   ```bash
+   npm run dev
+   ```
+
+📚 **Detailed Guide:** [LOCAL_SUPABASE_SETUP.md](./LOCAL_SUPABASE_SETUP.md)  
+🔄 **Migration Guide:** [MIGRATION_TO_LOCAL_SUPABASE.md](./MIGRATION_TO_LOCAL_SUPABASE.md)
+
+#### Alternative: Mock Mode
+
+For quick UI testing without database:
+
+1. **Create `.env.local`**
+   ```bash
+   cp env.example .env.local
+   ```
+
+2. **Enable mock mode in `.env.local`**
    ```env
    NEXT_PUBLIC_DISABLE_AUTH=true
+   ```
+
+3. **Start Development**
+   ```bash
+   npm run dev
+   ```
+
+### Production Supabase Setup
+
+For production deployment:
+
+1. **Create Supabase Project**
+   - Visit https://supabase.com
+   - Create new project
+
+2. **Apply Schema**
+   - Copy contents of `supabase/migrations/20250101000000_initial_schema.sql`
+   - Run in Supabase SQL Editor
+
+3. **Configure Environment**
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_anon_key
+   NEXT_PUBLIC_DISABLE_AUTH=false
    ```
 
 ## Project Structure
@@ -122,21 +181,39 @@ launchbird/
 │   ├── login/             # Login page
 │   ├── signup/            # Signup page
 │   ├── reset-password/    # Password reset page
-│   ├── profile/[code]/       # Client profile with code
+│   ├── dashboard/         # Main dashboard
+│   ├── projects/          # Project management
+│   ├── clients/           # Client management
+│   ├── tasks/             # Task management
+│   ├── profile/[code]/    # Client profile with code
+│   ├── app-admin/         # Admin panel
 │   ├── globals.css        # Global styles
 │   └── layout.tsx         # Root layout
 ├── components/            # React components
 │   ├── Auth/             # Authentication forms
-│   │   ├── LoginForm.tsx
-│   │   ├── SignupForm.tsx
-│   │   └── ResetPasswordForm.tsx
+│   ├── Dashboard/        # Dashboard components
+│   ├── Projects/         # Project components
+│   ├── Client/           # Client management
+│   ├── Task/             # Task management
 │   └── ui/               # ShadCN UI components
 ├── lib/                  # Utility functions
 │   ├── auth.ts           # Authentication utilities
-│   ├── firebase.ts       # Firebase configuration
+│   ├── platform.ts       # Supabase client configuration
+│   ├── localStorage.ts   # Local storage fallback
+│   ├── clients.ts        # Client operations
+│   ├── projects.ts       # Project operations
+│   ├── tasks.ts          # Task operations
 │   └── utils.ts          # General utilities
+├── supabase/             # Supabase configuration
+│   ├── config.toml       # Supabase CLI config
+│   ├── migrations/       # Database migrations
+│   └── seed.sql          # Seed data for development
+├── scripts/              # Utility scripts
+│   └── setup-local-supabase.sh  # Setup automation
 ├── tests/                # Test files
-│   └── auth.test.ts      # Authentication tests
+│   └── utils.test.ts     # Unit tests
+├── types/                # TypeScript type definitions
+│   └── index.ts          # Shared types
 └── public/               # Static assets
 ```
 
@@ -144,28 +221,28 @@ launchbird/
 
 ### User Registration
 1. User fills out signup form with email, password, role, and profile info
-2. Account created in Firebase Auth
-3. User profile stored in Firestore with role and metadata
+2. Account created in Supabase Auth
+3. User profile stored in PostgreSQL with role and metadata
 4. User redirected based on role (Admin → Dashboard, Team Member → Tasks)
 
 ### User Login
 1. User enters email and password
 2. Optional "Remember Me" for persistent sessions
-3. Firebase Auth validates credentials
-4. User profile retrieved from Firestore
+3. Supabase Auth validates credentials
+4. User profile retrieved from database
 5. Role-based redirection
 
 ### Password Reset
 1. User requests password reset
-2. Firebase sends reset email
+2. Supabase sends reset email
 3. User clicks link in email
 4. User sets new password
 
 ### Client Access
 1. Admin generates 4-character code for project
 2. Client visits `/profile/[code]`
-3. Optional password validation
-4. Anonymous authentication
+3. Code validated against database
+4. Optional password validation
 5. Access to read-only project view
 
 ## Testing

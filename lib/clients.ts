@@ -70,8 +70,39 @@ export async function getClients(organizationId: string, userId: string): Promis
   }
 
   try {
-    // Fallback to local storage if Supabase is not available
-    return ClientStorage.getClients(organizationId)
+    // Fetch from Supabase
+    const { db } = await import('./platform')
+    const { data, error } = await db
+      .from('clients')
+      .select('*')
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('Supabase error fetching clients:', error)
+      throw error
+    }
+
+    // Transform Supabase data to Client type
+    return (data || []).map((client: any) => ({
+      id: client.id,
+      organizationId: client.organization_id,
+      name: client.name,
+      email: client.email,
+      company: client.company,
+      phone: client.phone,
+      address: client.address,
+      assignedManagerId: client.created_by, // Using created_by as manager for now
+      assignedManagerName: '', // Would need to join with users table
+      status: 'active', // Default status
+      createdAt: new Date(client.created_at),
+      updatedAt: new Date(client.updated_at),
+      totalProjects: 0, // Would need to aggregate
+      activeProjects: 0,
+      completedProjects: 0,
+      lastContactDate: new Date(),
+      notes: ''
+    }))
   } catch (error) {
     console.error('Error fetching clients:', error)
     throw new Error('Failed to fetch clients')

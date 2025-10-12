@@ -194,11 +194,20 @@ const createMockClient = () => ({
 })
 
 // Create real or mock client based on environment
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co'
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy_key'
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321'
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0'
 
-// Always use mock client for now since Supabase is not configured
-export const supabase = createMockClient()
+// Use real Supabase client if URL and key are configured, otherwise fall back to mock
+export const supabase = (supabaseUrl && supabaseUrl !== 'https://dummy.supabase.co' && supabaseAnonKey && supabaseAnonKey !== 'dummy_key')
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+    })
+  : DEV_MODE 
+    ? createMockClient() 
+    : createClient(supabaseUrl, supabaseAnonKey)
 
 // Export for compatibility with existing code
 export const auth = supabase.auth
