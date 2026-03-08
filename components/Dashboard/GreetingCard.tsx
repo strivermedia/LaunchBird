@@ -99,7 +99,7 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
 
   
   return (
-    <Card className="relative border border-border/80 shadow-sm overflow-hidden">
+    <Card className="relative border border-border/80 shadow-sm overflow-hidden" data-testid="greeting-card">
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div 
           className="mx-auto h-full w-full"
@@ -117,7 +117,10 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Local Time */}
-          <div className="flex items-center space-x-4 p-4 rounded-lg bg-white/20 dark:bg-white/10 backdrop-blur-md">
+          <div
+            className="flex items-center space-x-4 p-4 rounded-lg bg-white/20 dark:bg-white/10 backdrop-blur-md"
+            data-testid="local-time"
+          >
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/40 to-white/10 dark:from-white/10 dark:to-white/5 backdrop-blur-md flex items-center justify-center">
               <Clock className="h-6 w-6 text-black dark:text-white" />
             </div>
@@ -143,7 +146,10 @@ export default function GreetingCard({ userName, userLocation }: GreetingCardPro
           </div>
 
           {/* Weather Information */}
-          <div className="flex items-center space-x-4 p-4 rounded-lg bg-white/20 dark:bg-white/10 backdrop-blur-md">
+          <div
+            className="flex items-center space-x-4 p-4 rounded-lg bg-white/20 dark:bg-white/10 backdrop-blur-md"
+            data-testid="weather-info"
+          >
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/40 to-white/10 dark:from-white/10 dark:to-white/5 backdrop-blur-md flex items-center justify-center">
               {weather?.condition === 'Clear' ? (
                 <Sun className="h-6 w-6 text-black dark:text-white" />

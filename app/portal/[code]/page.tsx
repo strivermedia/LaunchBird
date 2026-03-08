@@ -1,13 +1,13 @@
 import React from 'react'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
-import { getProjectByClientCode, getProjectActivities, getClientByAccessCode, getClientProjects } from '@/lib/client-profile'
-import { validateClientProfileCode } from '@/lib/auth'
-import ClientProfileContent from '@/components/ClientProfile/ClientProfileContent'
-import ClientProfileDashboard from '@/components/ClientProfile/ClientProfileDashboard'
+import { getProjectByClientCode, getProjectActivities, getClientByAccessCode, getClientProjects } from '@/lib/client-portal'
+import { validateClientPortalCode } from '@/lib/auth'
+import ClientPortalContent from '@/components/ClientPortal/ClientPortalContent'
+import ClientPortalDashboard from '@/components/ClientPortal/ClientPortalDashboard'
 import type { Project, Activity, Client } from '@/types'
 
-interface ClientProfilePageProps {
+interface ClientPortalPageProps {
   params: {
     code: string
   }
@@ -17,9 +17,9 @@ interface ClientProfilePageProps {
 }
 
 /**
- * Generate metadata for the client profile page
+ * Generate metadata for the client portal page
  */
-export async function generateMetadata({ params }: ClientProfilePageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: ClientPortalPageProps): Promise<Metadata> {
   const code = params.code
   
   try {
@@ -33,17 +33,17 @@ export async function generateMetadata({ params }: ClientProfilePageProps): Prom
     }
     
     return {
-      title: `${project.title} - Client Profile - LaunchBird`,
+      title: `${project.title} - Client Portal - LaunchBird`,
       description: `View project details and progress for ${project.title}`,
       openGraph: {
-        title: `${project.title} - Client Profile`,
+        title: `${project.title} - Client Portal`,
         description: `View project details and progress for ${project.title}`,
         type: 'website',
       },
     }
   } catch (error) {
     return {
-      title: 'Client Profile - LaunchBird',
+      title: 'Client Portal - LaunchBird',
       description: 'View your project details and progress',
     }
   }
@@ -60,10 +60,10 @@ export async function generateStaticParams() {
 }
 
 /**
- * Client Profile Page Component
+ * Client Portal Page Component
  * Handles static site generation and client-side hydration
  */
-export default async function ClientProfilePage({ params, searchParams }: ClientProfilePageProps) {
+export default async function ClientPortalPage({ params, searchParams }: ClientPortalPageProps) {
   const code = params.code
   const password = searchParams.password
   
@@ -81,7 +81,7 @@ export default async function ClientProfilePage({ params, searchParams }: Client
       // This is a client access code - show client dashboard
       const projects = await getClientProjects(client.id, client.organizationId)
       return (
-        <ClientProfileDashboard 
+        <ClientPortalDashboard 
           client={client}
           projects={projects}
           code={code}
@@ -91,7 +91,7 @@ export default async function ClientProfilePage({ params, searchParams }: Client
     
     // If not a client code, try project code
     if (password) {
-      const codeData = await validateClientProfileCode(code, password)
+      const codeData = await validateClientPortalCode(code, password)
       if (!codeData) {
         error = 'Invalid access code or password'
       }
@@ -107,7 +107,7 @@ export default async function ClientProfilePage({ params, searchParams }: Client
       activities = await getProjectActivities(project.id, project.organizationId, 20)
     }
   } catch (err) {
-          console.error('Error loading client profile:', err)
+    console.error('Error loading client portal:', err)
     error = 'An error occurred while loading the project'
   }
   
@@ -117,7 +117,7 @@ export default async function ClientProfilePage({ params, searchParams }: Client
   }
   
   return (
-    <ClientProfileContent 
+    <ClientPortalContent 
       project={project} 
       activities={activities}
       code={code}
@@ -125,3 +125,4 @@ export default async function ClientProfilePage({ params, searchParams }: Client
     />
   )
 } 
+

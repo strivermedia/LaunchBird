@@ -18,9 +18,3 @@ import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
-
-// Hide fetch/XHR requests from command log
-Cypress.on('window:before:load', (win) => {
-  // @ts-ignore
-  win.fetch = null
-})

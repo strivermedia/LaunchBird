@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { 
@@ -26,6 +27,7 @@ interface QuickActionsProps {
  * Modern quick action buttons with clean card design
  */
 export default function QuickActions({ userRole, onAction }: QuickActionsProps) {
+  const router = useRouter()
   const isAdmin = userRole === 'admin'
 
   const quickActions: QuickAction[] = [
@@ -60,6 +62,14 @@ export default function QuickActions({ userRole, onAction }: QuickActionsProps) 
       description: 'Send team message',
       requiresAdmin: false,
       action: () => onAction('send_message'),
+    },
+    {
+      type: 'create_task', // Reuse type for calendar
+      label: 'View Calendar',
+      icon: 'Calendar',
+      description: 'View your schedule',
+      requiresAdmin: false,
+      action: () => router.push('/calendar'),
     },
   ]
 

@@ -17,7 +17,7 @@ Your LaunchBird project is now ready for local Supabase development. Here's what
   - `projects` - Project management
   - `clients` - Client information
   - `tasks` - Task management with subtasks
-  - `client_profile_codes` - Client access codes
+  - `client_portal_codes` - Client access codes
 - **Security:** Row Level Security (RLS) enabled on all tables
 - **Indexes:** Performance indexes on all key fields
 - **Triggers:** Auto-update timestamps

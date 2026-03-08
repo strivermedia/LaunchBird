@@ -1,22 +1,23 @@
-# LaunchBird Client Profile System
+# LaunchBird Client Portal System
 
 ## Overview
 
-The LaunchBird Client Profile System provides a secure, read-only interface for clients to access their project information using 4-character access codes. The system supports both anonymous access and optional password protection.
+The LaunchBird Client Portal System provides a secure, read-only interface for clients to access their project information using 4-character access codes. The system supports both anonymous access and optional password protection.
 
 ## Architecture
 
 ### Pages
-- **`app/profile/page.tsx`** - Code entry page for clients to enter their access code
-- **`app/profile/[code]/page.tsx`** - Main client profile page with static site generation (SSG)
+- **`app/portal/page.tsx`** - Code entry page for clients to enter their access code
+- **`app/portal/[code]/page.tsx`** - Main client portal page with static site generation (SSG)
 
 ### Components
-- **`components/ClientProfile/ClientProfileContent.tsx`** - Main content component displaying project details
-- **`components/ClientProfile/ProjectStatus.tsx`** - Project milestones and timeline component
-- **`components/ClientProfile/FeedbackForm.tsx`** - Client feedback submission form
+- **`components/ClientPortal/ClientPortalContent.tsx`** - Main content component displaying project details
+- **`components/ClientPortal/ProjectStatus.tsx`** - Project milestones and timeline component
+- **`components/ClientPortal/FeedbackForm.tsx`** - Client feedback submission form
 
 ### Library Functions
-- **`lib/client-profile.ts`** - Core functionality for client access, validation, and data retrieval
+- **`lib/client-portal.ts`** - Core functionality for client portal data retrieval and logging
+- **`lib/auth.ts`** - Portal code creation/validation (`createClientPortalCode`, `validateClientPortalCode`)
 
 ## Features
 
@@ -49,8 +50,8 @@ The LaunchBird Client Profile System provides a secure, read-only interface for 
 
 ### For Clients
 
-1. **Access via URL**: Navigate to `https://launchbird.io/profile/[CODE]`
-2. **Code Entry**: Visit `/profile` and enter your 4-character access code
+1. **Access via URL**: Navigate to `https://launchbird.io/portal/[CODE]`
+2. **Code Entry**: Visit `/portal` and enter your 4-character access code
 3. **Password (if required)**: Enter project password when prompted
 4. **View Project**: Access project details, milestones, and shared files
 5. **Submit Feedback**: Use the feedback form to provide ratings and comments
@@ -59,38 +60,34 @@ The LaunchBird Client Profile System provides a secure, read-only interface for 
 
 #### Creating Client Access
 ```typescript
-import { createClientAccess } from '@/lib/client-profile'
+import { createClientPortalCode } from '@/lib/auth'
 
-const code = await createClientAccess(projectId, organizationId, 30) // 30 days expiry
+const code = await createClientPortalCode(projectId, undefined, 30) // 30 days expiry
 ```
 
 #### Validating Access
 ```typescript
-import { validateClientCode } from '@/lib/client-profile'
+import { validateClientPortalCode } from '@/lib/auth'
 
-const result = await validateClientCode('ABCD')
-if (result.valid) {
-  // Access granted
-  const project = result.project
-} else {
+const codeData = await validateClientPortalCode('ABCD')
+if (!codeData) {
   // Access denied
-  console.log(result.error)
 }
 ```
 
 #### Logging Access
 ```typescript
-import { logClientAccess } from '@/lib/client-profile'
+import { logClientAccess } from '@/lib/client-portal'
 
 await logClientAccess(code, projectId, organizationId)
 ```
 
 ## Data Flow
 
-1. **Code Validation**: Client enters code → System validates against Firestore
+1. **Code Validation**: Client enters code → System validates against Supabase
 2. **Project Loading**: Valid code → Fetch project data and activities
 3. **Static Generation**: Next.js generates static pages for performance
-4. **Client Interaction**: Client profiles project details and submits feedback
+4. **Client Interaction**: Client views project details and submits feedback
 5. **Access Tracking**: System logs all access attempts with timestamps
 
 ## Security Features

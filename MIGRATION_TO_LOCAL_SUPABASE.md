@@ -141,7 +141,7 @@ The schema in `supabase/migrations/20250101000000_initial_schema.sql` matches yo
 - **Projects** table
 - **Clients** table
 - **Tasks** table with subtasks support
-- **Client Profile Codes** table
+- **Client Portal Codes** table
 - **Row Level Security (RLS)** policies for all tables
 - **Indexes** for performance
 - **Triggers** for auto-updating timestamps

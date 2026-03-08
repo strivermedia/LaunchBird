@@ -32,7 +32,7 @@ Dashboard Navigation:
 - **Manager filtering** to view clients by assigned team member
 - **Responsive table** with sortable columns and quick actions
 
-### 👤 Client Profile Management
+### 👤 Client Management
 - **Detailed client information** with contact details and company information
 - **Assigned manager tracking** with titles and contact history
 - **Project statistics** showing total, active, and completed projects
@@ -69,7 +69,7 @@ Main client dashboard page with:
 - Quick action buttons
 
 #### `app/clients/[id]/page.tsx`
-Individual client profile page with:
+Individual client details page with:
 - Tabbed interface (Overview, Projects, Communications, Notes, Access)
 - Client information display
 - Project linking and management
@@ -84,7 +84,7 @@ Reusable client list component with:
 
 ### Backend Services
 
-#### `functions/shareClientProfileLink.ts`
+#### `functions/shareClientPortalLink.ts`
 Firebase Functions for:
 - **Code Generation**: Creates unique 4-character alphanumeric codes
 - **Code Storage**: Manages codes in Firestore with expiration and usage tracking
@@ -127,9 +127,9 @@ interface Client {
 }
 ```
 
-#### ClientProfileCode Interface
+#### ClientPortalCode Interface
 ```typescript
-interface ClientProfileCode {
+interface ClientPortalCode {
   id: string
   clientId: string
   code: string
@@ -193,7 +193,7 @@ TWILIO_PHONE_NUMBER=your_twilio_phone_number
 4. **View Profile**: Click the eye icon to view detailed client information
 
 ### Access Code Management
-1. **Generate Code**: In client profile, go to "Access Codes" tab
+1. **Generate Code**: In client details, go to "Access Codes" tab
 2. **Choose Type**: Select code-based or login-protected access
 3. **Send Code**: Use email or SMS buttons to send access codes
 4. **Monitor Usage**: Track code usage and expiration dates

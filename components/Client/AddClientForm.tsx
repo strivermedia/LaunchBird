@@ -195,7 +195,7 @@ export default function AddClientForm({ onClose, onSuccess }: AddClientFormProps
                 Add New Client
               </CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-400">
-                Create a new client profile and assign a manager
+                Create a new client and assign a manager
               </CardDescription>
             </div>
             <Button

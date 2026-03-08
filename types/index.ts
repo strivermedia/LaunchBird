@@ -152,8 +152,10 @@ export interface Shoutout {
  */
 export interface TimeEntry {
   id: string
+  organizationId: string
   userId: string
   projectId?: string
+  taskId?: string
   description: string
   startTime: Date
   endTime?: Date
@@ -468,7 +470,7 @@ export interface Client {
   clientAccessEnabled?: boolean
 }
 
-export interface ClientProfileCode {
+export interface ClientPortalCode {
   id: string
   clientId: string
   code: string

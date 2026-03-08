@@ -28,8 +28,8 @@ import {
   X, 
   Plus, 
   User, 
-  Tag,
   Clock,
+  PlayCircle,
   AlertCircle,
   CheckCircle2,
   Circle,
@@ -40,6 +40,7 @@ import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
 import type { Task, TaskStatus, TaskPriority, TaskRecurrence } from '@/types'
 import type { UserProfile } from '@/lib/auth'
+import { getPriorityColor as getPriorityBadgeColor } from '@/lib/status-utils'
 
 // Form validation schema
 const taskFormSchema = z.object({
@@ -47,6 +48,7 @@ const taskFormSchema = z.object({
   description: z.string().optional(),
   status: z.enum(['todo', 'in-progress', 'review', 'completed']),
   priority: z.enum(['low', 'medium', 'high', 'urgent']),
+  startDate: z.date().optional(),
   dueDate: z.date().optional(),
   assignedTo: z.array(z.string()),
   projectId: z.string().optional(),
@@ -55,7 +57,6 @@ const taskFormSchema = z.object({
   isRecurring: z.boolean(),
   recurrencePattern: z.enum(['none', 'daily', 'weekly', 'monthly']).optional(),
   recurrenceEndDate: z.date().optional(),
-  tags: z.array(z.string()),
   estimatedHours: z.number().min(0).optional(),
 })
 
@@ -86,7 +87,7 @@ export default function TaskForm({
   availableProjects = [],
   availableTasks = []
 }: TaskFormProps) {
-  const [tagInput, setTagInput] = useState('')
+  const [showStartCalendar, setShowStartCalendar] = useState(false)
   const [showCalendar, setShowCalendar] = useState(false)
   const [showRecurrenceCalendar, setShowRecurrenceCalendar] = useState(false)
 
@@ -105,6 +106,7 @@ export default function TaskForm({
       description: '',
       status: 'todo',
       priority: 'medium',
+      startDate: undefined,
       dueDate: undefined,
       assignedTo: [],
       projectId: 'none',
@@ -113,12 +115,15 @@ export default function TaskForm({
       isRecurring: false,
       recurrencePattern: 'none',
       recurrenceEndDate: undefined,
-      tags: [],
       estimatedHours: 0,
     },
   })
 
   const watchedValues = watch()
+  const hasSubtasks = (task?.subtasks?.length || 0) > 0
+  const subtaskEstimatedTotal = hasSubtasks
+    ? (task?.subtasks || []).reduce((sum, t) => sum + (t.estimatedHours || 0), 0)
+    : 0
 
   // Reset form when task changes
   useEffect(() => {
@@ -129,6 +134,7 @@ export default function TaskForm({
         description: task.description || '',
         status: task.status,
         priority: task.priority,
+        startDate: task.startDate,
         dueDate: task.dueDate,
         assignedTo: task.assignedTo,
         projectId: task.projectId || 'none',
@@ -137,34 +143,29 @@ export default function TaskForm({
         isRecurring: task.isRecurring,
         recurrencePattern: task.recurrencePattern || 'none',
         recurrenceEndDate: task.recurrenceEndDate,
-        tags: task.tags,
-        estimatedHours: task.estimatedHours || 0,
+        estimatedHours: hasSubtasks ? subtaskEstimatedTotal : task.estimatedHours || 0,
       })
     } else {
       // Creating new task - reset to default values
       reset()
     }
-  }, [task, reset])
+  }, [task, reset, hasSubtasks, subtaskEstimatedTotal])
+
+  // Keep parent estimated hours synced to sum(subtasks) in the form (UI-level enforcement)
+  useEffect(() => {
+    if (task && hasSubtasks) {
+      setValue('estimatedHours', subtaskEstimatedTotal, { shouldDirty: false })
+    }
+  }, [task, hasSubtasks, subtaskEstimatedTotal, setValue])
 
   // Reset form state when closed
   useEffect(() => {
     if (!isOpen) {
-      setTagInput('')
+      setShowStartCalendar(false)
       setShowCalendar(false)
       setShowRecurrenceCalendar(false)
     }
   }, [isOpen])
-
-  const handleAddTag = () => {
-    if (tagInput.trim() && !watchedValues.tags?.includes(tagInput.trim())) {
-      setValue('tags', [...(watchedValues.tags || []), tagInput.trim()])
-      setTagInput('')
-    }
-  }
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    setValue('tags', (watchedValues.tags || []).filter(tag => tag !== tagToRemove))
-  }
 
   const handleAddAssignee = (userId: string) => {
     if (!watchedValues.assignedTo?.includes(userId)) {
@@ -201,7 +202,7 @@ export default function TaskForm({
       case 'completed':
         return <CheckCircle2 className="h-4 w-4" />
       case 'in-progress':
-        return <Clock className="h-4 w-4" />
+        return <PlayCircle className="h-4 w-4" />
       case 'review':
         return <AlertCircle className="h-4 w-4" />
       case 'todo':
@@ -211,20 +212,7 @@ export default function TaskForm({
     }
   }
 
-  const getPriorityColor = (priority: TaskPriority) => {
-    switch (priority) {
-      case 'urgent':
-        return 'bg-red-500 text-white'
-      case 'high':
-        return 'bg-orange-500 text-white'
-      case 'medium':
-        return 'bg-yellow-500 text-white'
-      case 'low':
-        return 'bg-green-500 text-white'
-      default:
-        return 'bg-gray-500 text-white'
-    }
-  }
+  const getPriorityColor = (priority: TaskPriority) => getPriorityBadgeColor(priority)
 
   return (
     <Dialog open={isOpen} onOpenChange={() => onClose()}>
@@ -319,25 +307,25 @@ export default function TaskForm({
                     <SelectContent>
                       <SelectItem value="low">
                         <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full" />
+                          <div className="h-3 w-3 rounded-full bg-[#5EEAD4] ring-1 ring-black/10 dark:ring-white/15" />
                           <span>Low</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="medium">
                         <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-yellow-500 rounded-full" />
+                          <div className="h-3 w-3 rounded-full bg-[#FBBF24] ring-1 ring-black/10 dark:ring-white/15" />
                           <span>Medium</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="high">
                         <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-orange-500 rounded-full" />
+                          <div className="h-3 w-3 rounded-full bg-[#F97316] ring-1 ring-black/10 dark:ring-white/15" />
                           <span>High</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="urgent">
                         <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-red-500 rounded-full" />
+                          <div className="h-3 w-3 rounded-full bg-[#EF4444] ring-1 ring-black/10 dark:ring-white/15" />
                           <span>Urgent</span>
                         </div>
                       </SelectItem>
@@ -354,60 +342,117 @@ export default function TaskForm({
               <CardTitle className="text-sm">Scheduling</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>Due Date</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Controller
-                    name="dueDate"
-                    control={control}
-                    key={task ? `edit-${task.id}` : 'new'}
-                    render={({ field }) => (
-                      <Popover open={showCalendar} onOpenChange={setShowCalendar}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "w-full justify-start text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverPrimitive.Portal>
-                          <PopoverContent 
-                            className="w-auto p-0 z-[60] pointer-events-auto" 
-                            align="start"
-                            side="bottom"
-                            sideOffset={4}
-                          >
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={(date) => {
-                              if (date) {
+                  <Label>Start Date (optional)</Label>
+                  <div className="space-y-2">
+                    <Controller
+                      name="startDate"
+                      control={control}
+                      key={task ? `edit-start-${task.id}` : 'new-start'}
+                      render={({ field }) => (
+                        <Popover open={showStartCalendar} onOpenChange={setShowStartCalendar}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full justify-start text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date (optional)</span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverPrimitive.Portal>
+                            <PopoverContent 
+                              className="w-auto p-0 z-[60] pointer-events-auto" 
+                              align="start"
+                              side="bottom"
+                              sideOffset={4}
+                            >
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={(date) => {
                                 field.onChange(date)
-                                setShowCalendar(false)
-                              }
-                            }}
-                            onDayClick={(day, modifiers) => {
-                              if (!modifiers.disabled && !modifiers.outside) {
-                                field.onChange(day)
-                                setShowCalendar(false)
-                              }
-                            }}
-                            initialFocus
-                          />
-                          </PopoverContent>
-                        </PopoverPrimitive.Portal>
-                      </Popover>
-                    )}
-                  />
+                                setShowStartCalendar(false)
+                              }}
+                              onDayClick={(day, modifiers) => {
+                                if (!modifiers.disabled && !modifiers.outside) {
+                                  field.onChange(day)
+                                  setShowStartCalendar(false)
+                                }
+                              }}
+                              initialFocus
+                            />
+                            </PopoverContent>
+                          </PopoverPrimitive.Portal>
+                        </Popover>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Due Date (optional)</Label>
+                  <div className="space-y-2">
+                    <Controller
+                      name="dueDate"
+                      control={control}
+                      key={task ? `edit-due-${task.id}` : 'new-due'}
+                      render={({ field }) => (
+                        <Popover open={showCalendar} onOpenChange={setShowCalendar}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full justify-start text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date (optional)</span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverPrimitive.Portal>
+                            <PopoverContent 
+                              className="w-auto p-0 z-[60] pointer-events-auto" 
+                              align="start"
+                              side="bottom"
+                              sideOffset={4}
+                            >
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={(date) => {
+                                if (date) {
+                                  field.onChange(date)
+                                  setShowCalendar(false)
+                                }
+                              }}
+                              onDayClick={(day, modifiers) => {
+                                if (!modifiers.disabled && !modifiers.outside) {
+                                  field.onChange(day)
+                                  setShowCalendar(false)
+                                }
+                              }}
+                              initialFocus
+                            />
+                            </PopoverContent>
+                          </PopoverPrimitive.Portal>
+                        </Popover>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -418,9 +463,16 @@ export default function TaskForm({
                   type="number"
                   min="0"
                   step="0.5"
+                  disabled={!!task && hasSubtasks}
                   {...register('estimatedHours', { valueAsNumber: true })}
                   placeholder="0"
                 />
+                {task && hasSubtasks && (
+                  <p className="text-xs text-muted-foreground">
+                    Calculated from {task.subtasks?.length || 0} subtask
+                    {(task.subtasks?.length || 0) === 1 ? '' : 's'}: {subtaskEstimatedTotal}h total.
+                  </p>
+                )}
               </div>
 
               {/* Recurring Task Options */}
@@ -586,10 +638,10 @@ export default function TaskForm({
             </CardContent>
           </Card>
 
-          {/* Dependencies and Tags */}
+          {/* Dependencies */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm">Dependencies & Tags</CardTitle>
+              <CardTitle className="text-sm">Dependencies</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -629,46 +681,6 @@ export default function TaskForm({
                         ))}
                     </SelectContent>
                   </Select>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Tags</Label>
-                <div className="space-y-2">
-                  <div className="flex flex-wrap gap-2">
-                    {watchedValues.tags && watchedValues.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="flex items-center space-x-1">
-                        <Tag className="h-3 w-3" />
-                        <span>{tag}</span>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="h-4 w-4 p-0"
-                          onClick={() => handleRemoveTag(tag)}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </Badge>
-                    ))}
-                  </div>
-                  
-                  <div className="flex space-x-2">
-                    <Input
-                      value={tagInput}
-                      onChange={(e) => setTagInput(e.target.value)}
-                      placeholder="Add tag"
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault()
-                          handleAddTag()
-                        }
-                      }}
-                    />
-                    <Button type="button" onClick={handleAddTag} size="sm">
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
                 </div>
               </div>
             </CardContent>

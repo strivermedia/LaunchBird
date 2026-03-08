@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -29,13 +29,25 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { 
-  ArrowUpDown, 
-  ArrowUp, 
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Calendar as DatePicker } from '@/components/ui/calendar'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  ArrowUpDown,
+  ArrowUp,
   ArrowDown,
-  Calendar,
+  Calendar as CalendarIcon,
   Clock,
+  PlayCircle,
   User,
   Paperclip,
   MessageSquare,
@@ -49,7 +61,8 @@ import {
   CheckSquare,
   ChevronDown,
   ChevronRight,
-  GripVertical
+  GripVertical,
+  Maximize2,
 } from 'lucide-react'
 import {
   DropdownMenu,
@@ -61,6 +74,156 @@ import {
 import type { Task, TaskStatus, TaskPriority, TaskSort } from '@/types'
 import type { UserProfile } from '@/lib/auth'
 import { formatDistanceToNow } from 'date-fns'
+import { getPriorityColor as getPriorityBadgeColor, getTaskStageTheme } from '@/lib/status-utils'
+
+interface InlineEditableTitleProps {
+  value: string
+  onSave: (newValue: string) => void
+  className?: string
+  onExpand?: () => void
+}
+
+const InlineEditableTitle: React.FC<InlineEditableTitleProps> = ({
+  value,
+  onSave,
+  className,
+  onExpand,
+}) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const [draft, setDraft] = useState(value)
+
+  useEffect(() => {
+    if (!isEditing) {
+      setDraft(value)
+    }
+  }, [value, isEditing])
+
+  const commit = () => {
+    const trimmed = draft.trim()
+    if (trimmed && trimmed !== value) {
+      onSave(trimmed)
+    }
+    setIsEditing(false)
+  }
+
+  const cancel = () => {
+    setDraft(value)
+    setIsEditing(false)
+  }
+
+  if (isEditing) {
+    return (
+      <Input
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        autoFocus
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            commit()
+          } else if (e.key === 'Escape') {
+            e.preventDefault()
+            cancel()
+          }
+        }}
+        className={`h-8 text-sm px-2 ${className || ''}`}
+      />
+    )
+  }
+
+  return (
+    <div className="flex items-center gap-2 min-w-0">
+      <div
+        className={`group flex min-w-0 flex-1 items-center rounded-md border border-transparent px-2 py-1 hover:border-border hover:bg-muted/60 cursor-text ${className || ''}`}
+        onClick={() => setIsEditing(true)}
+      >
+        <span className="min-w-0 flex-1 font-medium text-sm text-left truncate text-foreground group-hover:text-foreground">
+          {value}
+        </span>
+      </div>
+      {onExpand && (
+        <button
+          type="button"
+          className="inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded hover:bg-muted-foreground/10 text-muted-foreground hover:text-foreground"
+          onClick={(e) => {
+            e.stopPropagation()
+            onExpand()
+          }}
+          aria-label="Open details"
+        >
+          <Maximize2 className="h-3 w-3" />
+        </button>
+      )}
+    </div>
+  )
+}
+
+interface InlineEditableDescriptionProps {
+  value?: string
+  onSave: (newValue?: string) => void
+  className?: string
+}
+
+const InlineEditableDescription: React.FC<InlineEditableDescriptionProps> = ({
+  value,
+  onSave,
+  className,
+}) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const [draft, setDraft] = useState(value || '')
+
+  useEffect(() => {
+    if (!isEditing) setDraft(value || '')
+  }, [value, isEditing])
+
+  const commit = () => {
+    const trimmed = draft.trim()
+    const next = trimmed.length ? trimmed : undefined
+    const prev = value?.trim() ? value.trim() : undefined
+    if (next !== prev) onSave(next)
+    setIsEditing(false)
+  }
+
+  const cancel = () => {
+    setDraft(value || '')
+    setIsEditing(false)
+  }
+
+  if (isEditing) {
+    return (
+      <Textarea
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        autoFocus
+        rows={2}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            e.preventDefault()
+            cancel()
+          } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+            e.preventDefault()
+            commit()
+          }
+        }}
+        className={`mt-1 w-full resize-none text-xs ${className || ''}`}
+      />
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      className={`mt-1 w-full text-left ${className || ''}`}
+      onClick={() => setIsEditing(true)}
+    >
+      <div className="text-xs text-muted-foreground line-clamp-1 break-all hover:text-foreground/80">
+        {value?.trim() ? value : 'Add description…'}
+      </div>
+    </button>
+  )
+}
 
 // Sortable Task Row Component
 interface SortableTaskRowProps {
@@ -69,6 +232,7 @@ interface SortableTaskRowProps {
   onTaskDelete?: (taskId: string) => void
   onTaskEdit?: (task: Task) => void
   onCreateSubtask?: (parentTask: Task) => void
+  onQuickCreateSubtask?: (parentTaskId: string, title: string) => void
   userProfile?: UserProfile | null
   showSubtasks?: Set<string>
   onToggleSubtasks?: (taskId: string) => void
@@ -85,6 +249,7 @@ const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
   onTaskDelete,
   onTaskEdit,
   onCreateSubtask,
+  onQuickCreateSubtask,
   userProfile,
   showSubtasks,
   onToggleSubtasks,
@@ -94,6 +259,9 @@ const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
   isOverdue,
   isDueSoon,
 }) => {
+  const [isTaskDueDateOpen, setIsTaskDueDateOpen] = useState(false)
+  const [newSubtaskTitle, setNewSubtaskTitle] = useState('')
+
   const {
     attributes,
     listeners,
@@ -108,12 +276,25 @@ const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
     transition,
   }
 
+  const handleQuickAddSubtask = () => {
+    const trimmed = newSubtaskTitle.trim()
+    if (!trimmed) return
+
+    if (onQuickCreateSubtask) {
+      onQuickCreateSubtask(task.id, trimmed)
+    } else if (onCreateSubtask) {
+      onCreateSubtask(task)
+    }
+
+    setNewSubtaskTitle('')
+  }
+
   return (
     <React.Fragment>
       <TableRow 
         ref={setNodeRef} 
         style={style}
-        className={`hover:bg-muted/50 ${isDragging ? 'opacity-50' : ''}`}
+        className={`group hover:bg-muted/50 ${isDragging ? 'opacity-50' : ''}`}
       >
         <TableCell>
           <div className="flex items-center">
@@ -125,84 +306,171 @@ const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
             >
               <GripVertical className="h-4 w-4 text-muted-foreground hover:text-foreground" />
             </div>
-            {getStatusIcon(task.status)}
           </div>
         </TableCell>
         
         <TableCell>
-          <div className="space-y-1">
-            <div className="font-medium text-sm">{task.title}</div>
-            {task.description && (
-              <div className="text-xs text-muted-foreground line-clamp-1">
-                {task.description}
-              </div>
-            )}
-            {task.tags && task.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-1">
-                {task.tags.slice(0, 2).map((tag, index) => (
-                  <Badge key={index} variant="outline" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-                {task.tags.length > 2 && (
-                  <Badge variant="outline" className="text-xs">
-                    +{task.tags.length - 2}
-                  </Badge>
+          <div className="flex items-start space-x-2">
+            {(task.subtasks?.length || 0) > 0 && (
+              <button
+                type="button"
+                className="mt-0.5 inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-muted-foreground/10 transition-opacity opacity-100"
+                onClick={() => onToggleSubtasks?.(task.id)}
+                aria-label={showSubtasks?.has(task.id) ? 'Collapse subtasks' : 'Expand subtasks'}
+              >
+                {showSubtasks?.has(task.id) ? (
+                  <ChevronDown className="h-4 w-4" />
+                ) : (
+                  <ChevronRight className="h-4 w-4" />
                 )}
-              </div>
+              </button>
             )}
-          </div>
-        </TableCell>
-        
-        <TableCell>
-          <Badge 
-            variant="secondary" 
-            className={`text-xs ${getPriorityColor(task.priority)}`}
-          >
-            {task.priority.toUpperCase()}
-          </Badge>
-        </TableCell>
-        
-        <TableCell>
-          <div className={`flex items-center space-x-2 ${getStatusColor(task.status)}`}>
-            {getStatusIcon(task.status)}
-            <span className="text-sm font-medium capitalize">
-              {task.status.replace('-', ' ')}
-            </span>
-          </div>
-        </TableCell>
-        
-        <TableCell>
-          {task.dueDate ? (
-            <div className="flex items-center space-x-2 text-sm">
-              <Calendar className="h-3 w-3 text-muted-foreground" />
-              <span className={`${
-                isOverdue(task) ? 'text-red-600 dark:text-red-400 font-medium' :
-                isDueSoon(task) ? 'text-yellow-600 dark:text-yellow-400 font-medium' :
-                'text-foreground'
-              }`}>
-                {isOverdue(task) ? 'Overdue' : 
-                 isDueSoon(task) ? 'Due soon' : 
-                 formatDistanceToNow(task.dueDate, { addSuffix: true })}
-              </span>
+            <div className="space-y-1 flex-1 min-w-0">
+              <InlineEditableTitle
+                value={task.title}
+                onSave={(newTitle) => onTaskUpdate(task.id, { title: newTitle })}
+                onExpand={onTaskEdit ? () => onTaskEdit(task) : undefined}
+              />
+              <InlineEditableDescription
+                value={task.description}
+                onSave={(newDesc) => onTaskUpdate(task.id, { description: newDesc })}
+              />
             </div>
-          ) : (
-            <span className="text-muted-foreground text-sm">No due date</span>
-          )}
+          </div>
+        </TableCell>
+        
+        <TableCell>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2"
+              >
+                <Badge
+                  variant="secondary"
+                  className={`text-xs ${getPriorityColor(task.priority)}`}
+                >
+                  {task.priority.toUpperCase()}
+                </Badge>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={() => onTaskUpdate(task.id, { priority: 'low' })}>
+                  <span className="mr-2 inline-block h-3 w-3 rounded-full bg-[#5EEAD4] ring-1 ring-black/10 dark:ring-white/15" />
+                  Low
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onTaskUpdate(task.id, { priority: 'medium' })}>
+                  <span className="mr-2 inline-block h-3 w-3 rounded-full bg-[#FBBF24] ring-1 ring-black/10 dark:ring-white/15" />
+                  Medium
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onTaskUpdate(task.id, { priority: 'high' })}>
+                  <span className="mr-2 inline-block h-3 w-3 rounded-full bg-[#F97316] ring-1 ring-black/10 dark:ring-white/15" />
+                  High
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onTaskUpdate(task.id, { priority: 'urgent' })}>
+                  <span className="mr-2 inline-block h-3 w-3 rounded-full bg-[#EF4444] ring-1 ring-black/10 dark:ring-white/15" />
+                  Urgent
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TableCell>
+        
+        <TableCell>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`h-7 px-2 ${getStatusColor(task.status)}`}
+              >
+                <div className="flex items-center space-x-2">
+                  {getStatusIcon(task.status)}
+                  <span className="text-sm font-medium capitalize">
+                    {task.status.replace('-', ' ')}
+                  </span>
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem onClick={() => onTaskUpdate(task.id, { status: 'todo' })}>
+                To do
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onTaskUpdate(task.id, { status: 'in-progress' })}>
+                In progress
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onTaskUpdate(task.id, { status: 'review' })}>
+                Review
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onTaskUpdate(task.id, { status: 'completed' })}>
+                Completed
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TableCell>
+        
+        <TableCell className="overflow-hidden max-w-[128px]">
+          <Popover open={isTaskDueDateOpen} onOpenChange={setIsTaskDueDateOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-auto min-h-7 px-2 py-1 text-sm font-normal min-w-0 w-full justify-start whitespace-normal text-left"
+              >
+                <div className="flex items-start space-x-2 min-w-0 flex-1 w-full">
+                  <CalendarIcon className="h-3 w-3 text-muted-foreground flex-shrink-0 mt-0.5" />
+                  {task.dueDate ? (
+                    <span
+                      className={`min-w-0 break-words text-left ${
+                        isOverdue(task)
+                          ? 'text-red-600 dark:text-red-400 font-medium'
+                          : isDueSoon(task)
+                          ? 'text-yellow-600 dark:text-yellow-400 font-medium'
+                          : 'text-foreground'
+                      }`}
+                    >
+                      {isOverdue(task)
+                        ? 'Overdue'
+                        : isDueSoon(task)
+                        ? 'Due soon'
+                        : (() => {
+                            const formatted = formatDistanceToNow(task.dueDate, { addSuffix: true })
+                            return formatted.charAt(0).toUpperCase() + formatted.slice(1)
+                          })()}
+                    </span>
+                  ) : (
+                    <span className="text-muted-foreground min-w-0 break-words text-left">No due date</span>
+                  )}
+                </div>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-auto p-2">
+              <DatePicker
+                mode="single"
+                selected={task.dueDate}
+                onSelect={(date) => {
+                  if (!date) return
+                  onTaskUpdate(task.id, { dueDate: date })
+                  setIsTaskDueDateOpen(false)
+                }}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
         </TableCell>
         
         <TableCell>
           {task.assignedToNames && task.assignedToNames.length > 0 ? (
             <div className="flex -space-x-1">
               {task.assignedToNames.slice(0, 3).map((name, index) => (
-                <Avatar key={index} className="h-6 w-6 border-2 border-background">
+                <Avatar key={index} className="h-7 w-7 border-2 border-background">
                   <AvatarFallback className="text-xs">
                     {name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               ))}
               {task.assignedToNames.length > 3 && (
-                <div className="h-6 w-6 rounded-full bg-muted border-2 border-background flex items-center justify-center">
+                <div className="h-7 w-7 rounded-full bg-muted border-2 border-background flex items-center justify-center">
                   <span className="text-xs text-muted-foreground">
                     +{task.assignedToNames.length - 3}
                   </span>
@@ -215,57 +483,10 @@ const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
         </TableCell>
         
         <TableCell>
-          {task.subtasks && task.subtasks.length > 0 ? (
-            <div className="flex items-center space-x-2">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-6 w-6 p-0"
-                onClick={() => onToggleSubtasks?.(task.id)}
-              >
-                {showSubtasks?.has(task.id) ? (
-                  <ChevronDown className="h-3 w-3" />
-                ) : (
-                  <ChevronRight className="h-3 w-3" />
-                )}
-              </Button>
-              <span className="text-sm font-medium">
-                {task.subtasks.length}
-              </span>
-              <div className="flex items-center space-x-1">
-                <span className="text-xs text-green-600">
-                  ({task.subtasks.filter(st => st.status === 'completed').length} completed)
-                </span>
-              </div>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-6 w-6 p-0"
-                onClick={() => onCreateSubtask?.(task)}
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
-            </div>
-          ) : (
-            <div className="flex items-center space-x-2">
-              <span className="text-muted-foreground text-sm">None</span>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-6 w-6 p-0"
-                onClick={() => onCreateSubtask?.(task)}
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
-            </div>
-          )}
-        </TableCell>
-        
-        <TableCell>
           {task.projectTitle ? (
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full" />
-              <span className="text-sm text-foreground truncate max-w-24">
+            <div className="flex items-start space-x-2 min-w-0">
+              <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1.5" />
+              <span className="text-sm text-foreground break-words min-w-0">
                 {task.projectTitle}
               </span>
             </div>
@@ -291,7 +512,7 @@ const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
                 </div>
               )}
             </div>
-            
+
             {/* Actions Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -326,50 +547,51 @@ const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
         </TableCell>
       </TableRow>
 
-      {/* Subtask Rows */}
-      {showSubtasks?.has(task.id) && task.subtasks && task.subtasks.length > 0 && (
+      {/* Subtask inline section (add + list) */}
+      {showSubtasks?.has(task.id) && (
         <>
-          {task.subtasks.map((subtask) => (
-            <TableRow key={subtask.id} className="hover:bg-muted/30 bg-muted/20">
-              <TableCell>
-                <div className="flex items-center pl-6">
-                  <div className="w-4 h-4 border-l-2 border-b-2 border-muted-foreground/30 rounded-bl-sm mr-2"></div>
-                  {getStatusIcon(subtask.status)}
+          {/* Existing subtasks list */}
+          {task.subtasks && task.subtasks.length > 0 && task.subtasks.map((subtask) => (
+            <TableRow
+              key={subtask.id}
+              className="relative hover:bg-muted/40 bg-muted/30"
+            >
+              <TableCell className="relative">
+                <div className="flex items-center pl-10">
+                  <div className="w-4 h-4 border-l-2 border-b-2 border-primary/40 rounded-bl-sm mr-2" />
                 </div>
               </TableCell>
               
               <TableCell>
-                <div className="space-y-1 pl-6">
-                  <div className="font-medium text-sm text-muted-foreground">{subtask.title}</div>
-                  {subtask.description && (
-                    <div className="text-xs text-muted-foreground line-clamp-1">
-                      {subtask.description}
-                    </div>
-                  )}
-                  {subtask.tags && subtask.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {subtask.tags.slice(0, 2).map((tag, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                      {subtask.tags.length > 2 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{subtask.tags.length - 2}
-                        </Badge>
-                      )}
-                    </div>
-                  )}
+                <div className="space-y-1 pl-10">
+                  <InlineEditableTitle
+                    value={subtask.title}
+                    onSave={(newTitle) => onTaskUpdate(subtask.id, { title: newTitle })}
+                    className="text-muted-foreground"
+                    onExpand={onTaskEdit ? () => onTaskEdit(subtask) : undefined}
+                  />
+                  <InlineEditableDescription
+                    value={subtask.description}
+                    onSave={(newDesc) => onTaskUpdate(subtask.id, { description: newDesc })}
+                  />
                 </div>
               </TableCell>
               
               <TableCell>
-                <Badge 
-                  variant="secondary" 
-                  className={`text-xs ${getPriorityColor(subtask.priority)}`}
-                >
-                  {subtask.priority.toUpperCase()}
-                </Badge>
+                <div className="flex flex-col gap-1">
+                  <Badge 
+                    variant="secondary" 
+                    className={`text-xs ${getPriorityColor(subtask.priority)}`}
+                  >
+                    {subtask.priority.toUpperCase()}
+                  </Badge>
+                  {subtask.estimatedHours && subtask.estimatedHours > 0 && (
+                    <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                      <Clock className="h-3 w-3" />
+                      <span>{subtask.estimatedHours}h</span>
+                    </span>
+                  )}
+                </div>
               </TableCell>
               
               <TableCell>
@@ -381,22 +603,31 @@ const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
                 </div>
               </TableCell>
               
-              <TableCell>
+              <TableCell className="overflow-hidden max-w-[128px]">
                 {subtask.dueDate ? (
-                  <div className="flex items-center space-x-2 text-sm">
-                    <Calendar className="h-3 w-3 text-muted-foreground" />
-                    <span className={`${
-                      isOverdue(subtask) ? 'text-red-600 dark:text-red-400 font-medium' :
-                      isDueSoon(subtask) ? 'text-yellow-600 dark:text-yellow-400 font-medium' :
-                      'text-foreground'
-                    }`}>
-                      {isOverdue(subtask) ? 'Overdue' : 
-                       isDueSoon(subtask) ? 'Due soon' : 
-                       formatDistanceToNow(subtask.dueDate, { addSuffix: true })}
+                  <div className="flex items-start space-x-2 text-sm min-w-0 w-full text-left">
+                    <CalendarIcon className="h-3 w-3 text-muted-foreground flex-shrink-0 mt-0.5" />
+                    <span
+                      className={`min-w-0 break-words text-left ${
+                        isOverdue(subtask)
+                          ? 'text-red-600 dark:text-red-400 font-medium'
+                          : isDueSoon(subtask)
+                          ? 'text-yellow-600 dark:text-yellow-400 font-medium'
+                          : 'text-foreground'
+                      }`}
+                    >
+                      {isOverdue(subtask)
+                        ? 'Overdue'
+                        : isDueSoon(subtask)
+                        ? 'Due soon'
+                        : (() => {
+                            const formatted = formatDistanceToNow(subtask.dueDate, { addSuffix: true })
+                            return formatted.charAt(0).toUpperCase() + formatted.slice(1)
+                          })()}
                     </span>
                   </div>
                 ) : (
-                  <span className="text-muted-foreground text-sm">No due date</span>
+                  <span className="text-muted-foreground text-sm min-w-0 break-words text-left">No due date</span>
                 )}
               </TableCell>
               
@@ -404,14 +635,14 @@ const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
                 {subtask.assignedToNames && subtask.assignedToNames.length > 0 ? (
                   <div className="flex -space-x-1">
                     {subtask.assignedToNames.slice(0, 3).map((name, index) => (
-                      <Avatar key={index} className="h-6 w-6 border-2 border-background">
+                      <Avatar key={index} className="h-7 w-7 border-2 border-background">
                         <AvatarFallback className="text-xs">
                           {name.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                     ))}
                     {subtask.assignedToNames.length > 3 && (
-                      <div className="h-6 w-6 rounded-full bg-muted border-2 border-background flex items-center justify-center">
+                      <div className="h-7 w-7 rounded-full bg-muted border-2 border-background flex items-center justify-center">
                         <span className="text-xs text-muted-foreground">
                           +{subtask.assignedToNames.length - 3}
                         </span>
@@ -424,14 +655,10 @@ const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
               </TableCell>
               
               <TableCell>
-                <span className="text-muted-foreground text-sm">—</span>
-              </TableCell>
-              
-              <TableCell>
                 {subtask.projectTitle ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                    <span className="text-sm text-foreground truncate max-w-24">
+                  <div className="flex items-start space-x-2 min-w-0">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1.5" />
+                    <span className="text-sm text-foreground break-words min-w-0">
                       {subtask.projectTitle}
                     </span>
                   </div>
@@ -457,7 +684,7 @@ const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
                       </div>
                     )}
                   </div>
-                  
+
                   {/* Actions Menu */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -492,6 +719,37 @@ const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
               </TableCell>
             </TableRow>
           ))}
+
+          {/* Inline "Add subtask" row (always last) */}
+          <TableRow className="relative bg-transparent">
+            <TableCell className="relative">
+              <div className="flex items-center pl-10">
+                <div className="w-4 h-4 border-l-2 border-b-2 border-primary/30 rounded-bl-sm mr-2" />
+              </div>
+            </TableCell>
+            <TableCell colSpan={7}>
+              <div className="flex items-center gap-2 pl-10 py-2 rounded-md border border-primary/10 bg-primary/5">
+                <Input
+                  value={newSubtaskTitle}
+                  onChange={(e) => setNewSubtaskTitle(e.target.value)}
+                  placeholder="Add subtask"
+                  className="h-8 text-sm max-w-sm bg-background"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      handleQuickAddSubtask()
+                    } else if (e.key === 'Escape') {
+                      e.preventDefault()
+                      setNewSubtaskTitle('')
+                    }
+                  }}
+                  onBlur={() => {
+                    handleQuickAddSubtask()
+                  }}
+                />
+              </div>
+            </TableCell>
+          </TableRow>
         </>
       )}
     </React.Fragment>
@@ -504,10 +762,12 @@ interface TaskListProps {
   onTaskDelete?: (taskId: string) => void
   onTaskEdit?: (task: Task) => void
   onCreateSubtask?: (parentTask: Task) => void
+  onQuickCreateSubtask?: (parentTaskId: string, title: string) => void
   onReorder?: (reorderedTasks: Task[]) => void
   userProfile?: UserProfile | null
   showSubtasks?: Set<string>
   onToggleSubtasks?: (taskId: string) => void
+  onCreateTask?: () => void
 }
 
 /**
@@ -523,7 +783,9 @@ export default function TaskList({
   onReorder,
   userProfile,
   showSubtasks,
-  onToggleSubtasks
+  onToggleSubtasks,
+  onCreateTask,
+  onQuickCreateSubtask,
 }: TaskListProps) {
   const [sort, setSort] = useState<TaskSort>({ field: 'createdAt', direction: 'desc' })
   const [isManualOrder, setIsManualOrder] = useState(false)
@@ -618,34 +880,12 @@ export default function TaskList({
 
   // Priority color mapping
   const getPriorityColor = (priority: TaskPriority) => {
-    switch (priority) {
-      case 'urgent':
-        return 'bg-red-500 text-white'
-      case 'high':
-        return 'bg-orange-500 text-white'
-      case 'medium':
-        return 'bg-yellow-500 text-white'
-      case 'low':
-        return 'bg-green-500 text-white'
-      default:
-        return 'bg-gray-500 text-white'
-    }
+    return getPriorityBadgeColor(priority)
   }
 
   // Status color mapping
   const getStatusColor = (status: TaskStatus) => {
-    switch (status) {
-      case 'completed':
-        return 'text-green-600 dark:text-green-400'
-      case 'in-progress':
-        return 'text-blue-600 dark:text-blue-400'
-      case 'review':
-        return 'text-purple-600 dark:text-purple-400'
-      case 'todo':
-        return 'text-gray-600 dark:text-gray-400'
-      default:
-        return 'text-gray-600 dark:text-gray-400'
-    }
+    return getTaskStageTheme(status).text
   }
 
   // Status icon mapping
@@ -654,7 +894,7 @@ export default function TaskList({
       case 'completed':
         return <CheckCircle2 className="h-4 w-4" />
       case 'in-progress':
-        return <Clock className="h-4 w-4" />
+        return <PlayCircle className="h-4 w-4" />
       case 'review':
         return <AlertCircle className="h-4 w-4" />
       case 'todo':
@@ -696,23 +936,16 @@ export default function TaskList({
               </div>
             )}
           </div>
-          <Button 
-            size="sm"
-            onClick={() => onTaskEdit?.({} as Task)}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New Task
-          </Button>
         </div>
       </CardHeader>
       
       <CardContent>
         <div className="rounded-md border">
-          <Table>
+          <Table className="table-fixed w-full">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-8"></TableHead>
-                <TableHead>
+                <TableHead className="w-10"></TableHead>
+                <TableHead className="w-[320px] md:w-[420px]">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -723,7 +956,7 @@ export default function TaskList({
                     {getSortIcon('title')}
                   </Button>
                 </TableHead>
-                <TableHead>
+                <TableHead className="w-28">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -734,22 +967,21 @@ export default function TaskList({
                     {getSortIcon('priority')}
                   </Button>
                 </TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>
+                <TableHead className="w-36">Status</TableHead>
+                <TableHead className="w-32">
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => handleSort('dueDate')}
-                    className="h-8 px-2 lg:px-3"
+                    className="h-8 px-2 lg:px-3 justify-start"
                   >
                     Due Date
                     {getSortIcon('dueDate')}
                   </Button>
                 </TableHead>
-                <TableHead>Assignees</TableHead>
-                <TableHead>Subtasks</TableHead>
-                <TableHead>Project</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="w-32">Assignees</TableHead>
+                <TableHead className="w-36">Project</TableHead>
+                <TableHead className="w-28">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <DndContext
@@ -770,6 +1002,7 @@ export default function TaskList({
                       onTaskDelete={onTaskDelete}
                       onTaskEdit={onTaskEdit}
                       onCreateSubtask={onCreateSubtask}
+                      onQuickCreateSubtask={onQuickCreateSubtask}
                       userProfile={userProfile}
                       showSubtasks={showSubtasks}
                       onToggleSubtasks={onToggleSubtasks}
@@ -795,7 +1028,15 @@ export default function TaskList({
             <p className="text-muted-foreground mb-4">
               Get started by creating your first task
             </p>
-            <Button onClick={() => onTaskEdit?.({} as Task)}>
+            <Button
+              onClick={() => {
+                if (onCreateTask) {
+                  onCreateTask()
+                } else {
+                  onTaskEdit?.({} as Task)
+                }
+              }}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Create Task
             </Button>

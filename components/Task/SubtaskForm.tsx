@@ -26,7 +26,6 @@ import {
   X, 
   Plus, 
   User, 
-  Tag,
   AlertCircle,
   CheckCircle2,
   Circle,
@@ -36,6 +35,7 @@ import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
 import type { CreateSubtaskForm as CreateSubtaskFormType, TaskPriority } from '@/types'
 import type { UserProfile } from '@/lib/auth'
+import { getPriorityColor as getPriorityBadgeColor } from '@/lib/status-utils'
 
 // Form validation schema
 const subtaskFormSchema = z.object({
@@ -45,7 +45,6 @@ const subtaskFormSchema = z.object({
   dueDate: z.date().optional(),
   assignedTo: z.array(z.string()),
   estimatedHours: z.number().min(0).optional(),
-  tags: z.array(z.string()),
 })
 
 type SubtaskFormData = z.infer<typeof subtaskFormSchema>
@@ -71,7 +70,6 @@ export default function SubtaskForm({
   userProfile,
   availableUsers = []
 }: SubtaskFormProps) {
-  const [tagInput, setTagInput] = useState('')
   const [showCalendar, setShowCalendar] = useState(false)
 
   const {
@@ -88,7 +86,6 @@ export default function SubtaskForm({
       description: '',
       priority: parentTask?.priority || 'medium',
       assignedTo: parentTask?.assignedTo || [],
-      tags: parentTask?.tags || [],
       estimatedHours: 0,
     },
   })
@@ -103,22 +100,10 @@ export default function SubtaskForm({
         description: '',
         priority: parentTask.priority || 'medium',
         assignedTo: parentTask.assignedTo || [],
-        tags: parentTask.tags || [],
         estimatedHours: 0,
       })
     }
   }, [parentTask, reset])
-
-  const handleAddTag = () => {
-    if (tagInput.trim() && !watchedValues.tags?.includes(tagInput.trim())) {
-      setValue('tags', [...(watchedValues.tags || []), tagInput.trim()])
-      setTagInput('')
-    }
-  }
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    setValue('tags', (watchedValues.tags || []).filter(tag => tag !== tagToRemove))
-  }
 
   const handleAddAssignee = (userId: string) => {
     if (!watchedValues.assignedTo?.includes(userId)) {
@@ -140,20 +125,7 @@ export default function SubtaskForm({
     }
   }
 
-  const getPriorityColor = (priority: TaskPriority) => {
-    switch (priority) {
-      case 'urgent':
-        return 'bg-red-500 text-white'
-      case 'high':
-        return 'bg-orange-500 text-white'
-      case 'medium':
-        return 'bg-yellow-500 text-white'
-      case 'low':
-        return 'bg-green-500 text-white'
-      default:
-        return 'bg-gray-500 text-white'
-    }
-  }
+  const getPriorityColor = (priority: TaskPriority) => getPriorityBadgeColor(priority)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -208,25 +180,25 @@ export default function SubtaskForm({
                     <SelectContent>
                       <SelectItem value="low">
                         <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full" />
+                          <div className="h-3 w-3 rounded-full bg-[#5EEAD4] ring-1 ring-black/10 dark:ring-white/15" />
                           <span>Low</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="medium">
                         <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-yellow-500 rounded-full" />
+                          <div className="h-3 w-3 rounded-full bg-[#FBBF24] ring-1 ring-black/10 dark:ring-white/15" />
                           <span>Medium</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="high">
                         <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-orange-500 rounded-full" />
+                          <div className="h-3 w-3 rounded-full bg-[#F97316] ring-1 ring-black/10 dark:ring-white/15" />
                           <span>High</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="urgent">
                         <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-red-500 rounded-full" />
+                          <div className="h-3 w-3 rounded-full bg-[#EF4444] ring-1 ring-black/10 dark:ring-white/15" />
                           <span>Urgent</span>
                         </div>
                       </SelectItem>
@@ -338,51 +310,6 @@ export default function SubtaskForm({
                         ))}
                     </SelectContent>
                   </Select>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Tags */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Tags</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex flex-wrap gap-2">
-                  {watchedValues.tags && watchedValues.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="flex items-center space-x-1">
-                      <Tag className="h-3 w-3" />
-                      <span>{tag}</span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="h-4 w-4 p-0"
-                        onClick={() => handleRemoveTag(tag)}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </Badge>
-                  ))}
-                </div>
-                
-                <div className="flex space-x-2">
-                  <Input
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    placeholder="Add tag"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault()
-                        handleAddTag()
-                      }
-                    }}
-                  />
-                  <Button type="button" onClick={handleAddTag} size="sm">
-                    <Plus className="h-4 w-4" />
-                  </Button>
                 </div>
               </div>
             </CardContent>

@@ -12,9 +12,9 @@ describe('Task Management', () => {
 
   it('should toggle between Kanban and List views', () => {
     cy.get('[data-testid="view-toggle"]').within(() => {
-      cy.get('button').contains('Kanban').should('have.attr', 'data-state', 'active')
-      cy.get('button').contains('List').click()
-      cy.get('button').contains('List').should('have.attr', 'data-state', 'active')
+      cy.contains('button', 'Kanban').should('have.attr', 'data-state', 'active')
+      cy.contains('button', 'List').click()
+      cy.contains('button', 'List').should('have.attr', 'data-state', 'active')
     })
   })
 
@@ -52,8 +52,10 @@ describe('Task Management', () => {
   it('should delete a task', () => {
     cy.get('[data-testid="task-card"]').first().within(() => {
       cy.get('[data-testid="task-menu"]').click()
-      cy.get('[data-testid="delete-task"]').click()
     })
+    
+    // Dropdown menu content is rendered in a portal (outside the card subtree)
+    cy.get('[data-testid="delete-task"]').click()
     
     cy.get('[data-testid="confirm-delete"]').click()
     cy.get('[data-testid="task-card"]').should('have.length.lessThan', 3)

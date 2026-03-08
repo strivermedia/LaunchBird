@@ -2,8 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Smart Calendar – task pills & project banners */
+.fc .lb-calendar-task {
+  border-left-width: 4px !important;
+  border-radius: 9999px !important;
+  padding: 4px 12px !important;
+  font-size: 0.75rem;
+  line-height: 1.1;
+}
+
+.fc .lb-calendar-task .fc-event-main {
+  padding: 0 !important;
+}
+
+.fc .lb-calendar-task-completed {
+  opacity: 0.3 !important;
+  transition: opacity 150ms ease-out, transform 150ms ease-out;
+}
+
+.fc .lb-calendar-project-banner {
+  border-radius: 9999px !important;
+  height: 12px !important;
+  min-height: 12px !important;
+  opacity: 0.08;
+}
+
+.fc .lb-calendar-project-banner .fc-event-main {
+  padding: 0 !important;
+}
+
 /* React Day Picker CSS */
 @import 'react-day-picker/dist/style.css';
+
+/* FullCalendar CSS - v6 includes styles in the bundle, no separate CSS files needed */
+
+/* DHTMLX Gantt CSS - loaded dynamically in GanttChart component to avoid SSR issues */
 
 /* LaunchBird custom utilities */
 @layer utilities {
@@ -217,6 +250,1008 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+}
+
+/* FullCalendar Styles - Match App Design System */
+.fc {
+  --fc-border-color: var(--border);
+  --fc-daygrid-event-dot-width: 8px;
+  --fc-event-border-radius: 6px;
+  --fc-small-font-size: 0.875rem;
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Header Toolbar */
+.fc-header-toolbar {
+  margin-bottom: 1.5rem !important;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.fc-toolbar-title {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  color: var(--foreground) !important;
+}
+
+/* Buttons */
+.fc-button {
+  background-color: var(--secondary) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+  border-radius: var(--radius) !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  transition: all 0.15s ease !important;
+  height: auto !important;
+  line-height: 1.5 !important;
+}
+
+.fc-button:hover {
+  background-color: var(--accent) !important;
+  border-color: var(--border) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Override hover for navigation buttons to use primary color */
+.fc-button-prev:hover,
+.fc-button-next:hover,
+.fc-button-today:hover {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+.fc-button:active {
+  transform: translateY(0);
+}
+
+.fc-button:focus {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.fc-button-primary:not(:disabled):active,
+.fc-button-primary:not(:disabled).fc-button-active {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.fc-button-primary:not(:disabled):focus {
+  background-color: var(--primary) !important;
+}
+
+/* Navigation buttons (prev/next/today) - use correct FullCalendar classes and match app behavior */
+/* Default state: neutral gray like other secondary buttons */
+.fc .fc-toolbar .fc-prev-button,
+.fc .fc-toolbar .fc-next-button,
+.fc .fc-toolbar .fc-today-button {
+  background-color: var(--secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--foreground) !important;
+}
+
+/* Hover / active: primary background with white text, consistent with menu buttons */
+.fc .fc-toolbar .fc-prev-button:not(:disabled):hover,
+.fc .fc-toolbar .fc-prev-button:not(:disabled):active,
+.fc .fc-toolbar .fc-next-button:not(:disabled):hover,
+.fc .fc-toolbar .fc-next-button:not(:disabled):active,
+.fc .fc-toolbar .fc-today-button:not(:disabled):hover,
+.fc .fc-toolbar .fc-today-button:not(:disabled):active,
+/* Today can remain selected */
+.fc .fc-toolbar .fc-today-button:not(:disabled).fc-button-active {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+/* Arrows inherit button text color (black on gray, white on purple) */
+.fc .fc-toolbar .fc-prev-button .fc-icon,
+.fc .fc-toolbar .fc-next-button .fc-icon,
+.fc .fc-toolbar .fc-prev-button .fc-icon::before,
+.fc .fc-toolbar .fc-next-button .fc-icon::before {
+  color: inherit !important;
+}
+
+/* CRITICAL: When button has white text (primary-foreground), icon MUST be white */
+.fc-button-prev:not(:disabled),
+.fc-button-next:not(:disabled),
+.fc-button-today:not(:disabled) {
+  /* Ensure icons inherit the button's text color */
+}
+
+.fc-button-prev:not(:disabled) .fc-icon,
+.fc-button-next:not(:disabled) .fc-icon,
+.fc-button-today:not(:disabled) .fc-icon {
+  /* Force icon to match button's text color - if button is white text, icon should be white */
+  color: inherit;
+}
+
+/* Critical: Force white icon on any button with primary background - highest priority */
+.fc-button-prev[style*="oklch"],
+.fc-button-next[style*="oklch"],
+.fc-button-today[style*="oklch"],
+.fc-button-prev:has([style*="oklch"]),
+.fc-button-next:has([style*="oklch"]),
+.fc-button-today:has([style*="oklch"]) {
+  color: var(--primary-foreground) !important;
+}
+
+.fc-button-prev[style*="oklch"] .fc-icon,
+.fc-button-prev[style*="oklch"] .fc-icon *,
+.fc-button-next[style*="oklch"] .fc-icon,
+.fc-button-next[style*="oklch"] .fc-icon *,
+.fc-button-today[style*="oklch"] .fc-icon,
+.fc-button-today[style*="oklch"] .fc-icon * {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+  color: var(--primary-foreground) !important;
+  fill: var(--primary-foreground) !important;
+  stroke: var(--primary-foreground) !important;
+}
+
+/* Ultimate fix: When button color is primary-foreground (meaning it has primary bg), force white icons */
+.fc-button-prev:not(:disabled)[style*="primary-foreground"],
+.fc-button-next:not(:disabled)[style*="primary-foreground"],
+.fc-button-today:not(:disabled)[style*="primary-foreground"],
+.fc-button-prev:not(:disabled)[style*="color"][style*="oklch(0.985"],
+.fc-button-next:not(:disabled)[style*="color"][style*="oklch(0.985"],
+.fc-button-today:not(:disabled)[style*="color"][style*="oklch(0.985"] {
+  color: var(--primary-foreground) !important;
+}
+
+.fc-button-prev:not(:disabled)[style*="primary-foreground"] .fc-icon,
+.fc-button-prev:not(:disabled)[style*="primary-foreground"] .fc-icon *,
+.fc-button-next:not(:disabled)[style*="primary-foreground"] .fc-icon,
+.fc-button-next:not(:disabled)[style*="primary-foreground"] .fc-icon *,
+.fc-button-today:not(:disabled)[style*="primary-foreground"] .fc-icon,
+.fc-button-today:not(:disabled)[style*="primary-foreground"] .fc-icon *,
+.fc-button-prev:not(:disabled)[style*="color"][style*="oklch(0.985"] .fc-icon,
+.fc-button-prev:not(:disabled)[style*="color"][style*="oklch(0.985"] .fc-icon *,
+.fc-button-next:not(:disabled)[style*="color"][style*="oklch(0.985"] .fc-icon,
+.fc-button-next:not(:disabled)[style*="color"][style*="oklch(0.985"] .fc-icon *,
+.fc-button-today:not(:disabled)[style*="color"][style*="oklch(0.985"] .fc-icon,
+.fc-button-today:not(:disabled)[style*="color"][style*="oklch(0.985"] .fc-icon * {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+  color: var(--primary-foreground) !important;
+  fill: var(--primary-foreground) !important;
+  stroke: var(--primary-foreground) !important;
+}
+
+/* Direct approach: When button has primary color in any style attribute, icon must be white */
+.fc-button-prev:not(:disabled),
+.fc-button-next:not(:disabled),
+.fc-button-today:not(:disabled) {
+  color: inherit;
+}
+
+/* The simplest fix: If button color is white (primary-foreground), icon must also be white/inverted */
+.fc-button-prev:not(:disabled) .fc-icon,
+.fc-button-next:not(:disabled) .fc-icon,
+.fc-button-today:not(:disabled) .fc-icon {
+  color: inherit;
+}
+
+/* When parent button has white text color, icon should be white - use filter as fallback */
+.fc-button-prev:not(:disabled),
+.fc-button-next:not(:disabled),
+.fc-button-today:not(:disabled) {
+  position: relative;
+}
+
+/* Direct rule: Any navigation button that has primary-foreground as its color should have white icons */
+.fc-button-prev:not(:disabled),
+.fc-button-next:not(:disabled),
+.fc-button-today:not(:disabled) {
+  /* Let icon inherit button's text color */
+}
+
+/* Apply filter to icon when button's computed color is primary-foreground */
+.fc-button-prev:not(:disabled):where([style*="var(--primary-foreground)"], [style*="oklch(0.985"]) .fc-icon,
+.fc-button-prev:not(:disabled):where([style*="var(--primary-foreground)"], [style*="oklch(0.985"]) .fc-icon *,
+.fc-button-next:not(:disabled):where([style*="var(--primary-foreground)"], [style*="oklch(0.985"]) .fc-icon,
+.fc-button-next:not(:disabled):where([style*="var(--primary-foreground)"], [style*="oklch(0.985"]) .fc-icon *,
+.fc-button-today:not(:disabled):where([style*="var(--primary-foreground)"], [style*="oklch(0.985"]) .fc-icon,
+.fc-button-today:not(:disabled):where([style*="var(--primary-foreground)"], [style*="oklch(0.985"]) .fc-icon * {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+}
+
+/* Remove transition on navigation button icons to prevent color flash */
+.fc-button-prev .fc-icon,
+.fc-button-next .fc-icon,
+.fc-button-today .fc-icon {
+  transition: none !important;
+}
+
+/* Force white icon whenever button has primary background - using attribute selector */
+.fc-button-prev[style*="background"] .fc-icon,
+.fc-button-next[style*="background"] .fc-icon,
+.fc-button-today[style*="background"] .fc-icon {
+  color: var(--primary-foreground) !important;
+}
+
+/* Maximum specificity - ensure white icon when button has primary background */
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-prev:not(:disabled):active .fc-icon,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-prev:not(:disabled).fc-button-active .fc-icon,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-prev:not(:disabled):hover .fc-icon,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-next:not(:disabled):active .fc-icon,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-next:not(:disabled).fc-button-active .fc-icon,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-next:not(:disabled):hover .fc-icon,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-today:not(:disabled):active .fc-icon,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-today:not(:disabled).fc-button-active .fc-icon,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-today:not(:disabled):hover .fc-icon {
+  color: var(--primary-foreground) !important;
+}
+
+/* Target any child elements within the icon with maximum specificity */
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-prev:not(:disabled):active .fc-icon *,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-prev:not(:disabled).fc-button-active .fc-icon *,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-prev:not(:disabled):hover .fc-icon *,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-next:not(:disabled):active .fc-icon *,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-next:not(:disabled).fc-button-active .fc-icon *,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-next:not(:disabled):hover .fc-icon *,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-today:not(:disabled):active .fc-icon *,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-today:not(:disabled).fc-button-active .fc-icon *,
+.fc .fc-header-toolbar .fc-toolbar-chunk .fc-button-today:not(:disabled):hover .fc-icon * {
+  color: var(--primary-foreground) !important;
+  fill: var(--primary-foreground) !important;
+  stroke: var(--primary-foreground) !important;
+}
+
+/* Force all SVG paths and elements to be white when button is active */
+.fc-button-prev:active svg,
+.fc-button-prev:active svg *,
+.fc-button-next:active svg,
+.fc-button-next:active svg *,
+.fc-button-today:active svg,
+.fc-button-today:active svg *,
+.fc-button-prev:hover svg,
+.fc-button-prev:hover svg *,
+.fc-button-next:hover svg,
+.fc-button-next:hover svg *,
+.fc-button-today:hover svg,
+.fc-button-today:hover svg * {
+  color: var(--primary-foreground) !important;
+  fill: var(--primary-foreground) !important;
+  stroke: var(--primary-foreground) !important;
+}
+
+/* Use CSS filter to force white icon when button has primary background */
+.fc-button-prev:not(:disabled):active .fc-icon,
+.fc-button-prev:not(:disabled):hover .fc-icon,
+.fc-button-prev:not(:disabled).fc-button-active .fc-icon,
+.fc-button-next:not(:disabled):active .fc-icon,
+.fc-button-next:not(:disabled):hover .fc-icon,
+.fc-button-next:not(:disabled).fc-button-active .fc-icon,
+.fc-button-today:not(:disabled):active .fc-icon,
+.fc-button-today:not(:disabled):hover .fc-icon,
+.fc-button-today:not(:disabled).fc-button-active .fc-icon {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+  color: var(--primary-foreground) !important;
+}
+
+/* Force white on any button with primary background using background-color detection */
+.fc-button-prev[style*="background-color"] .fc-icon,
+.fc-button-next[style*="background-color"] .fc-icon,
+.fc-button-today[style*="background-color"] .fc-icon {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+  color: var(--primary-foreground) !important;
+}
+
+/* Critical: Force white icon when button background is primary color */
+.fc-button-prev:not(:disabled)[style*="var(--primary)"],
+.fc-button-next:not(:disabled)[style*="var(--primary)"],
+.fc-button-today:not(:disabled)[style*="var(--primary)"] {
+  color: var(--primary-foreground) !important;
+}
+
+.fc-button-prev:not(:disabled)[style*="var(--primary)"] .fc-icon,
+.fc-button-prev:not(:disabled)[style*="var(--primary)"] .fc-icon *,
+.fc-button-next:not(:disabled)[style*="var(--primary)"] .fc-icon,
+.fc-button-next:not(:disabled)[style*="var(--primary)"] .fc-icon *,
+.fc-button-today:not(:disabled)[style*="var(--primary)"] .fc-icon,
+.fc-button-today:not(:disabled)[style*="var(--primary)"] .fc-icon * {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+  color: var(--primary-foreground) !important;
+  fill: var(--primary-foreground) !important;
+  stroke: var(--primary-foreground) !important;
+}
+
+/* Most important: When button has primary background color, force white icon */
+.fc-button-prev:not(:disabled),
+.fc-button-next:not(:disabled),
+.fc-button-today:not(:disabled) {
+  position: relative;
+}
+
+.fc-button-prev:not(:disabled) .fc-icon,
+.fc-button-next:not(:disabled) .fc-icon,
+.fc-button-today:not(:disabled) .fc-icon {
+  transition: color 0s, filter 0s !important;
+}
+
+/* Ultimate fix: Force white icon whenever button background matches primary - using class detection */
+.fc-button-primary.fc-button-prev .fc-icon,
+.fc-button-primary.fc-button-next .fc-icon,
+.fc-button-primary.fc-button-today .fc-icon,
+.fc-button-primary.fc-button-prev .fc-icon *,
+.fc-button-primary.fc-button-next .fc-icon *,
+.fc-button-primary.fc-button-today .fc-icon *,
+.fc-button-prev.fc-button-active .fc-icon,
+.fc-button-next.fc-button-active .fc-icon,
+.fc-button-today.fc-button-active .fc-icon,
+.fc-button-prev.fc-button-active .fc-icon *,
+.fc-button-next.fc-button-active .fc-icon *,
+.fc-button-today.fc-button-active .fc-icon * {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* ABSOLUTE FIX: Target the icon ::before pseudo-element which FullCalendar uses for chevrons */
+.fc-button-prev.fc-button-active .fc-icon::before,
+.fc-button-next.fc-button-active .fc-icon::before,
+.fc-button-today.fc-button-active .fc-icon::before,
+.fc-button-prev:active .fc-icon::before,
+.fc-button-next:active .fc-icon::before,
+.fc-button-today:active .fc-icon::before,
+.fc-button-prev:hover .fc-icon::before,
+.fc-button-next:hover .fc-icon::before,
+.fc-button-today:hover .fc-icon::before {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+  color: #ffffff !important;
+}
+
+/* Additional targeting for any button with primary background via computed style - use higher specificity */
+.fc .fc-button-prev:not(:disabled):not([style*="rgba(0, 0, 0, 0)"]):not([style*="transparent"]) .fc-icon,
+.fc .fc-button-next:not(:disabled):not([style*="rgba(0, 0, 0, 0)"]):not([style*="transparent"]) .fc-icon,
+.fc .fc-button-today:not(:disabled):not([style*="rgba(0, 0, 0, 0)"]):not([style*="transparent"]) .fc-icon {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+  color: var(--primary-foreground) !important;
+}
+
+/* Universal rule: Any navigation button that doesn't have the default gray background should have white icon */
+.fc-button-prev:not(:disabled):not(.fc-button-primary)[style*="background"],
+.fc-button-next:not(:disabled):not(.fc-button-primary)[style*="background"],
+.fc-button-today:not(:disabled):not(.fc-button-primary)[style*="background"],
+.fc-button-prev:not(:disabled).fc-button-primary,
+.fc-button-next:not(:disabled).fc-button-primary,
+.fc-button-today:not(:disabled).fc-button-primary {
+  color: var(--primary-foreground) !important;
+}
+
+.fc-button-prev:not(:disabled):not(.fc-button-primary)[style*="background"] .fc-icon,
+.fc-button-prev:not(:disabled):not(.fc-button-primary)[style*="background"] .fc-icon *,
+.fc-button-next:not(:disabled):not(.fc-button-primary)[style*="background"] .fc-icon,
+.fc-button-next:not(:disabled):not(.fc-button-primary)[style*="background"] .fc-icon *,
+.fc-button-today:not(:disabled):not(.fc-button-primary)[style*="background"] .fc-icon,
+.fc-button-today:not(:disabled):not(.fc-button-primary)[style*="background"] .fc-icon *,
+.fc-button-prev:not(:disabled).fc-button-primary .fc-icon,
+.fc-button-prev:not(:disabled).fc-button-primary .fc-icon *,
+.fc-button-next:not(:disabled).fc-button-primary .fc-icon,
+.fc-button-next:not(:disabled).fc-button-primary .fc-icon *,
+.fc-button-today:not(:disabled).fc-button-primary .fc-icon,
+.fc-button-today:not(:disabled).fc-button-primary .fc-icon * {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+  color: var(--primary-foreground) !important;
+  fill: var(--primary-foreground) !important;
+  stroke: var(--primary-foreground) !important;
+}
+
+/* Calendar Grid */
+.fc-daygrid-day {
+  background-color: var(--card) !important;
+  border-color: var(--border) !important;
+  transition: background-color 0.15s ease;
+}
+
+.fc-daygrid-day:hover {
+  background-color: var(--accent) !important;
+}
+
+.fc-day-today {
+  background-color: var(--accent) !important;
+}
+
+.fc-day-today .fc-daygrid-day-number {
+  color: var(--primary) !important;
+  font-weight: 600 !important;
+}
+
+.fc-col-header-cell {
+  background-color: transparent !important;
+  border-color: var(--border) !important;
+  padding: 0.75rem 0.5rem !important;
+}
+
+.fc-col-header-cell-cushion {
+  color: var(--muted-foreground) !important;
+  font-weight: 500 !important;
+  font-size: 0.75rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Day numbers */
+.fc-daygrid-day-number {
+  padding: 0.5rem !important;
+  color: var(--foreground) !important;
+  font-weight: 500 !important;
+}
+
+.fc-day-other .fc-daygrid-day-number {
+  color: var(--muted-foreground) !important;
+  opacity: 0.5;
+}
+
+/* Events */
+.fc-event {
+  border: none !important;
+  border-radius: var(--fc-event-border-radius) !important;
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  box-shadow: var(--shadow-xs) !important;
+}
+
+.fc-event:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-sm) !important;
+  opacity: 0.95 !important;
+}
+
+.fc-event-title {
+  font-weight: 500 !important;
+  padding: 0 !important;
+}
+
+.fc-daygrid-event {
+  border-radius: var(--fc-event-border-radius) !important;
+  margin: 0.125rem 0 !important;
+}
+
+/* Time Grid (Week/Day views) */
+.fc-timegrid-slot {
+  border-color: var(--border) !important;
+  height: 3rem !important;
+}
+
+.fc-timegrid-slot-label {
+  border-color: var(--border) !important;
+  color: var(--muted-foreground) !important;
+  font-size: 0.75rem !important;
+}
+
+.fc-timegrid-col {
+  background-color: var(--card) !important;
+}
+
+.fc-timegrid-col.fc-day-today {
+  background-color: var(--accent) !important;
+}
+
+/* More link */
+.fc-more-link {
+  color: var(--primary) !important;
+  font-weight: 500 !important;
+  font-size: 0.8125rem !important;
+  transition: color 0.15s ease !important;
+}
+
+.fc-more-link:hover {
+  color: var(--primary-hover, var(--primary)) !important;
+  text-decoration: underline !important;
+}
+
+/* Popover/Dialog */
+.fc-popover {
+  background-color: var(--popover) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.fc-popover-header {
+  background-color: var(--muted) !important;
+  border-color: var(--border) !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.fc-popover-title {
+  color: var(--foreground) !important;
+  font-weight: 600 !important;
+}
+
+.fc-popover-close {
+  color: var(--muted-foreground) !important;
+  opacity: 0.7;
+}
+
+.fc-popover-close:hover {
+  opacity: 1;
+  color: var(--foreground) !important;
+}
+
+/* Scrollbar for calendar */
+.fc-scroller::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.fc-scroller::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: 4px;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* Calendar wrapper */
+.calendar-wrapper {
+  border-radius: var(--radius);
+}
+
+/* FINAL FIX: Ensure prev/next buttons NEVER stay purple - only on hover/active */
+/* This rule has maximum specificity and will override everything FullCalendar does */
+.fc .fc-header-toolbar .fc-toolbar-chunk:first-child .fc-button-prev.fc-button-active:not(:hover):not(:active):not(:focus),
+.fc .fc-header-toolbar .fc-toolbar-chunk:first-child .fc-button-next.fc-button-active:not(:hover):not(:active):not(:focus),
+.fc .fc-header-toolbar .fc-toolbar-chunk:first-child .fc-button-prev.fc-button-primary:not(:hover):not(:active):not(:focus),
+.fc .fc-header-toolbar .fc-toolbar-chunk:first-child .fc-button-next.fc-button-primary:not(:hover):not(:active):not(:focus) {
+  background-color: var(--secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--foreground) !important;
+  box-shadow: none !important;
+}
+
+.fc .fc-header-toolbar .fc-toolbar-chunk:first-child .fc-button-prev.fc-button-active:not(:hover):not(:active):not(:focus) .fc-icon,
+.fc .fc-header-toolbar .fc-toolbar-chunk:first-child .fc-button-next.fc-button-active:not(:hover):not(:active):not(:focus) .fc-icon,
+.fc .fc-header-toolbar .fc-toolbar-chunk:first-child .fc-button-prev.fc-button-primary:not(:hover):not(:active):not(:focus) .fc-icon,
+.fc .fc-header-toolbar .fc-toolbar-chunk:first-child .fc-button-next.fc-button-primary:not(:hover):not(:active):not(:focus) .fc-icon {
+  color: var(--foreground) !important;
+}
+
+/* FINAL FIX: Universal rule - Any navigation button with primary background MUST have white icon */
+/* This rule has maximum specificity and will override any other conflicting styles */
+
+/* SIMPLEST FIX: If button has white text (primary-foreground), icon MUST be white */
+/* Target buttons with data attribute set by JavaScript */
+/* ULTIMATE FIX: When button has primary background (via data attribute or class), icon MUST be white */
+.fc-button-prev[data-has-primary-bg] .fc-icon,
+.fc-button-prev[data-has-primary-bg] .fc-icon *,
+.fc-button-next[data-has-primary-bg] .fc-icon,
+.fc-button-next[data-has-primary-bg] .fc-icon *,
+.fc-button-today[data-has-primary-bg] .fc-icon,
+.fc-button-today[data-has-primary-bg] .fc-icon *,
+.fc-button-prev.fc-button-has-primary .fc-icon,
+.fc-button-prev.fc-button-has-primary .fc-icon *,
+.fc-button-next.fc-button-has-primary .fc-icon,
+.fc-button-next.fc-button-has-primary .fc-icon *,
+.fc-button-today.fc-button-has-primary .fc-icon,
+.fc-button-today.fc-button-has-primary .fc-icon * {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+  color: rgb(255, 255, 255) !important;
+  fill: rgb(255, 255, 255) !important;
+  stroke: rgb(255, 255, 255) !important;
+}
+
+/* Also target pseudo-elements for data attribute buttons */
+.fc-button-prev[data-has-primary-bg] .fc-icon::before,
+.fc-button-next[data-has-primary-bg] .fc-icon::before,
+.fc-button-today[data-has-primary-bg] .fc-icon::before,
+.fc-button-prev.fc-button-has-primary .fc-icon::before,
+.fc-button-next.fc-button-has-primary .fc-icon::before,
+.fc-button-today.fc-button-has-primary .fc-icon::before {
+  color: rgb(255, 255, 255) !important;
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+}
+
+/* Also target ::before pseudo-elements */
+.fc-button-prev[data-has-primary-bg] .fc-icon::before,
+.fc-button-next[data-has-primary-bg] .fc-icon::before,
+.fc-button-today[data-has-primary-bg] .fc-icon::before,
+.fc-button-prev.fc-button-has-primary .fc-icon::before,
+.fc-button-next.fc-button-has-primary .fc-icon::before,
+.fc-button-today.fc-button-has-primary .fc-icon::before {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+  color: rgb(255, 255, 255) !important;
+}
+
+/* ULTIMATE FIX: Force icon white whenever button background-color is primary */
+/* This targets buttons that have the primary background applied inline or via CSS */
+.fc-button-prev:not(:disabled) .fc-icon,
+.fc-button-next:not(:disabled) .fc-icon,
+.fc-button-today:not(:disabled) .fc-icon {
+  /* Use mix-blend-mode or filter based on parent background */
+  transition: filter 0s, color 0s !important;
+}
+
+/* When button text is white (meaning it has primary background), icon must be white */
+.fc-button-prev:not(:disabled),
+.fc-button-next:not(:disabled),
+.fc-button-today:not(:disabled) {
+  position: relative;
+}
+
+/* Nuclear option: Force white icon on ANY button that doesn't have default styling */
+.fc-button-prev:not(:disabled):not([style*="oklch(0.9220"]) .fc-icon,
+.fc-button-next:not(:disabled):not([style*="oklch(0.9220"]) .fc-icon,
+.fc-button-today:not(:disabled):not([style*="oklch(0.9220"]) .fc-icon {
+  /* Will be handled by data attribute or JavaScript */
+}
+
+/* Force white icon when button color is primary-foreground (indicating primary background) */
+.fc-button-prev:not(:disabled)[style*="color: var(--primary-foreground)"] .fc-icon,
+.fc-button-prev:not(:disabled)[style*="color:var(--primary-foreground)"] .fc-icon,
+.fc-button-next:not(:disabled)[style*="color: var(--primary-foreground)"] .fc-icon,
+.fc-button-next:not(:disabled)[style*="color:var(--primary-foreground)"] .fc-icon,
+.fc-button-today:not(:disabled)[style*="color: var(--primary-foreground)"] .fc-icon,
+.fc-button-today:not(:disabled)[style*="color:var(--primary-foreground)"] .fc-icon,
+.fc-button-prev:not(:disabled)[style*="color: var(--primary-foreground)"] .fc-icon *,
+.fc-button-prev:not(:disabled)[style*="color:var(--primary-foreground)"] .fc-icon *,
+.fc-button-next:not(:disabled)[style*="color: var(--primary-foreground)"] .fc-icon *,
+.fc-button-next:not(:disabled)[style*="color:var(--primary-foreground)"] .fc-icon *,
+.fc-button-today:not(:disabled)[style*="color: var(--primary-foreground)"] .fc-icon *,
+.fc-button-today:not(:disabled)[style*="color:var(--primary-foreground)"] .fc-icon * {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(1) !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* Nuclear option: Force ALL icons in navigation buttons to be inverted when button has primary background */
+/* Check if button's computed color is white (indicating primary background) */
+.fc-button-prev:not(:disabled) .fc-icon,
+.fc-button-next:not(:disabled) .fc-icon,
+.fc-button-today:not(:disabled) .fc-icon {
+  /* Use CSS to detect parent's color and invert if needed - JavaScript will handle this */
+}
+
+/* Hide FullCalendar default title styling - we'll style it ourselves */
+.fc-toolbar-title {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: var(--foreground) !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Improve spacing in calendar header */
+.fc-header-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.fc-header-toolbar .fc-toolbar-chunk {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fc-header-toolbar .fc-toolbar-chunk:first-child {
+  gap: 0.5rem;
+}
+
+/* Better spacing between navigation buttons (prev/next/today) */
+.fc-header-toolbar .fc-toolbar-chunk:first-child .fc-button {
+  margin: 0;
+  margin-right: 0.5rem;
+}
+
+.fc-header-toolbar .fc-toolbar-chunk:first-child .fc-button:last-of-type {
+  margin-right: 0;
+}
+
+/* Additional spacing for prev/next buttons specifically */
+.fc-button-prev,
+.fc-button-next {
+  margin-left: 0 !important;
+  margin-right: 0.75rem !important;
+}
+
+.fc-button-prev + .fc-button-next {
+  margin-left: 0.75rem !important;
+}
+
+/* FINAL OVERRIDE: Force prev/next buttons to be gray - this rule comes LAST and overrides everything */
+/* This will work even if FullCalendar adds inline styles, because we're removing them in JavaScript */
+.fc-button-prev:not(:hover):not(:active),
+.fc-button-next:not(:hover):not(:active) {
+  background-color: var(--secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--foreground) !important;
+}
+
+.fc-button-prev:not(:hover):not(:active) .fc-icon,
+.fc-button-prev:not(:hover):not(:active) .fc-icon::before,
+.fc-button-next:not(:hover):not(:active) .fc-icon,
+.fc-button-next:not(:hover):not(:active) .fc-icon::before {
+  color: var(--foreground) !important;
+}
+
+/* LaunchBird Gantt (DHTMLX) – themed to match app */
+/* NOTE: dhtmlx-gantt overwrites the container element's className to `gantt_container`,
+   so these rules intentionally target DHTMLX classes directly. */
+.gantt_container {
+  font-family: var(--font-sans) !important;
+  background: var(--card) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-sm) !important;
+  overflow: hidden !important;
+}
+
+/* Grid + timeline backgrounds */
+.gantt_container .gantt_grid,
+.gantt_container .gantt_task,
+.gantt_container .gantt_grid_data,
+.gantt_container .gantt_task_bg {
+  background: var(--card) !important;
+}
+
+/* Fallback: DHTMLX structure can vary by version */
+.gantt_grid,
+.gantt_task,
+.gantt_grid_data,
+.gantt_task_bg {
+  background: var(--card) !important;
+}
+
+/* Header rows */
+.gantt_container .gantt_grid_scale,
+.gantt_container .gantt_task_scale {
+  background: var(--muted) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.gantt_grid_scale,
+.gantt_task_scale {
+  background: var(--muted) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.gantt_container .gantt_grid_head_cell,
+.gantt_container .gantt_scale_cell {
+  background: transparent !important;
+  color: var(--muted-foreground) !important;
+  border-color: var(--border) !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.gantt_grid_head_cell,
+.gantt_scale_cell {
+  background: transparent !important;
+  color: var(--muted-foreground) !important;
+  border-color: var(--border) !important;
+}
+
+/* Rows / cells */
+.gantt_container .gantt_row,
+.gantt_container .gantt_task_row,
+.gantt_container .gantt_cell {
+  border-color: var(--border) !important;
+}
+
+.gantt_row,
+.gantt_task_row,
+.gantt_cell {
+  border-color: var(--border) !important;
+}
+
+.gantt_container .gantt_cell {
+  color: var(--foreground) !important;
+  font-size: 0.875rem !important;
+}
+
+/* Hover & selection */
+.gantt_container .gantt_row:hover,
+.gantt_container .gantt_task_row:hover {
+  background: var(--accent) !important;
+}
+
+.gantt_container .gantt_row.gantt_selected,
+.gantt_container .gantt_task_row.gantt_selected {
+  background: color-mix(in oklch, var(--primary) 10%, var(--card)) !important;
+}
+
+/* Task bars */
+.gantt_container .gantt_task_line {
+  border-radius: 9999px !important;
+  box-shadow: var(--shadow-xs) !important;
+  border: 1px solid color-mix(in oklch, var(--foreground) 12%, transparent) !important;
+  background-color: var(--muted-foreground) !important;
+}
+
+.gantt_container .gantt_task_content {
+  color: var(--primary-foreground) !important;
+  font-weight: 600 !important;
+  font-size: 0.8125rem !important;
+  padding: 0 10px !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+/* Task bar colors (LaunchBird theme tokens) */
+.gantt_container .gantt_task_line.lb-gantt-task--priority-urgent {
+  background-color: var(--destructive) !important;
+  border-color: color-mix(in oklch, var(--destructive) 70%, var(--foreground)) !important;
+}
+.gantt_container .gantt_task_line.lb-gantt-task--priority-high {
+  background-color: var(--chart-2) !important;
+  border-color: color-mix(in oklch, var(--chart-2) 70%, var(--foreground)) !important;
+}
+.gantt_container .gantt_task_line.lb-gantt-task--priority-medium {
+  background-color: var(--primary) !important;
+  border-color: color-mix(in oklch, var(--primary) 70%, var(--foreground)) !important;
+}
+.gantt_container .gantt_task_line.lb-gantt-task--priority-low {
+  background-color: var(--chart-3) !important;
+  border-color: color-mix(in oklch, var(--chart-3) 70%, var(--foreground)) !important;
+}
+
+.gantt_container .gantt_task_line.lb-gantt-task--type-project {
+  background-color: var(--chart-4) !important;
+  border-color: color-mix(in oklch, var(--chart-4) 70%, var(--foreground)) !important;
+}
+.gantt_container .gantt_task_line.lb-gantt-task--type-milestone {
+  background-color: var(--chart-2) !important;
+  border-color: color-mix(in oklch, var(--chart-2) 70%, var(--foreground)) !important;
+}
+
+/* Status overrides */
+.gantt_container .gantt_task_line.lb-gantt-task--status-completed {
+  background-color: color-mix(in oklch, var(--muted-foreground) 55%, var(--card)) !important;
+  border-color: color-mix(in oklch, var(--muted-foreground) 45%, var(--border)) !important;
+}
+.gantt_container .gantt_task_line.lb-gantt-task--status-completed .gantt_task_content {
+  color: var(--foreground) !important;
+  opacity: 0.7 !important;
+}
+
+.gantt_container .gantt_task_line.lb-gantt-task--status-in-progress {
+  background-color: var(--primary) !important;
+  border-color: color-mix(in oklch, var(--primary) 70%, var(--foreground)) !important;
+}
+
+.gantt_container .gantt_task_line.lb-gantt-task--readonly {
+  /* Make summary rows feel like headers, not editable bars */
+  opacity: 0.9;
+  cursor: default !important;
+}
+
+/* Hide hover handles (resize/link/progress) on read-only summary rows */
+.gantt_container .gantt_task_line.lb-gantt-task--readonly .gantt_task_drag,
+.gantt_container .gantt_task_line.lb-gantt-task--readonly .gantt_link_control,
+.gantt_container .gantt_task_line.lb-gantt-task--readonly .gantt_task_progress_handle {
+  display: none !important;
+}
+
+.gantt_container .gantt_task_line.lb-gantt-task--priority-urgent .gantt_task_content {
+  color: var(--destructive-foreground) !important;
+}
+.gantt_container .gantt_task_line.lb-gantt-task--priority-high .gantt_task_content,
+.gantt_container .gantt_task_line.lb-gantt-task--priority-medium .gantt_task_content,
+.gantt_container .gantt_task_line.lb-gantt-task--priority-low .gantt_task_content,
+.gantt_container .gantt_task_line.lb-gantt-task--type-project .gantt_task_content,
+.gantt_container .gantt_task_line.lb-gantt-task--type-milestone .gantt_task_content,
+.gantt_container .gantt_task_line.lb-gantt-task--status-in-progress .gantt_task_content {
+  color: var(--primary-foreground) !important;
+}
+
+/* Progress overlay inside bar */
+.gantt_container .gantt_task_progress {
+  border-radius: 9999px !important;
+  background: rgba(0, 0, 0, 0.18) !important;
+}
+
+/* Small tasks still look like pills */
+.gantt_container .gantt_task_line.gantt_milestone,
+.gantt_container .gantt_milestone .gantt_task_content {
+  border-radius: 9999px !important;
+}
+
+/* Today marker (DHTMLX marker plugin) */
+.gantt_marker.lb-gantt-today,
+.gantt_marker_area.lb-gantt-today {
+  background-color: color-mix(in oklch, var(--primary) 20%, transparent) !important;
+}
+.gantt_marker.lb-gantt-today {
+  width: 2px !important;
+}
+
+/* Tooltip (DHTMLX appends this to body) */
+.gantt_tooltip {
+  font-family: var(--font-sans);
+  background: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-lg) !important;
+  padding: 10px 12px;
+  max-width: 320px;
+}
+
+.gantt_tooltip .lb-gantt-tooltip__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+
+.gantt_tooltip .lb-gantt-tooltip__meta {
+  display: grid;
+  gap: 4px;
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+}
+
+.gantt_tooltip .lb-gantt-tooltip__label {
+  color: var(--foreground);
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+/* Scrollbars */
+.gantt_task::-webkit-scrollbar,
+.gantt_grid_data::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.gantt_task::-webkit-scrollbar-track,
+.gantt_grid_data::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+
+.gantt_task::-webkit-scrollbar-thumb,
+.gantt_grid_data::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+
+.gantt_task::-webkit-scrollbar-thumb:hover,
+.gantt_grid_data::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* Dark mode tweaks */
+.dark .gantt_container .gantt_task_progress {
+  background: rgba(0, 0, 0, 0.35) !important;
 }
 
 @layer base {

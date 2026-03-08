@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 
 // Development mode flag
 const DEV_MODE = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
+const DISABLE_AUTH = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
 
 // Mock Supabase client for development
 const createMockClient = () => ({
@@ -105,7 +106,7 @@ const createMockClient = () => ({
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
                   }
-                } else if (table === 'client_profiles') {
+                } else if (table === 'client_portal_codes') {
                   return {
                     id: 'dev-client-123',
                     code: 'DEV123',
@@ -198,24 +199,26 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0'
 
 // Use real Supabase client if URL and key are configured, otherwise fall back to mock
-export const supabase = (supabaseUrl && supabaseUrl !== 'https://dummy.supabase.co' && supabaseAnonKey && supabaseAnonKey !== 'dummy_key')
-  ? createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-      },
-    })
-  : DEV_MODE 
-    ? createMockClient() 
-    : createClient(supabaseUrl, supabaseAnonKey)
+export const supabase: any = (
+  DISABLE_AUTH
+    ? createMockClient()
+    : (supabaseUrl && supabaseUrl !== 'https://dummy.supabase.co' && supabaseAnonKey && supabaseAnonKey !== 'dummy_key')
+      ? createClient(supabaseUrl, supabaseAnonKey, {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+          },
+        })
+      : createClient(supabaseUrl, supabaseAnonKey)
+) as any
 
 // Export for compatibility with existing code
-export const auth = supabase.auth
-export const db = supabase
-export const analytics = supabase
+export const auth: any = (supabase as any).auth
+export const db: any = supabase as any
+export const analytics: any = supabase as any
 
 export const checkConnection = async (): Promise<boolean> => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_AUTH) {
     console.log('🔧 Development mode: Database connection bypassed')
     return true
   }
@@ -229,7 +232,7 @@ export const checkConnection = async (): Promise<boolean> => {
 }
 
 export const logAnalyticsEvent = (eventName: string, parameters?: Record<string, any>) => {
-  if (DEV_MODE) {
+  if (DEV_MODE || DISABLE_AUTH) {
     console.log('🔧 Development mode: Analytics event:', eventName, parameters)
     return
   }

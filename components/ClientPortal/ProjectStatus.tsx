@@ -258,4 +258,5 @@ export default function ProjectStatus({ project, activities }: ProjectStatusProp
       </Card>
     </div>
   )
-} 
+}
+

@@ -9,6 +9,7 @@ import { Progress } from '@/components/ui/progress'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import GreetingCard from '@/components/Dashboard/GreetingCard'
+import CalendarWidget from '@/components/Calendar/CalendarWidget'
 import type { WeatherData } from '@/types'
 
 /**
@@ -61,7 +62,7 @@ export default function DashboardPage() {
         </div>
         {/* Right column: Recent Activity aligned with welcome banner */}
         <div className="hidden lg:block">
-          <Card>
+          <Card data-testid="activity-feed">
             <CardHeader>
               <CardTitle className="text-lg">Recent Activity</CardTitle>
             </CardHeader>
@@ -92,13 +93,25 @@ export default function DashboardPage() {
         {/* Left Column - Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Quick Actions */}
-          <Card>
+          <Card data-testid="quick-actions">
             <CardHeader>
               <CardTitle className="text-lg">Quick Actions</CardTitle>
               <CardDescription>Common tasks to get you going</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Button asChild variant="pill" className="justify-center">
+                  <a href="/projects">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Projects
+                  </a>
+                </Button>
+                <Button asChild variant="pill" className="justify-center">
+                  <a href="/tasks">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Tasks
+                  </a>
+                </Button>
                 <Button variant="pill" className="justify-center"
                   onClick={() => logAnalyticsEvent('quick_action_clicked', { action: 'add_project' })}
                 >
@@ -128,7 +141,7 @@ export default function DashboardPage() {
           </Card>
 
           {/* Projects Overview */}
-          <Card>
+          <Card data-testid="projects-overview">
             <CardHeader>
               <CardTitle className="text-lg">Projects Overview</CardTitle>
               <CardDescription>Progress across your active projects</CardDescription>
@@ -195,6 +208,9 @@ export default function DashboardPage() {
 
         {/* Right Column - Sidebar */}
         <div className="space-y-6">
+          {/* Calendar Widget */}
+          <CalendarWidget />
+
           {/* Time Tracking Summary */}
           <Card>
             <CardHeader>

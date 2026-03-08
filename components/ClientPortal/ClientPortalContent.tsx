@@ -10,13 +10,13 @@ import { Separator } from '@/components/ui/separator'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import ProjectStatus from './ProjectStatus'
 import FeedbackForm from './FeedbackForm'
-import { logClientAccess } from '@/lib/client-profile'
+import { logClientAccess } from '@/lib/client-portal'
 import { getDynamicGradient, getGradientColors } from '@/lib/dashboard'
 import { formatDate } from '@/lib/date-utils'
 import { getStatusColor, getTypeColor } from '@/lib/status-utils'
 import type { Project, Activity } from '@/types'
 
-interface ClientProfileContentProps {
+interface ClientPortalContentProps {
   project: Project
   activities: Activity[]
   code: string
@@ -24,15 +24,15 @@ interface ClientProfileContentProps {
 }
 
 /**
- * Main Client Profile Content Component
+ * Main Client Portal Content Component
  * Displays project details, milestones, shared files, and feedback forms
  */
-export default function ClientProfileContent({ 
+export default function ClientPortalContent({ 
   project, 
   activities, 
   code, 
   password 
-}: ClientProfileContentProps) {
+}: ClientPortalContentProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [accessLogged, setAccessLogged] = useState(false)
   const [gradient, setGradient] = useState(getDynamicGradient())
@@ -80,7 +80,7 @@ export default function ClientProfileContent({
                   LaunchBird
                 </h1>
                 <p className="text-sm text-muted-foreground dark:text-muted-foreground">
-                  Client Profile
+                  Client Portal
                 </p>
               </div>
             </div>

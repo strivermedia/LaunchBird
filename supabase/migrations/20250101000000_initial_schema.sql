@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS projects (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create client profile codes table
-CREATE TABLE IF NOT EXISTS client_profile_codes (
+-- Create client portal codes table
+CREATE TABLE IF NOT EXISTS client_portal_codes (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   code TEXT UNIQUE NOT NULL,
   project_id UUID REFERENCES projects(id) NOT NULL,
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 
 -- Enable Row Level Security
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE client_profile_codes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE client_portal_codes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;
@@ -138,11 +138,11 @@ CREATE POLICY "Organization admins can insert users in their org" ON users
     )
   );
 
--- RLS Policies for client_profile_codes table
-CREATE POLICY "Anyone can validate client codes" ON client_profile_codes
+-- RLS Policies for client_portal_codes table
+CREATE POLICY "Anyone can validate client codes" ON client_portal_codes
   FOR SELECT USING (true);
 
-CREATE POLICY "Users can create client codes for their organization projects" ON client_profile_codes
+CREATE POLICY "Users can create client codes for their organization projects" ON client_portal_codes
   FOR INSERT WITH CHECK (
     project_id IN (
       SELECT p.id FROM projects p
@@ -151,7 +151,7 @@ CREATE POLICY "Users can create client codes for their organization projects" ON
     )
   );
 
-CREATE POLICY "Users can view client codes for their organization projects" ON client_profile_codes
+CREATE POLICY "Users can view client codes for their organization projects" ON client_portal_codes
   FOR SELECT USING (
     project_id IN (
       SELECT p.id FROM projects p
@@ -286,8 +286,8 @@ CREATE POLICY "Users can delete tasks in their organization" ON tasks
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 CREATE INDEX IF NOT EXISTS idx_users_organization_id ON users(organization_id);
-CREATE INDEX IF NOT EXISTS idx_client_codes_code ON client_profile_codes(code);
-CREATE INDEX IF NOT EXISTS idx_client_codes_expires ON client_profile_codes(expires_at);
+CREATE INDEX IF NOT EXISTS idx_client_codes_code ON client_portal_codes(code);
+CREATE INDEX IF NOT EXISTS idx_client_codes_expires ON client_portal_codes(expires_at);
 CREATE INDEX IF NOT EXISTS idx_projects_status ON projects(status);
 CREATE INDEX IF NOT EXISTS idx_projects_created_by ON projects(created_by);
 CREATE INDEX IF NOT EXISTS idx_projects_organization_id ON projects(organization_id);

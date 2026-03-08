@@ -6,7 +6,7 @@ The client management system allows administrators and team members to manage cl
 ## Features
 
 ### Add Client
-The "Add Client" functionality allows users to create new client profiles with comprehensive information.
+The "Add Client" functionality allows users to create new clients with comprehensive information.
 
 #### Access Control
 - **Admin/Owner**: Can create clients and assign them to any team member
@@ -106,7 +106,7 @@ Located at `components/Client/ClientList.tsx`
 **Features:**
 - Displays clients in a table format
 - Search and filtering
-- Quick actions (email, SMS, view, client profile)
+- Quick actions (email, SMS, view, client portal)
 - Status badges
 - Responsive design
 

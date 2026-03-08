@@ -2,7 +2,7 @@
 -- This file populates the local database with test data for development
 
 -- Clear existing data (in reverse order of dependencies)
-TRUNCATE tasks, client_profile_codes, projects, clients, users, organizations CASCADE;
+TRUNCATE tasks, client_portal_codes, projects, clients, users, organizations CASCADE;
 
 -- Create test organization
 INSERT INTO organizations (id, name, description, plan, plan_status, created_by, created_at)
@@ -31,8 +31,8 @@ VALUES
   ('99999999-9999-9999-9999-999999999999', 'PPC Campaign Management', 'Ongoing PPC campaign management and optimization', 'active', '66666666-6666-6666-6666-666666666666', '11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222', NOW()),
   ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Mobile App Development', 'Cross-platform mobile application for iOS and Android', 'active', '77777777-7777-7777-7777-777777777777', '11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222', NOW());
 
--- Create client profile codes
-INSERT INTO client_profile_codes (id, code, project_id, password, expires_at, created_by, created_at)
+-- Create client portal codes
+INSERT INTO client_portal_codes (id, code, project_id, password, expires_at, created_by, created_at)
 VALUES 
   ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'AB12', '88888888-8888-8888-8888-888888888888', NULL, NOW() + INTERVAL '90 days', '22222222-2222-2222-2222-222222222222', NOW()),
   ('cccccccc-cccc-cccc-cccc-cccccccccccc', 'CD34', '99999999-9999-9999-9999-999999999999', NULL, NOW() + INTERVAL '90 days', '22222222-2222-2222-2222-222222222222', NOW()),

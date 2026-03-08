@@ -16,7 +16,7 @@ Your LaunchBird app has been fully updated to use **local Supabase** with **prop
 - `getAuthenticatedUser()` - Get current user
 - `requireAuth()` - Throw if not authenticated
 - `isPublicRoute()` - Check if route needs auth
-- Public routes defined: `/login`, `/signup`, `/reset-password`, `/profile`
+- Public routes defined: `/login`, `/signup`, `/reset-password`, `/portal`
 
 ### 2. Layout Authentication Protection ✅
 
@@ -98,7 +98,7 @@ All routes **except** these require authentication:
 - `/login`
 - `/signup`
 - `/reset-password`
-- `/profile/*` (client profiles)
+- `/portal/*` (client portal)
 
 ### What Happens When You Visit a Protected Route
 

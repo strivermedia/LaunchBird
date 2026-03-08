@@ -64,7 +64,7 @@ The app will run with mock data and bypass all database connections! 🎉
 ### Security Features
 - Supabase Authentication integration
 - Role-based access control
-- Secure 4-character code generation for client profiles
+- Secure 4-character code generation for client portal access
 - Password protection for client access
 - GDPR/CCPA compliant data handling
 
@@ -185,7 +185,7 @@ launchbird/
 │   ├── projects/          # Project management
 │   ├── clients/           # Client management
 │   ├── tasks/             # Task management
-│   ├── profile/[code]/    # Client profile with code
+│   ├── portal/[code]/     # Client portal with code
 │   ├── app-admin/         # Admin panel
 │   ├── globals.css        # Global styles
 │   └── layout.tsx         # Root layout
@@ -240,7 +240,7 @@ launchbird/
 
 ### Client Access
 1. Admin generates 4-character code for project
-2. Client visits `/profile/[code]`
+2. Client visits `/portal/[code]`
 3. Code validated against database
 4. Optional password validation
 5. Access to read-only project view

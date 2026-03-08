@@ -18,7 +18,7 @@ import {
   Copy
 } from 'lucide-react'
 import { Client } from '@/types'
-import { createClientAccessCode } from '@/lib/client-profile'
+import { createClientAccessCode } from '@/lib/client-portal'
 
 interface ClientActionsProps {
   client: Client
@@ -35,7 +35,7 @@ export default function ClientActions({
   onSendEmail, 
   onSendSMS 
 }: ClientActionsProps) {
-  const handleClientProfile = async () => {
+  const handleClientPortal = async () => {
     try {
       // Get or create client access code
       const accessCode = await createClientAccessCode(
@@ -44,8 +44,8 @@ export default function ClientActions({
         'user-id'
       )
       
-      // Open client profile in new tab
-      window.open(`/profile/${accessCode}`, '_blank')
+      // Open client portal in new tab
+      window.open(`/portal/${accessCode}`, '_blank')
     } catch (error) {
       console.error('Error creating client access:', error)
       alert('Failed to create client access. Please try again.')
@@ -110,11 +110,11 @@ export default function ClientActions({
         </DropdownMenuItem>
         
         <DropdownMenuItem 
-          onClick={handleClientProfile}
+          onClick={handleClientPortal}
           className="flex items-center gap-2 cursor-pointer"
         >
           <ExternalLink className="h-4 w-4 text-orange-600" />
-          <span>Client Profile</span>
+          <span>Client Portal</span>
         </DropdownMenuItem>
         
         <DropdownMenuItem 

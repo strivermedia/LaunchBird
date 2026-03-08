@@ -169,21 +169,23 @@ export async function getProjects(
     }
 
     // Transform Supabase data to Project type
-    const projects = (data || []).map((project: any) => ({
+    const projects: Project[] = (data || []).map((project: any): Project => ({
       id: project.id,
       organizationId: project.organization_id,
       title: project.name,
       description: project.description,
-      type: 'one-time' as ProjectType, // Default
+      type: (project.type || 'one-time') as ProjectType,
       status: project.status as ProjectStatus,
-      progress: 0, // Would need to calculate
-      startDate: project.created_at ? new Date(project.created_at) : undefined,
-      assignedTo: [], // Would need separate table
+      progress: project.progress || 0,
+      startDate: project.start_date ? new Date(project.start_date) : new Date(project.created_at),
+      endDate: project.end_date ? new Date(project.end_date) : undefined,
+      deadline: project.deadline ? new Date(project.deadline) : undefined,
+      assignedTo: project.assigned_to || [],
       createdBy: project.created_by,
       createdAt: new Date(project.created_at),
       updatedAt: new Date(project.updated_at),
       clientId: project.client_id,
-      tags: []
+      tags: project.tags || []
     }))
     
     // Role-based filtering
@@ -191,7 +193,7 @@ export async function getProjects(
 
     // Team members can only see assigned projects
     if (userRole === 'team_member' && userId) {
-      filteredProjects = filteredProjects.filter(project =>
+      filteredProjects = filteredProjects.filter((project: Project) =>
         project.assignedTo.includes(userId)
       )
     }
@@ -343,7 +345,7 @@ export async function generateClientCode(organizationId: string): Promise<string
 
     // Check for existing codes to ensure uniqueness
     const { data: existingCodes } = await db
-      .from('client_profile_codes')
+      .from('client_portal_codes')
       .select('code')
       .eq('project_id', 
         db.from('projects')

@@ -30,7 +30,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { 
   Client, 
-  ClientProfileCode, 
+  ClientPortalCode, 
   ClientCommunication, 
   ClientNote, 
   ClientProject 
@@ -39,17 +39,17 @@ import { useAuth } from '@/lib/useAuth'
 import { updateClient } from '@/lib/clients'
 
 /**
- * Client Profile Page
+ * Client Details Page
  * Displays detailed client information with project links, communications, notes, and code management
  */
-export default function ClientProfilePage() {
+export default function ClientDetailsPage() {
   const params = useParams()
   const router = useRouter()
   const { user } = useAuth()
   const clientId = params.id as string
 
   const [client, setClient] = useState<Client | null>(null)
-  const [profileCodes, setProfileCodes] = useState<ClientProfileCode[]>([])
+  const [portalCodes, setPortalCodes] = useState<ClientPortalCode[]>([])
   const [communications, setCommunications] = useState<ClientCommunication[]>([])
   const [notes, setNotes] = useState<ClientNote[]>([])
   const [projects, setProjects] = useState<ClientProject[]>([])
@@ -93,7 +93,7 @@ export default function ClientProfilePage() {
       completedProjects: 3,
     }
 
-    const mockProfileCodes: ClientProfileCode[] = [
+    const mockPortalCodes: ClientPortalCode[] = [
       {
         id: 'code1',
         clientId,
@@ -200,7 +200,7 @@ export default function ClientProfilePage() {
     ]
 
     setClient(mockClient)
-    setProfileCodes(mockProfileCodes)
+    setPortalCodes(mockPortalCodes)
     setCommunications(mockCommunications)
     setNotes(mockNotes)
     setProjects(mockProjects)
@@ -1043,7 +1043,7 @@ export default function ClientProfilePage() {
                 Access Codes
               </CardTitle>
               <CardDescription>
-                Manage 4-character codes for client profile access
+                Manage 4-character codes for client portal access
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -1077,13 +1077,13 @@ export default function ClientProfilePage() {
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                   Active Codes
                 </h3>
-                {profileCodes.length === 0 ? (
+                {portalCodes.length === 0 ? (
                   <p className="text-gray-600 dark:text-gray-400 text-center py-8">
                     No access codes generated yet.
                   </p>
                 ) : (
                   <div className="space-y-4">
-                    {profileCodes.map((code) => (
+                    {portalCodes.map((code) => (
                       <div
                         key={code.id}
                         className="border border-border rounded-lg p-4"

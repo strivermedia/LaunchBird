@@ -24,6 +24,7 @@ import {
   LogOut,
   ChevronLeft,
   CheckSquare,
+  Calendar,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -120,6 +121,30 @@ export default function RootLayout({
     if (savedTheme) {
       setTheme(savedTheme)
     }
+  }, [])
+
+  // Load FullCalendar CSS
+  useEffect(() => {
+    const loadFullCalendarCSS = () => {
+      const cssFiles = [
+        'https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.19/main.min.css',
+        'https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.19/main.min.css',
+        'https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.19/main.min.css'
+      ]
+
+      cssFiles.forEach(href => {
+        const linkId = `fullcalendar-${href.split('/').pop()}`
+        if (!document.getElementById(linkId)) {
+          const link = document.createElement('link')
+          link.id = linkId
+          link.rel = 'stylesheet'
+          link.href = href
+          document.head.appendChild(link)
+        }
+      })
+    }
+
+    loadFullCalendarCSS()
   }, [])
 
   useEffect(() => {
@@ -375,6 +400,7 @@ export default function RootLayout({
                   <Button
                     variant="ghost"
                     size="sm"
+                    data-testid="theme-toggle"
                     onClick={() => setTheme('dark')}
                     className={`h-8 w-8 p-0 ${theme === 'dark' ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'hover:bg-accent'}`}
                   >

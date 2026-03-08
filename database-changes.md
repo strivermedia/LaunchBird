@@ -18,7 +18,7 @@ For each change, document:
 
 **Date**: 2024-01-07  
 **Feature**: Initial multitenant database setup  
-**Tables**: users, organizations, projects, clients, client_profile_codes  
+**Tables**: users, organizations, projects, clients, client_portal_codes  
 **SQL File**: `supabase-schema.sql`  
 **Breaking Changes**: None (initial setup)  
 **Rollback**: N/A  
@@ -33,7 +33,7 @@ For each change, document:
 ### RLS Policies Created:
 - Users can only see their organization's data
 - Organization owners/admins have elevated permissions
-- Client profile codes are accessible to anyone (for client access)
+- Client portal codes are accessible to anyone (for client access)
 - Data isolation enforced at the database level
 
 ---
@@ -74,7 +74,7 @@ For each change, document:
 ### Rollback Initial Schema
 ```sql
 -- WARNING: This will delete all data!
-DROP TABLE IF EXISTS client_profile_codes CASCADE;
+DROP TABLE IF EXISTS client_portal_codes CASCADE;
 DROP TABLE IF EXISTS projects CASCADE;
 DROP TABLE IF EXISTS clients CASCADE;
 DROP TABLE IF EXISTS users CASCADE;

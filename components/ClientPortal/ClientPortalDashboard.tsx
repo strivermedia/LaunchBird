@@ -9,11 +9,11 @@ import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { logClientAccess } from '@/lib/client-profile'
+import { logClientAccess } from '@/lib/client-portal'
 import { getDynamicGradient, getGradientColors } from '@/lib/dashboard'
 import type { Client, Project } from '@/types'
 
-interface ClientProfileDashboardProps {
+interface ClientPortalDashboardProps {
   client: Client
   projects: Project[]
   code: string
@@ -41,14 +41,14 @@ interface ProjectFile {
 }
 
 /**
- * Client Profile Dashboard Component
+ * Client Portal Dashboard Component
  * Displays all projects for a specific client
  */
-export default function ClientProfileDashboard({ 
+export default function ClientPortalDashboard({ 
   client, 
   projects, 
   code 
-}: ClientProfileDashboardProps) {
+}: ClientPortalDashboardProps) {
   const [accessLogged, setAccessLogged] = useState(false)
   const [gradient, setGradient] = useState(getDynamicGradient())
   const [gradientColors, setGradientColors] = useState(getGradientColors())
@@ -362,7 +362,7 @@ export default function ClientProfileDashboard({
                   LaunchBird
                 </h1>
                 <p className="text-sm text-muted-foreground dark:text-muted-foreground">
-                  Client Profile
+                  Client Portal
                 </p>
               </div>
             </div>
@@ -910,3 +910,4 @@ export default function ClientProfileDashboard({
     </div>
   )
 }
+

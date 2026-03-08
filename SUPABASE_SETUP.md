@@ -57,7 +57,7 @@ NEXT_PUBLIC_DISABLE_AUTH=false
 
 ### Database Tables Created
 - **users** - User profiles and authentication data
-- **client_profile_codes** - 4-character access codes for clients
+- **client_portal_codes** - 4-character access codes for clients
 - **projects** - Project management data
 - **clients** - Client information
 - **organizations** - Organization management
@@ -65,7 +65,7 @@ NEXT_PUBLIC_DISABLE_AUTH=false
 ### Security Features
 - ✅ Row Level Security (RLS) enabled on all tables
 - ✅ Role-based access control (Admin, Team Member, Client)
-- ✅ Secure client profile code system
+- ✅ Secure client portal code system
 - ✅ Proper authentication flows
 
 ## 🎯 Key Features Implemented
@@ -73,13 +73,13 @@ NEXT_PUBLIC_DISABLE_AUTH=false
 ### Authentication
 - Email/password signup and signin
 - Password reset functionality
-- Anonymous authentication for client profiles
+- Anonymous authentication for client portal
 - User profile management
 - Role-based access control
 
 ### Database Operations
 - User profile CRUD operations
-- Client profile code generation and validation
+- Client portal code generation and validation
 - Project and client management
 - Organization management
 

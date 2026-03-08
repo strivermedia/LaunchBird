@@ -1,7 +1,7 @@
 // Client management with local storage for development
 import { 
   Client, 
-  ClientProfileCode, 
+  ClientPortalCode, 
   ClientCommunication, 
   ClientNote, 
   ClientProject 
@@ -200,12 +200,12 @@ export async function deleteClient(clientId: string, userId: string): Promise<vo
 }
 
 /**
- * Get client profile codes
+ * Get client portal codes
  * @param clientId - The client ID
  * @param userId - The current user ID
- * @returns Promise<ClientProfileCode[]> - Array of profile codes
+ * @returns Promise<ClientPortalCode[]> - Array of portal codes
  */
-export async function getClientProfileCodes(_clientId: string, _userId: string): Promise<ClientProfileCode[]> {
+export async function getClientPortalCodes(_clientId: string, _userId: string): Promise<ClientPortalCode[]> {
   // Mock implementation
   return [
     {

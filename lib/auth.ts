@@ -32,9 +32,9 @@ export interface UserProfile {
 }
 
 /**
- * Client profile code interface
+ * Client portal code interface
  */
-export interface ClientProfileCode {
+export interface ClientPortalCode {
   code: string
   projectId: string
   password?: string
@@ -62,6 +62,8 @@ const getMockUser = (): UserProfile => ({
   title: 'Developer',
   location: 'Development',
   theme: 'light',
+  organizationId: 'dev-org-123',
+  organizationRole: 'owner',
   createdAt: new Date(),
   updatedAt: new Date(),
 })
@@ -255,7 +257,7 @@ export const sendPasswordReset = async (email: string): Promise<void> => {
 }
 
 /**
- * Sign in anonymously for client profile
+ * Sign in anonymously for client portal
  * @returns Promise<UserCredential>
  */
 export const signInAnonymouslyForClient = async (): Promise<{ user: User | null; error: SupabaseAuthError | null }> => {
@@ -346,15 +348,15 @@ export const updateUserProfile = async (uid: string, updates: Partial<UserProfil
 }
 
 /**
- * Validate client profile code
+ * Validate client portal code
  * @param code - 4-character code
  * @param password - Optional password
- * @returns Promise<ClientProfileCode | null>
+ * @returns Promise<ClientPortalCode | null>
  */
-export const validateClientProfileCode = async (
+export const validateClientPortalCode = async (
   code: string,
   password?: string
-): Promise<ClientProfileCode | null> => {
+): Promise<ClientPortalCode | null> => {
   if (DEV_MODE) {
     return {
       code: code.toUpperCase(),
@@ -372,7 +374,7 @@ export const validateClientProfileCode = async (
   }
   
   const { data, error } = await db
-    .from('client_profile_codes')
+    .from('client_portal_codes')
     .select('*')
     .eq('code', code.toUpperCase())
     .gt('expires_at', new Date().toISOString())
@@ -398,13 +400,13 @@ export const validateClientProfileCode = async (
 }
 
 /**
- * Create client profile code
+ * Create client portal code
  * @param projectId - Project ID
  * @param password - Optional password
  * @param expiresInDays - Days until expiration (default: 30)
  * @returns Promise<string>
  */
-export const createClientProfileCode = async (
+export const createClientPortalCode = async (
   projectId: string,
   password?: string,
   expiresInDays: number = 30
@@ -421,7 +423,7 @@ export const createClientProfileCode = async (
   const expiresAt = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000)
   
   const { error } = await db
-    .from('client_profile_codes')
+    .from('client_portal_codes')
     .insert({
       code,
       project_id: projectId,
@@ -449,7 +451,7 @@ export const getRedirectPath = (role: UserRole): string => {
     case 'team_member':
       return '/tasks'
     case 'client':
-      return '/profile'
+      return '/portal'
     default:
       return '/dashboard'
   }

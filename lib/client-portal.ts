@@ -13,7 +13,7 @@ const DISABLE_AUTH = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
 export const isDevMode = (): boolean => DEV_MODE
 
 /**
- * Get project by client code
+ * Get project by client access code
  * @param code - 4-character client access code
  * @returns Promise<Project | null>
  */
@@ -51,7 +51,7 @@ export const getProjectByClientCode = async (code: string): Promise<Project | nu
 }
 
 /**
- * Get project updates/activities for client profile
+ * Get project updates/activities for the client portal
  * @param projectId - Project ID
  * @param organizationId - Organization ID
  * @param limitCount - Number of activities to fetch
@@ -106,7 +106,7 @@ export const getProjectActivities = async (
 }
 
 /**
- * Subscribe to real-time project updates for client profile
+ * Subscribe to real-time project updates for the client portal
  * @param projectId - Project ID
  * @param organizationId - Organization ID
  * @param callback - Callback function for updates
@@ -124,7 +124,7 @@ export const subscribeToProjectUpdates = (
 }
 
 /**
- * Subscribe to real-time project activities for client profile
+ * Subscribe to real-time project activities for the client portal
  * @param projectId - Project ID
  * @param organizationId - Organization ID
  * @param callback - Callback function for updates
@@ -289,4 +289,5 @@ export const submitClientFeedback = async (feedback: {
 }): Promise<void> => {
   // Mock implementation - no actual submission
   console.log('Mock implementation - submitting client feedback:', feedback)
-} 
+}
+

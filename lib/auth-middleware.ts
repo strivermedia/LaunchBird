@@ -54,7 +54,7 @@ export const PUBLIC_ROUTES = [
   '/login',
   '/signup',
   '/reset-password',
-  '/profile', // Client profile pages
+  '/portal', // Client portal pages
 ]
 
 /**

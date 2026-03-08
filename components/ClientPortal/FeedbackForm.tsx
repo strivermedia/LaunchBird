@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { submitClientFeedback } from '@/lib/client-profile'
+import { submitClientFeedback } from '@/lib/client-portal'
 
 interface FeedbackFormProps {
   projectId: string
@@ -281,4 +281,5 @@ export default function FeedbackForm({ projectId }: FeedbackFormProps) {
       </CardContent>
     </Card>
   )
-} 
+}
+

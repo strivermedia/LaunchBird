@@ -398,7 +398,7 @@ export default function ProjectList({ projects, onProjectUpdate }: ProjectListPr
                     </div>
                   </div>
                   
-                  {/* Progress and Actions */}
+                  {/* Progress */}
                   <div className="flex items-center gap-3 ml-4">
                     <div className="text-center">
                       <div className="text-sm font-semibold">{project.progress}%</div>
@@ -407,18 +407,6 @@ export default function ProjectList({ projects, onProjectUpdate }: ProjectListPr
                         className="w-16 h-2"
                       />
                     </div>
-                    
-                    <Link 
-                      href={`/projects/${project.id}`}
-                      className="block"
-                    >
-                      <Button
-                        size="sm"
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4 py-2"
-                      >
-                        View Details
-                      </Button>
-                    </Link>
                   </div>
                 </div>
               </CardContent>
@@ -456,9 +444,6 @@ export default function ProjectList({ projects, onProjectUpdate }: ProjectListPr
                 </TableHead>
                 <TableHead className="font-semibold text-gray-700 dark:text-gray-300 py-4">
                   Budget
-                </TableHead>
-                <TableHead className="font-semibold text-gray-700 dark:text-gray-300 py-4">
-                  Actions
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -580,20 +565,6 @@ export default function ProjectList({ projects, onProjectUpdate }: ProjectListPr
                       ) : (
                         <span className="text-gray-600 dark:text-gray-400 text-sm">-</span>
                       )}
-                    </TableCell>
-                    
-                    <TableCell className="py-4 relative">
-                                              <Link 
-                          href={`/projects/${project.id}`}
-                          className="block"
-                        >
-                          <Button
-                            size="sm"
-                            className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4 py-2 cursor-pointer z-10 relative"
-                          >
-                            View Details
-                          </Button>
-                        </Link>
                     </TableCell>
                   </TableRow>
                 )

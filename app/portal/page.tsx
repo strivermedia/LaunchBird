@@ -10,10 +10,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
 /**
- * Client Profile Code Entry Page
+ * Client Portal Code Entry Page
  * Allows clients to enter their 4-character access code
  */
-export default function ClientProfileCodeEntryPage() {
+export default function ClientPortalCodeEntryPage() {
   const router = useRouter()
   const [code, setCode] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -34,8 +34,8 @@ export default function ClientProfileCodeEntryPage() {
     setError(null)
 
     try {
-          // Redirect to the client profile page with the code
-    router.push(`/profile/${code.toUpperCase()}`)
+      // Redirect to the client portal page with the code
+      router.push(`/portal/${code.toUpperCase()}`)
     } catch (err) {
       setError('An error occurred. Please try again.')
     } finally {
@@ -65,7 +65,7 @@ export default function ClientProfileCodeEntryPage() {
               LaunchBird
             </h1>
             <p className="text-muted-foreground dark:text-muted-foreground mt-2">
-              Client Profile
+              Client Portal
             </p>
           </div>
         </div>
@@ -121,7 +121,7 @@ export default function ClientProfileCodeEntryPage() {
                   </>
                 ) : (
                   <>
-                    Access Project
+                    Access Client Portal
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </>
                 )}
@@ -150,4 +150,5 @@ export default function ClientProfileCodeEntryPage() {
       </div>
     </div>
   )
-} 
+}
+
